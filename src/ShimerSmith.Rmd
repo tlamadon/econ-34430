@@ -1,0 +1,228 @@
+# Workers and firms heterogeneity
+
+We are going to look at the Shimer-Smith model. We are going to solve it on the computer, then simulate from it, and finally estimate AKM on the simulated data and anaylise the biases that might come from the procedure.
+
+```{r,results=FALSE,message=FALSE,warning=FALSE}
+  #some imports
+require(gtools)
+require(data.table)
+require(ggplot2)
+require(reshape)
+require(readstata13)
+require(RcppSimpleTensor)
+source("../../econ-34430-sol/src/search.r") # you do not have access to this repo which has the solutions! :-) !
+```
+
+## Sovling Shimer Smith
+
+The equilibrium of Shimer and Smith can be solved by iterating on the Bellman equation $W_0$, $\Pi_0$ and $S$, they are given by:
+
+$$ (r+s)S(x,y) = f(x,y) -r W_0(x) - r \Pi_0(y) $$
+
+$$ r W_0(x) = b + \kappa  \alpha \int \max \{ S(x,y') , 0\} V(y') dy'$$
+
+$$ r \Pi_0(y) = -c + \kappa (1-\alpha)  \int \max \{ S(x',y) , 0\} U(x') dx'$$
+
+This needs to be jointly solved for with the endogenous distribution of matches $h(x,y)$ which must satify 
+
+$$ h(x,y) = (1-s)  h(x,y)  1[S(x,y)\geq 0] + \kappa 1[S(x,y)\geq 0] U(x) V(y)$$
+
+Here is a code that will create a parameter set, and a code that initialize your model with some starting values. 
+
+
+
+```{r}
+initp <- function(...) {
+  p = list()
+  p$ay = 0.2
+  p$nx = 50
+  p$ny = 50
+  p$nz = 50
+  p$sz = 1
+  p$dt  = 4 
+  p$sep = 0.02
+  p$r   = 0.05
+  p$rho = -2
+  p$b   = 0 
+  p$c   = 0
+  p$alpha = 0.5 # bargaining power
+  p$fsize = 50
+  p$m   = 0.4
+  p$nu  = 0.3 # efficiency of search on the job
+  p$K   = 0
+  p$lb0  = 0.4 
+  p$lb1  = 0.1
+  p$M=1.5
+  
+  #p$pf = function(x,y,z=0,p) x*y + z
+  p$pf = function(x,y,z=0,p)  ( x^p$rho +  y^p$rho )^(1/p$rho) + p$ay # haggerdorn law manovski 
+  
+  sp = list(...)
+  
+  for (n in names(sp)) {
+    p[[n]] = sp[[n]]
+  }
+  
+  return(p)
+}
+```
+
+
+and here is some code that initialize the different functions needed:
+
+```r
+  X = spread( (0:(p$nx-1))/p$nx , 2, p$ny )
+  Y = spread( (0:(p$ny-1))/p$ny , 1, p$nx )
+  FF = p$pf(X,Y,0,p)  
+  W0 = rep(0,p$nx)
+  P0 = rep(0,p$ny)
+  H  = array(0.8/(p$nx*p$ny),c(p$nx,p$ny))
+  U  = rep(0.2/p$nx,p$nx)
+  V  = (p$M-0.8) * rep(1/p$ny,p$ny)
+  S  = FF / p$r 
+```
+
+As guidance here is how I compute the $S(x,y)$ function and the $\kappa$. You can use and install RcppSimpleTensor, or directly use the spread, colSums and rowSums functions. Note that it can be important to use relaxation parameters such as `ctrl$rs` here. This is because the Bellman equation is a contraction mapping, but the distribution jointly with the Bellman equations might note be. 
+
+```r
+    kp =  pmin(pmin(sum(U), p$m*sum(U)^.5 * sum(V)^.5),sum(V))/(sum(U) * sum(V))
+    
+    S2 = t.S(FF,W0,P0,p$r) / ( p$r + p$sep)
+    dS = mean( (S - S2 )^2 )/mean( (S)^2 )
+    S = ctrl$rs * S + (1-ctrl$rs) * S2
+    
+    wage = p$alpha * (p$sep + p$r) * S + p$r * spread(W0,2,p$ny)
+```
+
+At this point you need to write a loop that will find the fix point. Stop the loop when `dS<1e-7`. With the default starting values, you should find the following figure:
+
+```{r}
+  p <- initp()
+  ctrl=list(maxiter=400,rs=0.5,rw=0.5,rh=0.8)
+  model = shimersmith.solve(p,ctrl)
+  persp(model$S*(model$S>0))
+  persp(model$H,theta=-30)
+```
+
+
+## Test your solving code
+
+Install the libary test_that and write a few test cases that will verify that your code is doing what you expect it to do! For instance, check that the h and u distribution sum to 1 for each x.
+
+```r
+require(testthat)
+test_that("Testing model sulotion", {
+    expect_true( all(diff(model$W0)>0), "W0 is increasing")
+    expect_true( all(diff(model$P0)>0), "W0 is increasing")
+    expect_true( abs(1-sum(model$H)-sum(model$U))<1e-8, label = "worker mass is 1")
+})  
+```
+
+## Simulate a panel
+
+In this section we want to simulate a panel with N workers over T periods working in M firms. Note that N and M represents the number of IDs, not types. We want to create a `data.table` with columns `i,t,x,y,spell,wage,fid`.
+
+You should start by simulating without worrying about the firm ids. Use a double for-loop, on time 1 draw $(x,y)$ from the stationary distribution of workers which is $U(x) + H(x,y)$. Then for this given worker simulate the sequence of events that happens to him: loosing his job if employed, finding a new job if unemployed, using the outcome of your model. A sequence of events of length T will be a given individuals. When you simulate a given individual, also store the spell number. This number should increase when the worker looses his job or finds a new job (this will be useful later). Set $y=0$ when the worker is not employed.
+
+__Hint:__ on simulating, it is much faster to pre-allocate arrays such as `X=array(0,T*N)` for each variable, then fill these and create the `sim` data.table at the very end with `sim = data.table(x=X,y=Y,t=T,i=I)` and such.
+
+At this point you should have a `data.table` with columns `i,t,x,y,spell`. Once we you have simulated this panel, we want to attach firms to spells. We are going to do this is a semi-naive way by randomly attaching firm ids to spells (the firm id needs to be fix over a spell). Since the separation rate is the same in each job, we do not have to worry to weight them by the length of spells.
+
+```r
+# we want to target a given firm size (that should be a parameter of your simulating function)
+fsize = 200 
+
+# we get spells information, randomly draw from firm without replacement
+spells = unique(sim[y>0,list(i,spell,y)])
+spells[, fid:= as.integer(y + p$ny*sample( rep((1:ceiling(.N/fsize)),fsize*1.2),.N,replace=FALSE)),y]
+
+# merge back in
+setkey(spells,i,spell)
+setkey(sim,i,spell)
+sim[,fid := spells[sim,fid]]
+
+# quick check!
+assert_that(sim[,length(unique(y)),fid][,all(V1==1)])
+```
+
+__Hint:__ here you could make your life much easier if you insure that the firm ids are continuous (no gap) and start at 1. This will be convenient when indexing them later.
+
+We finish this section by appending the wage. We want to append the equilibrium wage when working and $b$ when not working. Here is a simple way to attach the wage and b:
+
+```r
+sim[y>0, wage := model$wage[x,y]*exp(rnorm(.N)*noise),list(x,y)]
+sim[y==0, wage := p$b]
+```
+
+The command makes use of many of the functionalities of data.table. When calling `sim[param1, param2 , param3]`, param1 subset the table, param2 execute a commmand and using `:=` assigns a new column. Finally param3 allows us to run the param2 within each values of $x,y$. Within each we then use the variable `.N` which gives the size of the sub-group within $(x,y)$, which allows us to draw exactly the right number of iid noises!
+
+
+### Testing your simulation code
+
+Yes, this is boring, but it will save you time in the end! Check that in your simulated data, you have the correct separation rate and correct matching probability per type! Also check that your simulated unemployment distribution is close to the U you solved for, and same for H.
+
+Also simulate a long time dimension like $T=100$, then compute the sum of discounted future reward at $t=1$ for each $x$ and each $y$, including $y=0$. Take the mean of the expected values and check that it matches $W_0(x)$ when $y=0$ and check that it matches $W_1(x,y)$ for the employed. 
+
+
+## Estimate AKM
+
+We now want to estimate AKM. AKM requires to compute the smallest connected set among firms, but we are going to ignore this for now. Because of the way we simulated data, it is very unlikely.
+
+__Important:__ form now on, we work with log-wages.
+
+### firm fix effects
+
+TO estimate AKM we start by focusing on movers and we want to build the firms fix-effects. We are going to estimate it by OLS. We want to create a matrix of dummies for each firm and focus on movers only. Firm select the set of workers that are movers (they need to show up in at least 2 different firms ids). Make this selection using the data.table methods. It should look like:
+
+```r
+movers_id = sim[y>0,list(N = <somthing that computes the number of firms),i][N>=2,i]
+msim = sim[y>0][i %in% movers_id]
+```
+
+We then create our matrix of regressors with each firm dummies. We want to use sparse matrices for that. Construct a sparse matrix of zeros using the `SparseM` package. You need to run through your `msim` table and put ones in the correct columns for each line, and take the wage for the dependent. Once the matrix of regressors and the dependent are constructed, use `slm.fit` to run a sparse OLS. You now have your firm fix effects.
+
+Finally, reattach the fix effect to the data by appending using the firm id. Call that column `psi`. __Hint__ be carefull to correclty match the estimated fixed-effect to the correct firm in `sim`. This mergin can be tricky, because you need to keep track of the id in the order you put them in the matrix. 
+
+### worker fix effects
+
+We can now recover the worker fix effect by differencing and attach it to our simulated sample.
+
+```r
+asim = sim[y>0,list(aplha = mean(wage - psi)),i]
+setkey(asim,i)
+setkey(sim,i)
+sim[,aplha := asim[sim,alpha]]
+```
+
+
+## Variance analysis
+
+We are at the end of our work! We now want to check the estimated sorting from AKM and compare it to the true decomposition. Actually at this point we are just going to compare AKM to the best linear projection.
+
+To get the variance decomposition of AKM we compute the following:
+
+```r
+fit_akm = lm(wage ~ alpha + psi,sim)
+sim$res = residuals(fit)
+pred = predict(fit_akm,type = "terms")
+sim$k_hat = pred[,1]
+sim$l_hat = pred[,2]
+vardec_akm = sim[,cov(data.frame(wage,k_hat,l_hat,res))$cov]
+```
+
+to get the best linear projection we do the folliwing:
+
+```r
+fit = lm(wage ~ factor(x) + factor(y),sim)
+sim$res = residuals(fit)
+pred = predict(fit,type = "terms")
+sim$k_hat = pred[,1]
+sim$l_hat = pred[,2]
+vardec_best = sim[,cov.wt( data.frame(y_imp,k_hat,l_hat,res))$cov]
+```
+
+Now we want to compare the best decomposition to the akm decomposition under values of $\rho$ in the production function that spans positive to negative sorting. Ideally we want to compare these under different firm sizes, to measure the incendital parameter bias. The ideal answer her would show that we few movers the correlation can be strongly negatively correlated, however in the case of PAM, with enough data, AKM should not be doing so badly!
+
+
+
+

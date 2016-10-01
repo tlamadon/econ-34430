@@ -1,0 +1,22 @@
+---
+  title: "Econ 34430"
+---
+  
+  Hello, Website! This contains help files for homeworks for Econ 34430.
+  
+## Getting started {#start}
+
+You will first need to install `R` and `Rstudio`. To do use the following links:
+
+ - [R](https://cran.rstudio.com/)
+ - [RStudio](https://www.rstudio.com/products/rstudio/download/)
+
+Here is a [tutorial](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.pdf) and a [cheatsheet](https://s3.amazonaws.com/assets.datacamp.com/img/blog/data+table+cheat+sheet.pdf) for `data.table`
+
+Here is a [tutorial](http://www.ceb-institute.org/bbs/wp-content/uploads/2011/09/handout_ggplot2.pdf), a [cheatsheet](http://www.rstudio.com/wp-content/uploads/2015/12/ggplot2-cheatsheet-2.0.pdf) and the [full documentation](http://docs.ggplot2.org/current/) for `ggplot2`.
+
+Yu can install directly:
+
+```r
+install.packages(c("devtools","data.tables","ggplot2"))
+```

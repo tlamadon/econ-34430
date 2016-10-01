@@ -1,0 +1,126 @@
+---
+title: "Static Labor Supply"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+require(testthat)
+require(xtable)
+require(pander)
+```
+
+Let's start with studying static labor supply. We will consider the decision of the agent under the following rule:
+
+$$
+\max_{c,h} \frac{c^{1+\eta}}{1+\eta} - \beta \frac{h^{1+\gamma}}{1+\gamma}\\
+\text{s.t. } c = \rho \cdot w\cdot h -r + \mu\\ 
+$$
+The individual takes his wage $w$ as given, he chooses hours of work $h$ and consumption $c$ subject to a given non labor income $\mu$ as well as a tax regime defined by $\rho,r$.
+
+We note already that the non labor income can control for dynamic labor supply since we can have $\mu= b_t - (1+r)b_{t+1}$. This is part of a larger maximization problem where the agents choose optimaly $b_t$ over time. We will get there next time.
+
+### Interior solution
+
+The first order conditions give us $w(wh +r - \mu)^\eta = \beta h^\gamma$. There is no closed-form but we can very quickly find an interior solution by using Newton maximization on the function $f(x) = w(wh +r - \mu)^\eta - \beta h^\gamma$. We iterate on 
+
+$$x \leftarrow x - f(x)/f'x)$$.
+
+```{r}
+# function which updates choice of hours using Newton step
+# R here is total unearned income (including taxes when not working and all)
+ff.newt <- function(x,w,R,eta,gamma,beta) {
+  f0 = w*(w*x + R)^eta - beta*x^gamma
+  f1 =  eta*w^2 * (w*x + R)^(eta-1) - gamma * beta *x^(gamma-1)
+  x  = x - f0/f1 
+  x  = ifelse(w*x + R<0, -R/w + 0.0001,x)
+  x
+}
+```
+
+### Simulating data
+
+We are going to simulate a data set where agents will choose participation as well as the number of hours if they decide to work. To do that we will solve for the interior solution under a given tax rate and compare this to the option of no-work.
+
+```{r, results='hide'}
+p  = list(eta=-1.5,gamma = 0.8,beta=1,beta0=0.1) # define preferences
+tx = list(rho=1,r=0) # define a simple tax
+N=1000
+simdata = data.table(i=1:N,X=rnorm(N))
+simdata[,lw := X     + rnorm(N)*0.2];      # add a wage which depends on X
+simdata[,mu := exp(0.3*X + rnorm(N)*0.2)]; # add non-labor income that also depends on X
+
+# we then solve for the choice of hours and consumption
+simdata[, h := pmax(-mu+tx$r + p$beta0 ,0)/exp(lw)+1] # starting value
+# for loop for newton method (30 should be enough, it is fast)
+for (i in 1:30) {
+  simdata[, h := ff.newt(h,tx$rho*exp(lw),mu-tx$r-p$beta0,p$eta,p$gamma,p$beta) ]
+}
+
+# attach consumption, value of working
+simdata[, c  := exp(lw)*h + mu - p$beta0];
+simdata[, u1 := c^(1+p$eta)/(1+p$eta) - p$beta * h^(1+p$gamma)/(1+p$gamma) ];
+```
+
+At this point we can regress $\log(w)$ on $\log(c)$ and $\log(h)$ and find precisely the parameters of labor supply:
+
+```{r}
+pander(summary(simdata[,lm(lw ~ log(c) + log(h))]))
+```
+
+## Adding participation
+
+We simply compute the value of choosing $h=0$, then take the highest of working and not working. 
+
+```{r, results='hide'}
+simdata[,u0:=  mu^(1+p$eta)/(1+p$eta)];
+simdata[,p1:=u1>u0]
+ggplot(simdata,aes(x=u0,y=u1)) + geom_point() + geom_abline(linetype=2)
+```
+
+The regression still works, among ecah individual who chooses to work, the FOC is still satified.
+
+```{r}
+pander(summary(simdata[p1==TRUE,lm(lw ~ log(c) + log(h))]))
+```
+
+## Heterogeneity in $\beta$
+
+Finally we want to add heterogeneity in the $\beta$ parameter. 
+
+```{r, results="hide"}
+simdata[,betai := exp(0.5*X+rnorm(N)*0.1)]
+simdata[, h := pmax(-mu+tx$r + p$beta0 ,0)/exp(lw)+1]
+for (i in 1:30) {
+  simdata[, h := ff.newt(h,tx$rho*exp(lw),mu-tx$r-p$beta0,p$eta,p$gamma,betai) ]
+}
+
+# attach consumption
+simdata[, c  := exp(lw)*h + mu - p$beta0];
+simdata[, u1 := c^(1+p$eta)/(1+p$eta) - betai * h^(1+p$gamma)/(1+p$gamma) ];
+simdata[, u0:=  mu^(1+p$eta)/(1+p$eta)];
+simdata[,p1:=u1>u0]
+
+# let's check that the FOC holds
+sfit = summary(simdata[,lm(lw ~ log(c) + log(h) + log(betai))])
+expect_equivalent(sfit$r.squared,1)
+expect_equivalent(coef(sfit)["log(c)",1],-p$eta)
+expect_equivalent(coef(sfit)["log(h)",1],p$gamma)
+
+sfit = summary(simdata[p1==TRUE,lm(lw ~ log(c) + log(h))])
+expect_false(coef(sfit)["log(c)",1]==-p$eta)
+```
+
+```{r, ,results='asis'}
+pander(sfit)
+```
+
+# Questions 
+
+ 1. Take the simulated data from the model with heterogenous $\beta_i$. First explain why regressing $\log(w)$ on $\log(c)$, $\log(h)$, and $X$ does not deliver correct estimates.
+ 2. Simulate 2 periods of the model (a short panel), keep everything fixed over the 2 periods, but redraw the wage. Estimate the model in differences and recover the parameters using $\log(w)$ on $\log(c)$, $\log(h)$. How does including or not including participation decision affect the results? Explain.
+ 3. Let's repeat the exerice using a repeated cross-section together with a tax change. Simuluate 2 cross-sections with different marginal tax rates (do this by multiplying the wage by a factor), and do not redraw the wage. Next, slice the X variable into K categories ( take K=5, but it should even work with K=1). Finally, use the change in the after tax wage using means at the group level to recover the parameters of the model. Again, do this with and without participation and show how it can affect the results.
+ 4. Extend the model to add an excluded variable that affects participation through $\mu$ but not the wage (keep X everywhere). Devise a way improve the estimates by controling for participation.
+ 5. BONUS QUESTION: solve the model with a tax schedule with a kink (solve for the interior in each region, then the agent chooses the max). As in 3, simulate a repeated cross-section and document the selection effects around the kink.
+
+
+

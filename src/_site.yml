@@ -1,0 +1,15 @@
+name: "Econ 34430 "
+output_dir: "../docs"
+navbar:
+  title: "Econ 34430"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Static LS"
+      href: static-labor-supply.html
+    - text: "Dynamic LS"
+      href: dynamic-labor-supply.html
+    - text: "Mixtures"
+      href: earnings-mixtures.html
+    - text: "Sorting"
+      href: ShimerSmith.html
