@@ -1,9 +1,12 @@
----
-  title: "Econ 34430"
----
+
+<br/><br/>
+This contains help files for homeworks for _Econ 34430_. The corresponding github repository can be found [here](https://github.com/tlamadon/econ-34430).
   
-  Hello, Website! This contains help files for homeworks for Econ 34430.
-  
+<!-- Place this tag where you want the button to render. -->
+<a class="github-button" href="https://github.com/tlamadon/econ-34430/archive/master.zip" data-icon="octicon-cloud-download" data-style="mega" aria-label="Download tlamadon/econ-34430 on GitHub">Download</a>  <a class="github-button" href="https://github.com/tlamadon/econ-34430/fork" data-icon="octicon-repo-forked" data-style="mega" data-count-href="/tlamadon/econ-34430/network" data-count-api="/repos/tlamadon/econ-34430#forks_count" data-count-aria-label="# forks on GitHub" aria-label="Fork tlamadon/econ-34430 on GitHub">Fork</a>
+
+
+
 ## Getting started {#start}
 
 You will first need to install `R` and `Rstudio`. To do use the following links:
@@ -15,8 +18,19 @@ Here is a [tutorial](https://cran.r-project.org/web/packages/data.table/vignette
 
 Here is a [tutorial](http://www.ceb-institute.org/bbs/wp-content/uploads/2011/09/handout_ggplot2.pdf), a [cheatsheet](http://www.rstudio.com/wp-content/uploads/2015/12/ggplot2-cheatsheet-2.0.pdf) and the [full documentation](http://docs.ggplot2.org/current/) for `ggplot2`.
 
-Yu can install directly:
+You can install most packages directly:
 
 ```r
-install.packages(c("devtools","data.tables","ggplot2"))
+install.packages(c("devtools","data.table","ggplot2","plyr"))
 ```
+
+Other packages need to be installed from github using the devtools package:
+
+```r
+require(devtools)
+install_github("tlamadon/RcppSimpleTensor")
+```
+
+
+<!-- Place this tag in your head or just before your close body tag. -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>  

@@ -9,13 +9,15 @@ require(xtable)
 require(pander)
 ```
 
+You can find the source code for this file in the class repository. The direct link is [here](https://raw.githubusercontent.com/tlamadon/econ-34430/master/src/static-labor-supply.Rmd)
+
 Let's start with studying static labor supply. We will consider the decision of the agent under the following rule:
 
 $$
 \max_{c,h} \frac{c^{1+\eta}}{1+\eta} - \beta \frac{h^{1+\gamma}}{1+\gamma}\\
-\text{s.t. } c = \rho \cdot w\cdot h -r + \mu\\ 
+\text{s.t. } c = \rho \cdot w\cdot h -r + \mu - \beta_0 \cdot 1[h>0] \\ 
 $$
-The individual takes his wage $w$ as given, he chooses hours of work $h$ and consumption $c$ subject to a given non labor income $\mu$ as well as a tax regime defined by $\rho,r$.
+The individual takes his wage $w$ as given, he chooses hours of work $h$ and consumption $c$ subject to a given non labor income $\mu$ as well as a tax regime defined by $\rho,r$. $\beta_0$ is a fixed cost associated with working.
 
 We note already that the non labor income can control for dynamic labor supply since we can have $\mu= b_t - (1+r)b_{t+1}$. This is part of a larger maximization problem where the agents choose optimaly $b_t$ over time. We will get there next time.
 

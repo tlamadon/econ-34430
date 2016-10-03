@@ -184,7 +184,7 @@ then you can load the data
 ```
 
 we start by computing some kind of residual wage
-```{r,results=FALSE,message=FALSE,warning=FALSE}
+```{r,results='hide',message=FALSE,warning=FALSE}
   fit = lm(log(log_y) ~ year + marit + state_st ,data ,na.action=na.exclude)
   data[, log_yr := residuals(fit)]
 ```
@@ -214,7 +214,7 @@ The code does not need any modicification if we do things conditional on $\rho$.
 
 How to get $\rho$ ? We can pick it using covariance restrictions! For now, just use a reasonable value for instance 0.6 . Here is the code to prepare your data:
 
-```{r,results=FALSE,message=FALSE,warning=FALSE}
+```{r,results='hide',message=FALSE,warning=FALSE}
   # extract lags
   setkey(data,person,year)
   data[, log_yr_l3 := data[J(person,year-2),log_yr]]
