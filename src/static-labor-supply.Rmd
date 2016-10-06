@@ -34,7 +34,8 @@ ff.newt <- function(x,w,R,eta,gamma,beta) {
   f0 = w*(w*x + R)^eta - beta*x^gamma
   f1 =  eta*w^2 * (w*x + R)^(eta-1) - gamma * beta *x^(gamma-1)
   x  = x - f0/f1 
-  x  = ifelse(w*x + R<0, -R/w + 0.0001,x)
+  x  = ifelse(w*x + R<=0, -R/w + 0.0001,x) # make sure we do not step out of bounds for next iteration
+  x  = ifelse(x<0, 0.0001,x)
   x
 }
 ```
@@ -116,13 +117,26 @@ expect_false(coef(sfit)["log(c)",1]==-p$eta)
 pander(sfit)
 ```
 
-# Questions 
+# Short Panel version 
 
- 1. Take the simulated data from the model with heterogenous $\beta_i$. First explain why regressing $\log(w)$ on $\log(c)$, $\log(h)$, and $X$ does not deliver correct estimates.
- 2. Simulate 2 periods of the model (a short panel), keep everything fixed over the 2 periods, but redraw the wage. Estimate the model in differences and recover the parameters using $\log(w)$ on $\log(c)$, $\log(h)$. How does including or not including participation decision affect the results? Explain.
- 3. Let's repeat the exerice using a repeated cross-section together with a tax change. Simuluate 2 cross-sections with different marginal tax rates (do this by multiplying the wage by a factor), and do not redraw the wage. Next, slice the X variable into K categories ( take K=5, but it should even work with K=1). Finally, use the change in the after tax wage using means at the group level to recover the parameters of the model. Again, do this with and without participation and show how it can affect the results.
- 4. Extend the model to add an excluded variable that affects participation through $\mu$ but not the wage (keep X everywhere). Devise a way improve the estimates by controling for participation.
- 5. BONUS QUESTION: solve the model with a tax schedule with a kink (solve for the interior in each region, then the agent chooses the max). As in 3, simulate a repeated cross-section and document the selection effects around the kink.
+ **Q1:** Take the simulated data from the model with heterogenous $\beta_i$. First explain why regressing $\log(w)$ on $\log(c)$, $\log(h)$, and $X$ does not deliver correct estimates.
+ **Q2:** Simulate 2 periods of the model (a short panel), keep everything fixed over the 2 periods, but redraw the wage. Estimate the model in differences and recover the parameters using $\log(w)$ on $\log(c)$, $\log(h)$. How does including or not including participation decision affect the results? Explain.
+ 
+# Repeated cross-section version
 
+In this section we want to get closer to the Blundell, Duncan and Meghir (1998) exercice. We first modify the cost to allow for an increase return to X, and for the presence of a change in the tax rate. Simulate wages according to:
+
+```r
+  simdata[,lw := lb*X + rnorm(N)*0.2];      # add a wage which depends on X
+```
+
+Write a function that can simulate a full cross section and that takes `lb` as inpute as well as marginal tax rate $\rho$. It should apply the same function as before to solve for the interior solution, but use the after-tax wage every where.
+
+ **Q3:** simulate two cross-sections with $(lb=1,\rho=1)$ and $(lb=1.5,\rho=0.8)$ and use 10k indivduals. Simulate data without participation decision for now. Combine the data and show that previous regression provides biased estimates. Then slice X into K categories (for example using quantiles). Then compute $\log(w)$, $\log(c)$ and $\log(h)$ within each group and time period. Run the regression in first differences and show that this recovers the structural parameters.
+
+ **Q4:** Add the participation decision to the data generating process. Show that the results are now biased.
+ 
+ **Q5:** Extend the model to add an excluded variable that affects participation through $\mu$ but not the wage (keep X everywhere). Devise a way improve the estimates by controling for participation.
+ 
 
 
