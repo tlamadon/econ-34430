@@ -225,34 +225,3 @@ vardec_best = sim[,cov.wt( data.frame(y_imp,k_hat,l_hat,res))$cov]
 
 Now we want to compare the best decomposition to the akm decomposition under values of $\rho$ in the production function that spans positive to negative sorting. Ideally we want to compare these under different firm sizes, to measure the incendital parameter bias. The ideal answer her would show that we few movers the correlation can be strongly negatively correlated, however in the case of PAM, with enough data, AKM should not be doing so badly!
 
-# Card Kline plot
-
-```{r}
-sim = shimersmith.simulate(model,p,10000)
-
-# get firm group
-fg = sim[,mean(y1),f1]
-fg[,r:= ceiling(4*rank(V1)/.N)]
-
-# reattach firm group
-setkey(fg,f1)
-setkey(sim,f1)
-sim[,g1:=fg[sim,r]]
-setkey(sim,f2)
-sim[,g2:=fg[sim,r]]
-
-rr = sim[,list(mean(y1),mean(y2)),list(g1,g2)][g1!=g2]
-rr = melt(rr,id.vars = c("g1","g2"))
-rr[,m:=paste(g1,g2,sep="->")]
-rr[,m2:=paste(pmin(g1,g2),pmax(g2,g1),sep="")]
-rr[,t:=1*(paste(variable)=="V1")]
-rr2 = copy(rr)
-rr2[t==0,t:=-1]
-rr2[t==1,t:=2]
-rr = rbind(rr,rr2)
-ggplot(rr[g1!=1][g2!=1],aes(x=t,y=value,color=factor(m2),group=m)) + geom_line()
-
-
-
-
-```
