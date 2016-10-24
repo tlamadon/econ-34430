@@ -13,6 +13,8 @@ navbar:
           href: static-labor-supply.html
         - text: "Hotz and Miller"
           href: dynprog-HotzMiller.html
+        - text: "Dynamic LS"
+          href: dynamic-labor-supply.html
         - text: "Mixtures"
           href: earnings-mixtures.html
         - text: "Sorting"

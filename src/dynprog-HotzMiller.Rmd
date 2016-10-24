@@ -41,7 +41,7 @@ p    = list(nt=10, # nb of periods
             wsd=1, # standard deviation of wage shock epsilon
             r1=0.1,r2=0,rt=0.05,   # return to experience in activity 1 and 2, and age effect 
             u0=0,u1=2.5,u2=2.25,  # preference values for each choice
-            r=Inf+0.02) # discount paramter
+            r=0.02) # discount paramter
 
 # init value function
 V    = array(0,c(p$nt,p$ne))
@@ -133,20 +133,36 @@ ggplot(rr,aes(x=t,y=m,ymin=q025,ymax=q975)) + geom_line() + geom_errorbar(width=
 
 We want to apply the Hotz and Miller approach to estimate this dynamic programing problem.
 
-### **Q1** Payoff equation
+### **Q1** Payoff equation and transition function
 
-Show that you can recover direclty the parameter of the wage equation in this problem. Write the regression code that recovers them.
+Show that you can recover direclty the parameter of the wage equation in this problem. Write the regression code that recovers them. Also write code that recovers the transition matrices $G_0,G_1,G_2$. Show that the $G$ estimated matrices align with the true one. Then do a parametric estimation by imposing the known form for the transition and recover the slope and variance parameters use for each $a$ in the first part.
 
 ### **Q2** CCP given risk aversion and $r=\infty$
 
-We start with a simple case where there is full discounting. In this case, 
+We start with a simple case where there is full discounting. Express $\log(Pr[a=2|E,t,W] / Pr[a=1|E,t,W])$ and $\log(Pr[a=3|E,t,W] / Pr[a=1|E,t])$. Write down an estimator (which is linear) for $u(a=2)$ and $U(a=3)$ in this case and show that you can get the values from simulated data.
 
+### **Q3** CCP given risk aversion
 
+The risk aversion coefficient does not enter linearly in the utility problem. We are going to fix it, and use Hotz and Miller conditional on that value. So Assume that $\rho$ is known and fixed at some value. We need to construct our expressions that will help us recover $u(a=2)$ and $U(a=3)$ in this dynamic case.
 
+Start by computing the choice probabilities in the simulated data $Pr[a|E,t]$. Why do we not need to also condition on the wage?
 
-The risk aversion coefficient does not enter linearly in the utility problem. We are going to fix it, and use Hotz and Miller conditional on that value. So Assume that $\rho$ is known. 
+From these conditional choice probablities, and using the know value of $\rho$, construct the coefficients $\alpha_{t}(a|E)$ and $\beta_{t}(a,E)$ such that:
+
+$$ 
+\begin{align*}
+Q_t(a|E) &= E U(w,a,\xi) + \beta \sum_{x_{t+1}}\bar{V}_t(x_{t+1})) g(x_{t+1}|a) + \xi(a) \\
+         &= \alpha_{t}(a|E) + \beta_{t}(a,E) \cdot u(a) \\
+\end{align*}
+$$
+
+These are the analog of $\tilde{r} and \tilde{e}$ that we covered in class. Note that this values have to use  Give this expressions, construct a linear expression using log probabilty choices that recovers the $u(a)$ values.
+
+### **Q4** Full estimation
+
+The final step is then to put the whole previous procedure inside a function that takes $\rho$ as an argument and returns the fit of the last step that recovers the $u(a)$ values. Evaluate the fit on a grid of values for $\rho$ and return that plot.
+
  
-### **Q3** Evaluate the previous problem at a grid for $\rho$ and plot the result.
  
  
  
