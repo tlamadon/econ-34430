@@ -20,15 +20,15 @@ Let's use a very simple model that we can solve exactly. The state space will be
 
 We consider the following preferences:
 
-$$ U(w,a,\xi) = \frac{w^{1-\rho}-1}{1-\rho} + u(a) +  \xi(a)$$
+$$ U(w,a,\xi) = \gamma \cdot \frac{w^{1-\rho}}{1-\rho} + u(a) +  \xi(a)$$
 where $\xi(a)$ is an iid, type 1 extreme value shock, and $u(a)$ is a permanent preference vector. We consider the following wage equation:
 
-$$ \log(w_{it}(a)) = \beta_a E_{it} + \epsilon_{it}(a) $$
+$$ \log(w_{it}(a)) = \beta_a E_{it} + \beta_r t +  \epsilon_{it}(a) $$
 where $E_{it}$ is a stochastic observed experience value. $\epsilon(a)$ is iid and normaly distributed. The agent does not know the $\epsilon(a)$ at the time where she decides which action $a$ to choose. As we know we can solve for the expected value function given by:
 
-$$ \bar{V}_t(x) = \log \sum_a \exp \Big[  E U(w,a,\xi) + \beta \sum_{x_{t+1}}\bar{V}_t(x_{t+1})) g(x_{t+1}|a) \Big]$$
+$$ \bar{V}_t(x) = \log \sum_a \exp \Big[  \mathbb{E} U(w,a,\xi) + \beta \sum_{x_{t+1}}\bar{V}_t(x_{t+1})) g(x_{t+1}|a) \Big]$$
 because of the log-normal shocks we get that 
-$$E U(w,a,\xi) = \exp \Big( (1-\rho)^2 \sigma_\epsilon^2/2) \Big) \cdot U(w,a,0) .$$
+$$\mathbb{E} U(w,a,\xi) =   \gamma  \cdot \frac{ \exp \Big( (1-\rho)^2 \sigma_\epsilon^2/2) \Big) }{1-\rho} \exp\Big\{ (1-\rho) \cdot (\beta_a E_{it} + \beta_r t)\Big\} + u(a) +  \xi(a) .$$
 ## Preparing the environment
 
 We set parameters and initialize the transition matrices, value functions and Q-values.
@@ -40,8 +40,9 @@ p    = list(nt=10, # nb of periods
             rho=2, # risk aversion
             wsd=1, # standard deviation of wage shock epsilon
             r1=0.1,r2=0,rt=0.05,   # return to experience in activity 1 and 2, and age effect 
-            u0=0,u1=2.5,u2=2.25,  # preference values for each choice
-            r=0.02) # discount paramter
+            u0=0,u1=3,u2=2.5,  # preference values for each choice
+            r=0.02,
+            gamma=1.2) # discount paramter
 
 # init value function
 V    = array(0,c(p$nt,p$ne))
@@ -65,7 +66,7 @@ GG[2,,] = trm(0   ,0.2,p$ne)  # in activity 2, experience does not accumulate
 GG[3,,] = trm(1   ,0.2,p$ne)  # in activity 3, experience accumulates
 
 # define utility function
-uf <- function(w,p) (w^(1-p$rho))/(1-p$rho)
+uf <- function(w,p) p$gamma*(w^(1-p$rho))/(1-p$rho)
 ```
 
 We then solve the dynamic problem recursively. In the last period they just get the last wage for ever.
@@ -101,7 +102,7 @@ for (t in (p$nt-1):1) {
 
 Then we simulate a data set:
 
-```{r simulating}
+```{r simulating,fig.align="center"}
 N=50000
 simdata = data.table(ii=1:N)
 R = c(0,p$r1,p$r2)
@@ -123,10 +124,10 @@ simdata = simdata[,{
 },ii]
 
 rr = simdata[,.N,list(A,t)][,pr:=N/sum(N),t]
-ggplot(rr[t<10],aes(x=t,y=pr,color=factor(A))) + geom_line() +ggtitle("Average choices over time")
+ggplot(rr[t<10],aes(x=t,y=pr,color=factor(A))) + geom_line() +ggtitle("Average choices over time") + theme_bw()
 
 rr = simdata[,list(m=mean(E),q975=quantile(E,0.975),q025=quantile(E,0.025)),t]
-ggplot(rr,aes(x=t,y=m,ymin=q025,ymax=q975)) + geom_line() + geom_errorbar(width=0.2) +ggtitle("value of E over time")
+ggplot(rr,aes(x=t,y=m,ymin=q025,ymax=q975)) + geom_line() + geom_errorbar(width=0.2) +ggtitle("value of E over time") + theme_bw()
 ```
 
 ## Questions
@@ -143,7 +144,7 @@ We start with a simple case where there is full discounting. Express $\log(Pr[a=
 
 ### **Q3** CCP given risk aversion
 
-The risk aversion coefficient does not enter linearly in the utility problem. We are going to fix it, and use Hotz and Miller conditional on that value. So Assume that $\rho$ is known and fixed at some value. We need to construct our expressions that will help us recover $u(a=2)$ and $U(a=3)$ in this dynamic case.
+The risk aversion coefficient does not enter linearly in the utility problem. We are going to fix it, and use Hotz and Miller conditional on that value. So Assume that $\rho$ is known and fixed at some value. We need to construct our expressions that will help us recover $u(a=2)$ and $U(a=3)$ in this dynamic case. This requires the use of the Euler cosntant $\gamma_e = 0.577$.
 
 Start by computing the choice probabilities in the simulated data $Pr[a|E,t]$. Why do we not need to also condition on the wage?
 
