@@ -10,7 +10,7 @@ require(ggplot2)
 require(reshape)
 require(readstata13)
 require(RcppSimpleTensor)
-source("../../econ-34430-sol/src/search.r") # you do not have access to this repo which has the solutions! :-) !
+source("../../src/search.r") # you do not have access to this repo which has the solutions! :-) !
 ```
 
 ## Sovling Shimer Smith
