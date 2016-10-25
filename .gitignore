@@ -4,3 +4,14 @@
 .Ruserdata
 src/.tensor
 docs
+src/dynamic-labor-supply_files
+src/dynprog-HotzMiller_files
+src/site_libs
+src/earnings-mixtures_files
+dynamic-labor-supply.html
+dynprog-HotzMiller.html
+earnings-mixtures.html
+em-with-mixtures.html
+index.html
+src/DynProgSildes_files
+DynProgSildes.html
