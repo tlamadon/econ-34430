@@ -1,0 +1,27 @@
+---
+title: "EM for normal mixtures"
+output: html_document
+---
+
+# The EM algorithm
+
+We consider the following model:
+
+$$
+\begin{align}
+k_i &\sim \pi(k|X_i) \\
+Y_i &\sim F(Y|k_i,X_i;\theta,\omega_k)
+\end{align}
+$$
+
+Where we are interested in the parameters $\theta,\omega_k,\pi(k|X)$. Given a data set $(Y_i,X_i)$ we consider the maximum likelihood estimator:
+
+$$ \max_{\theta,\omega_k,\pi(k|X)} \sum_k F(Y|k_i,X_i;\theta,\omega_k) \pi(k|X) $$
+
+where we treat $Pr[Z|X;\theta]$ non parametricaly, and denote $\pi_X(k) =  Pr[Z|X;\theta] 
+
+To fix ideas, imagine that $X$ can take two values only. And that $Pr[Y|X,Z;\theta]$ is simple.
+
+
+
+
