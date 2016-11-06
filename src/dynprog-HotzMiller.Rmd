@@ -1,6 +1,4 @@
-# Dynamic Programming
-
-## A simple numerical model
+# Dynamic programing
 
 Let's consider a simple dynamic programing problem. In this problem set we want to simulate from a single agent problem and use the Hotz and Miller approach to recover the parameters.
 
@@ -14,7 +12,7 @@ require(reshape2)
 source("utils.r")
 ```
 
-### Setting the environment
+## Setting the environment
 
 Let's use a very simple model that we can solve exactly. The state space will be discrete, we will consider a two sector problem and staying at thome. We will use Rust assumptions. For simplicity we consider only 10 years.
 
@@ -26,31 +24,28 @@ where $\xi(a)$ is an iid, type 1 extreme value shock, and $u(a)$ is a permanent 
 $$ \log(w_{it}(a)) = \beta_a E_{it} + \beta_r t +  \epsilon_{it}(a) $$
 where $E_{it}$ is a stochastic observed experience value. $\epsilon(a)$ is iid and normaly distributed. The agent does not know the $\epsilon(a)$ at the time where she decides which action $a$ to choose. As we know we can solve for the expected value function given by:
 
-$$ \bar{V}_t(x) = \log \sum_a \exp \Big[  \mathbb{E} U(w,a,\xi) + \beta \sum_{x_{t+1}}\bar{V}_t(x_{t+1})) g(x_{t+1}|a) \Big]$$
+$$ \bar{V}_t(x) = \log \sum_a \exp \Big[  \mathbb{E} U(w,a,\xi) + \beta \sum_{x_{t+1}}\bar{V}_t(x_{t+1}) g(x_{t+1}|a) \Big] + \gamma_c$$
 because of the log-normal shocks we get that 
 $$\mathbb{E} U(w,a,\xi) =   \gamma  \cdot \frac{ \exp \Big( (1-\rho)^2 \sigma_\epsilon^2/2) \Big) }{1-\rho} \exp\Big\{ (1-\rho) \cdot (\beta_a E_{it} + \beta_r t)\Big\} + u(a) +  \xi(a) .$$
-## Preparing the environment
+
+### Preparing the environment
 
 We set parameters and initialize the transition matrices, value functions and Q-values.
 
 ```{r}
 # setting paramters
-p    = list(nt=10, # nb of periods
-            ne=10, # nb of experience level
-            rho=2, # risk aversion
-            wsd=1, # standard deviation of wage shock epsilon
-            r1=0.1,r2=0,rt=0.05,   # return to experience in activity 1 and 2, and age effect 
-            u0=0,u1=3,u2=2.5,  # preference values for each choice
-            r=0.02,
-            gamma=1.2) # discount paramter
+initp <-function() {
+  p    = list(nt=10, # nb of periods
+              ne=10, # nb of experience level
+              rho=2, # risk aversion
+              wsd=1, # standard deviation of wage shock epsilon
+              r1=0.1,r2=0,rt=0.05,   # return to experience in activity 1 and 2, and age effect 
+              u0=0,u1=5,u2=4,  # preference values for each choice
+              r=0.02,
+              gamma=1.2) # discount paramter
+}
 
-# init value function
-V    = array(0,c(p$nt,p$ne))
-# init Q-value
-QQa = array(0,c(p$nt,p$ne,3))
-
-# prepare levels for experience
-E = 1:p$ne
+gc = -digamma(1) # Euler constant
 
 # construct transition matrix for each choice
 trm <- function(d,s,n) {
@@ -59,69 +54,107 @@ trm <- function(d,s,n) {
   D = D / spread(rowSums(D),2,n) 
 }
 
-# global transition matrix
-GG = array(0,c(3,p$ne,p$ne))
-GG[1,,] = trm(-0.2,0.2,p$ne)  # when not working, epxerience depreciates
-GG[2,,] = trm(0   ,0.2,p$ne)  # in activity 2, experience does not accumulate
-GG[3,,] = trm(1   ,0.2,p$ne)  # in activity 3, experience accumulates
+# function to initialize the model
+model.init <- function(p) {
+  # init value function
+  V    = array(0,c(p$nt,p$ne))
+  # init Q-value
+  QQa = array(0,c(p$nt,p$ne,3))
+  # global transition matrix
+  GG = array(0,c(3,p$ne,p$ne))
+  GG[1,,] = trm(-0.2,0.1,p$ne)  # when not working, epxerience depreciates
+  GG[2,,] = trm(0   ,0.1,p$ne)  # in activity 2, experience does not accumulate
+  GG[3,,] = trm(1   ,0.1,p$ne)  # in activity 3, experience accumulates
+  return(list(V=V,QQa=QQa,GG=GG))
+}
 
 # define utility function
 uf <- function(w,p) p$gamma*(w^(1-p$rho))/(1-p$rho)
 ```
 
-We then solve the dynamic problem recursively. In the last period they just get the last wage for ever.
 
-```{r final}
-S = exp( p$wsd^2 * (1-p$rho)^2/2) # scaling due to the shock
-
-# final values (get the same choice for ever)
-Vf = S*cbind( p$u0 , uf(p$r1 * E + p$rt*p$nt ,p) +p$u1, uf(p$r2 * E + p$rt*p$nt ,p) + p$u2)/p$r
-V[p$nt,] = log( rowSums(exp(Vf)))
-QQa[p$nt,,] = Vf
-
-```
-
-## Solving dynamic problem
+### Solving dynamic problem
 
 We then solve the values recursively
+
 ```{r solving}
-# construct Q value for each choice of the 3 choices
-for (t in (p$nt-1):1) {
-  Q0 =                                p$u0  + 1/(1+p$r)* GG[1,,] %*% V[t+1,]
-  Q1 =  S*uf(p$r1 * E + p$rt*p$nt ,p) + p$u1  + 1/(1+p$r)* GG[2,,] %*% V[t+1,]
-  Q2 =  S*uf(p$r2 * E + p$rt*p$nt ,p) + p$u2  + 1/(1+p$r)* GG[3,,] %*% V[t+1,]
-  QQ = cbind(Q0,Q1,Q2)
-  V[t,] = log(rowSums(exp(QQ)))
+model.solve <- function(model,p) {
   
-  # saving the choice probability
-  QQa[t,,] = QQ
+  V = model$V
+  Vf = model$Vf
+  QQa = model$QQa
+  GG = model$GG
+
+  # scaling due to the shock
+  S = exp( p$wsd^2 * (1-p$rho)^2/2) 
+  
+  # final values (get the same choice for ever)
+  Vf = cbind( p$u0 , S*uf(p$r1 * (1:p$ne) + p$rt*p$nt ,p) +p$u1, S*uf(p$r2 * (1:p$ne) + p$rt*p$nt ,p) + p$u2)/p$r
+  V[p$nt,] = log( rowSums(exp(Vf))) + gc
+  QQa[p$nt,,] = Vf
+
+  # construct Q value for each choice of the 3 choices
+  for (t in (p$nt-1):1) {
+    Q0 =                               p$u0  + 1/(1+p$r)* GG[1,,] %*% V[t+1,]
+    Q1 =  S*uf(p$r1 * (1:p$ne) + p$rt*t ,p) + p$u1  + 1/(1+p$r)* GG[2,,] %*% V[t+1,]
+    Q2 =  S*uf(p$r2 * (1:p$ne) + p$rt*t ,p) + p$u2  + 1/(1+p$r)* GG[3,,] %*% V[t+1,]
+    QQ = cbind(Q0,Q1,Q2)
+    V[t,] = log(rowSums(exp(QQ))) + gc
+    
+    # saving the choice probability
+    QQa[t,,] = QQ
+  }
+  
+  model$V = V
+  model$QQa = QQa
+  model$S = S
+  model$Vf = Vf
+  return(model)
 }
+
 ```
 
-## Simulating
+### Simulating
 
 Then we simulate a data set:
 
 ```{r simulating,fig.align="center"}
-N=50000
-simdata = data.table(ii=1:N)
-R = c(0,p$r1,p$r2)
+model.simulate <- function(model,p,N) {
+  
+  V = model$V
+  Vf = model$Vf
+  QQa = model$QQa
+  GG = model$GG
+  
+  simdata = data.table(ii=1:N)
+  R = c(0,p$r1,p$r2)
+  
+  dE = 1:p$nt
+  dW = 1:p$nt
+  dA = 1:p$nt
+  
+  simdata = simdata[,{
+    dE[1] = sample.int(p$ne,1,prob=1/(1:p$ne))
+    for (t in 1:p$nt) {
+      pr = exp(QQa[t,dE[t],] - max(QQa[t,dE[t],]))
+      dA[t] = sample.int(3,1,prob= exp(QQa[t,dE[t],]))
+      dW[t] = exp(R[dA[t]] * dE[t] + p$rt*t + p$wsd*rnorm(1))
+      if (dA[t]==1) dW[t]=NA;
+      if (t<p$nt) {dE[t+1] = sample.int(p$ne,1,prob=GG[dA[t],dE[t],])}
+    }
+    list(A=dA,W=dW,E=dE,t=1:p$nt)
+  },ii]
+  return(simdata)
+}
+```
 
-dE = 1:10
-dW = 1:10
-dA = 1:10
+We can simulate and look at some stats:
 
-simdata = simdata[,{
-  dE[1] = sample.int(p$ne,1,prob=1/(1:p$ne))
-  for (t in 1:p$nt) {
-    pr = exp(QQa[t,dE[1],] - max(QQa[t,dE[1],]))
-    dA[t] = sample.int(3,1,prob= exp(QQa[t,dE[1],]))
-    dW[t] = exp(R[dA[t]] * dE[t] + p$rt*t + p$wsd*rnorm(1))
-    if (dA[t]==1) dW[t]=NA;
-    if (t<p$nt) {dE[t+1] = sample.int(p$ne,1,prob=GG[dA[t],dE[t],])}
-  }
-  list(A=dA,W=dW,E=dE,t=1:p$nt)
-},ii]
+```{r analysis}
+p = initp()
+model = model.init(p)
+model = model.solve(model,p)
+simdata = model.simulate(model,p,10000)
 
 rr = simdata[,.N,list(A,t)][,pr:=N/sum(N),t]
 ggplot(rr[t<10],aes(x=t,y=pr,color=factor(A))) + geom_line() +ggtitle("Average choices over time") + theme_bw()
@@ -136,37 +169,74 @@ We want to apply the Hotz and Miller approach to estimate this dynamic programin
 
 ### **Q1** Payoff equation and transition function
 
-Show that you can recover direclty the parameter of the wage equation in this problem. Write the regression code that recovers them. Also write code that recovers the transition matrices $G_0,G_1,G_2$. Show that the $G$ estimated matrices align with the true one. Then do a parametric estimation by imposing the known form for the transition and recover the slope and variance parameters use for each $a$ in the first part.
+Show that you can recover direclty the parameter of the wage equation in this problem. Write the regression code that recovers them. Also write code that recovers the transition matrices $G_0,G_1,G_2$. Show that the $G$ estimated matrices align with the true one. 
+
+Then do a parametric estimation by imposing the known form for the transition and recover the slope and variance parameters use for each $a$ in the first part. In other words use a minimum distance to recover the 2 parameters used in the `trm` function to generate the law of motions.
 
 ### **Q2** CCP given risk aversion and $r=\infty$
 
-We start with a simple case where there is full discounting. Express $\log(Pr[a=2|E,t,W] / Pr[a=1|E,t,W])$ and $\log(Pr[a=3|E,t,W] / Pr[a=1|E,t])$. Write down an estimator (which is linear) for $u(a=2)$ and $U(a=3)$ in this case and show that you can get the values from simulated data.
+We start with a simple case where there is full discounting. Express $\log(Pr[a=2|E,t] / Pr[a=1|E,t])$ and $\log(Pr[a=3|E,t] / Pr[a=1|E,t])$. Write down an estimator (which is linear) for $u(a=2)$ and $u(a=3)$ in this case and show that you can get the values from simulated data.
 
-### **Q3** CCP given risk aversion
+As an intermeidate step, compute the realized choice probability at each $x,t$ with data simulated using $r=\infty$. Plot each of this probability against the true probability that you can compute using the true parameters. This graph should be close to the 45 degree line.
 
-The risk aversion coefficient does not enter linearly in the utility problem. We are going to fix it, and use Hotz and Miller conditional on that value. So Assume that $\rho$ is known and fixed at some value. We need to construct our expressions that will help us recover $u(a=2)$ and $U(a=3)$ in this dynamic case. This requires the use of the Euler cosntant $\gamma_e = 0.577$.
+### **Q3** Expressing Values as linear function of parameters (for $\rho$ known)
 
-Start by computing the choice probabilities in the simulated data $Pr[a|E,t]$. Why do we not need to also condition on the wage?
+The risk aversion coefficient does not enter linearly in the utility problem. We are going to fix it, and use the Hotz and Miller approach conditional on the value of $\rho$. So Assume that $\rho$ is known and fixed at its true value. We need to construct our expressions that will help us recover $u(a=2)$ and $U(a=3)$ in this dynamic case. This requires the use of the Euler cosntant $\gamma_e = 0.577$. 
 
-From these conditional choice probablities, and using the know value of $\rho$, construct the coefficients $\alpha_{t}(a|E)$ and $\beta_{t}(a,E)$ such that:
+Let's start with a simple observation. If you consider a static problem of the form:
+
+$$V = \mathbb{E} \big[ \max u(a) + \xi(a) \big] = \log \sum_a \exp(u(a)) + \gamma_c$$
+
+we also know that:
+$$ Pr[a] = \frac{\exp(u(a))}{\sum_{a'} \exp(u(a'))} $$
+
+but also, we can express $V$ usin these choice probabilities:
+
+$$ V = \sum_a Pr[a] \cdot \big( u(a) + \mathbb{E} [\xi(a)|a] \big) $$
+where finally we also know that $\mathbb{E} [\xi(a)|a] = \gamma_c - log(Pr[a])$. This then gives us that:
+
+$$ V = \sum_a Pr[a] \cdot \big( u(a) + \gamma_c - log(Pr[a]) \big) $$
+
+We then use the recursive formulation of the value function which was: 
+
+$$ \bar{V}_t(x) = \log \sum_a \exp \Big[  \mathbb{E} U(w,a,\xi) + \beta \sum_{x_{t+1}}\bar{V}_t(x_{t+1}) g(x_{t+1}|a) \Big] + \gamma_c$$
+
+where we have that $\mathbb{E} U(w,a,\xi) = \gamma S u( \mathbb{E}w)$. At this point we are interested in recovering $u(a)$ and $\gamma$. We can look at the final period and see that
 
 $$ 
 \begin{align*}
-Q_t(a|E) &= E U(w,a,\xi) + \beta \sum_{x_{t+1}}\bar{V}_t(x_{t+1})) g(x_{t+1}|a) + \xi(a) \\
-         &= \alpha_{t}(a|E) + \beta_{t}(a,E) \cdot u(a) \\
+\bar{V}_T(x) &=  \mathbb{E} \max_a \Big[ \gamma \cdot S \cdot u_0(\mathbb{E}[w|x,t]) + u(a) \Big] \\
+&= \sum_a Pr[a|x,t] \Big(  \gamma \cdot S \cdot u_0(\mathbb{E}[w|x,t]) + u(a) + \gamma_c - \log Pr[a|x,t] \Big) \\
+&= \gamma \cdot \Big( \sum_a Pr[a|x,t] \cdot S \cdot u_0(\mathbb{E}[w|x,t]) \Big)  + u(a) \cdot \Big( \sum_a Pr[a|x,t] \cdot S \cdot u_0(\mathbb{E}[w|x,t]) \Big)  \\
+& \hspace{5cm} + \gamma_c - \sum Pr[a|x,t] \log Pr[a|x,t] \\
+ \end{align*}
+ $$
+
+Call $\theta = (\gamma,u(2),u(3))$, we have found a matrix $B_T$ which is $n_e \times 4$ and a vector $A_T$, functions only of data and of know parameters, such that $\bar{V}_T = A_T + B_T \theta$. Strictly speaking we could just recover the parameters directly here! But for the sake of the exercice we are going to move backward.
+
+Concretely, at each period $t$ we have that the flow payoff can be expressed linearly. In other words, there exists a $\tilde{B}_t$ such that $\mathbb{E_t}u(w_t) = \tilde{B}_t \theta$. We can now express $A_t$ and $B_t$ recursively:
+
+$$ 
+\begin{align*}
+\bar{V}_{t} &= \log \sum_a \exp \Big[   S \cdot u_0(\mathbb{E}_{t}w_{t}) + u(a) + \beta \cdot G(a) \times \bar{V}_T \Big] + \gamma_c \\
+& = \log \sum_a \exp \Big[   \tilde{B}_{t} \theta + \beta G(a) (A_t +  B_t \theta) \Big] + \gamma_c  \\
+& = \sum_a Pr[a|t,x] \Big[    \tilde{B}_{t} \theta + \beta G(a) (A_t +  B_t \theta)  - \log Pr[a|t,x] \Big] + \gamma_c \\
+& = \underbrace{\Big( \sum_a Pr[a|t,x] ( \tilde{B}_{t} \theta + \beta G(a) B_t) \Big)}_{B_{t-1}} \theta + \underbrace{ \sum_a Pr[a|t,x] A_{t} + \gamma_c -  \sum_a Pr[a|t,x] \log Pr[a|t,x]}_{A_{t-1}}
 \end{align*}
 $$
 
-These are the analog of $\tilde{r} and \tilde{e}$ that we covered in class. Note that this values have to use  Give this expressions, construct a linear expression using log probabilty choices that recovers the $u(a)$ values.
+Where we combine the two terms to construct $B_{t-1},A_{t-1}$. The current question asks you to write the code that construct the sequence of $B_{t-1},A_{t-1}$ as a function of measured choice probabilities $Pr[a|x,t]$. Provide such code, and to verify that your code is correct, construct the $B_{t-1},A_{t-1}$ associated with the true probabilities coming constructed from `model$QQa`, then using the true $\theta$, plot your generated $A_t +  B_t \theta$ against the `model$V` which should line on the 45 degree line as in the previous question.
 
-### **Q4** Full estimation
+### **Q4** Use the CCP to $\gamma$ and $u(2),u(3)$
 
-The final step is then to put the whole previous procedure inside a function that takes $\rho$ as an argument and returns the fit of the last step that recovers the $u(a)$ values. Evaluate the fit on a grid of values for $\rho$ and return that plot.
+Compute the choice probabilities in the simulated data $Pr[a|E,t]$. Use these conditional choice probabilites to reconstruct the values using the procedure you developed in the previous section (here you can use the know parameters for the wage equation). The final step is regress the log ratio of choices on the linear expression to recover $\gamma$ and $u(2),u(3)$ from the simluated dynamic data. Report the estimated paramters (once you have $B_{t-1},A_{t-1}$, this a linear regression!).
+
+### **Q5** Full estimation
+
+In this final question we want to put it all together:
+ 1. Recover the wage and transition parameters as in the first question
+ 2. Recover $\gamma$ and $u(2),u(3)$ using steps of the previous question for a fixed value of $\rho$
+ 3. Run the previous step for a grid on $\rho$ (report this plot)
 
  
- 
- 
- 
- 
-
 
