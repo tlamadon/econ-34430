@@ -212,20 +212,29 @@ $$
  \end{align*}
  $$
 
-Call $\theta = (\gamma,u(2),u(3))$, we have found a matrix $B_T$ which is $n_e \times 4$ and a vector $A_T$, functions only of data and of know parameters, such that $\bar{V}_T = A_T + B_T \theta$. Strictly speaking we could just recover the parameters directly here! But for the sake of the exercice we are going to move backward.
+Call $\theta = (\gamma,u(2),u(3))$, we have found a matrix $B_T$ which is $n_e \times 3$ and a vector $A_T$, functions only of data and of known parameters, such that $\bar{V}_T = A_T + B_T \theta$. Strictly speaking we could just recover the parameters directly here! But for the sake of the exercice we are going to use all time periods.
 
-Concretely, at each period $t$ we have that the flow payoff can be expressed linearly. In other words, there exists a $\tilde{B}_t$ such that $\mathbb{E_t}u(w_t) = \tilde{B}_t \theta$. We can now express $A_t$ and $B_t$ recursively:
+At each period $t$ we have that the flow payoff can be expressed linearly. In other words, there exists a $\tilde{B}_t(a)$ such that $\mathbb{E_t}[u(w_t)|x,a] = \tilde{B}_t(a) \theta$. We can now express $A_t$ and $B_t$ recursively. I write in matrix form where rows are difference values of $x=E$ and $P_t[a]$ is diagonal matrix with values $Pr[a|t,x]$:
 
 $$ 
 \begin{align*}
-\bar{V}_{t} &= \log \sum_a \exp \Big[   S \cdot u_0(\mathbb{E}_{t}w_{t}) + u(a) + \beta \cdot G(a) \times \bar{V}_T \Big] + \gamma_c \\
-& = \log \sum_a \exp \Big[   \tilde{B}_{t} \theta + \beta G(a) (A_t +  B_t \theta) \Big] + \gamma_c  \\
-& = \sum_a Pr[a|t,x] \Big[    \tilde{B}_{t} \theta + \beta G(a) (A_t +  B_t \theta)  - \log Pr[a|t,x] \Big] + \gamma_c \\
-& = \underbrace{\Big( \sum_a Pr[a|t,x] ( \tilde{B}_{t} \theta + \beta G(a) B_t) \Big)}_{B_{t-1}} \theta + \underbrace{ \sum_a Pr[a|t,x] A_{t} + \gamma_c -  \sum_a Pr[a|t,x] \log Pr[a|t,x]}_{A_{t-1}}
+\bar{V}_{t} &= \log \sum_a \exp \Big[   S \cdot u_0(\mathbb{E}_{t}w_{t}) + u(a) + \beta \cdot G(a) \times \bar{V}_{t+1} \Big] + \gamma_c \\
+& = \log \sum_a \exp \Big[   \tilde{B}_{t}(a) \theta + \beta G(a) (A_{t+1} +  B_{t+1} \theta) \Big] + \gamma_c  \\
+& = \sum_a P_t[a] \Big[    \tilde{B}_{t}(a) \theta + \beta G(a) (A_{t+1} +  B_{t+1} \theta)  - \log Pr[a|t,x] \Big] + \gamma_c \\
+& = \underbrace{\Big( \sum_a P_t[a] ( \tilde{B}_{t}(a)+ \beta G(a) B_{t+1}) \Big)}_{B_{t}} \theta + \underbrace{ \sum_a \beta  G(a)  P_t[a] A_{t+1} + \gamma_c -  (\sum_a P_t[a] \log P_t[a]) \times  \mathbf{1}}_{A_{t}} 
 \end{align*}
 $$
 
-Where we combine the two terms to construct $B_{t-1},A_{t-1}$. The current question asks you to write the code that construct the sequence of $B_{t-1},A_{t-1}$ as a function of measured choice probabilities $Pr[a|x,t]$. Provide such code, and to verify that your code is correct, construct the $B_{t-1},A_{t-1}$ associated with the true probabilities coming constructed from `model$QQa`, then using the true $\theta$, plot your generated $A_t +  B_t \theta$ against the `model$V` which should line on the 45 degree line as in the previous question.
+Where we combine the two terms to construct $B_{t-1},A_{t-1}$ to get:
+
+$$
+\begin{align*}
+B_{t-1}[x,j] & = \sum_a Pr[a|x,t] \tilde{B}_t(a,x,j) + \beta \sum_a \sum_{x'} Pr[a|x,t] G(a,x',x) B_{t+1}(x',j) \\
+A_{t-1}[x]   & =  \gamma_c + \beta \sum_a \sum_{x'} Pr[a|x,t] G(a,x',x)  A_t(x') - \sum_a Pr[a|x,t] \log Pr[a|x,t]
+\end{align*}
+$$
+
+The current question asks you to write the code that construct this sequence of $B_{t-1},A_{t-1}$ as a function of measured choice probabilities $Pr[a|x,t]$. Provide such code (note that `RcppSimpleTensor` can help a lot here). To verify that your code is correct, construct the $B_{t-1},A_{t-1}$ associated with the true probabilities coming constructed from `model$QQa`, then using the true $\theta$, plot your generated $A_t +  B_t \theta$ against the `model$V` which should line on the 45 degree line as in the previous question.
 
 ### **Q4** Use the CCP to $\gamma$ and $u(2),u(3)$
 
