@@ -95,15 +95,15 @@ model.solve <- function(model,p) {
   S = exp( p$wsd^2 * (1-p$rho)^2/2) 
   
   # final values (get the same choice for ever)
-  Vf = cbind( p$u0 , S*uf(p$r1 * (1:p$ne) + p$rt*p$nt ,p) +p$u1, S*uf(p$r2 * (1:p$ne) + p$rt*p$nt ,p) + p$u2)/p$r
+  Vf = cbind( p$u0 , S*uf( exp(p$r1 * (1:p$ne) + p$rt*p$nt) ,p) +p$u1, S*uf( exp(p$r2 * (1:p$ne) + p$rt*p$nt) ,p) + p$u2)/p$r
   V[p$nt,] = log( rowSums(exp(Vf))) + gc
   QQa[p$nt,,] = Vf
 
   # construct Q value for each choice of the 3 choices
   for (t in (p$nt-1):1) {
     Q0 =                               p$u0  + 1/(1+p$r)* GG[1,,] %*% V[t+1,]
-    Q1 =  S*uf(p$r1 * (1:p$ne) + p$rt*t ,p) + p$u1  + 1/(1+p$r)* GG[2,,] %*% V[t+1,]
-    Q2 =  S*uf(p$r2 * (1:p$ne) + p$rt*t ,p) + p$u2  + 1/(1+p$r)* GG[3,,] %*% V[t+1,]
+    Q1 =  S*uf(exp(p$r1 * (1:p$ne) + p$rt*t) ,p) + p$u1  + 1/(1+p$r)* GG[2,,] %*% V[t+1,]
+    Q2 =  S*uf(exp(p$r2 * (1:p$ne) + p$rt*t) ,p) + p$u2  + 1/(1+p$r)* GG[3,,] %*% V[t+1,]
     QQ = cbind(Q0,Q1,Q2)
     V[t,] = log(rowSums(exp(QQ))) + gc
     
@@ -187,33 +187,33 @@ As an intermeidate step, compute the realized choice probability at each $x,t$ w
 
 ### **Q3** Expressing Values as linear function of parameters (for $\rho$ known)
 
-The risk aversion coefficient does not enter linearly in the utility problem. We are going to fix it, and use the Hotz and Miller approach conditional on the value of $\rho$. So Assume that $\rho$ is known and fixed at its true value. We need to construct our expressions that will help us recover $u(a=2)$ and $U(a=3)$ in this dynamic case. This requires the use of the Euler cosntant $\gamma_e = 0.577$. 
+The risk aversion coefficient does not enter linearly in the utility problem. We are going to fix it, and use the Hotz and Miller approach conditional on the value of $\rho$. So Assume that $\rho$ is known and fixed at its true value. We need to construct our expressions that will help us recover $u(a=2)$ and $u(a=3)$ in this dynamic case. This requires the use of the Euler cosntant $\gamma_e = 0.577$. 
 
 Let's start with a simple observation. If you consider a static problem of the form:
 
-$$V = \mathbb{E} \big[ \max u(a) + \xi(a) \big] = \log \sum_a \exp(u(a)) + \gamma_c$$
+$$V = \mathbb{E} \big[ \max_k u_k + \xi_k \big] = \log \sum_k \exp(u_k) + \gamma_c$$
 
 we also know that:
-$$ Pr[a] = \frac{\exp(u(a))}{\sum_{a'} \exp(u(a'))} $$
+$$ Pr[k] = \frac{\exp(u_k)}{\sum_{k'} \exp(u_{k'})} $$
 
 but also, we can express $V$ usin these choice probabilities:
 
-$$ V = \sum_a Pr[a] \cdot \big( u(a) + \mathbb{E} [\xi(a)|a] \big) $$
-where finally we also know that $\mathbb{E} [\xi(a)|a] = \gamma_c - log(Pr[a])$. This then gives us that:
+$$ V = \sum_k Pr[k] \cdot \big( u_k + \mathbb{E} [\xi_k|k] \big) $$
+where finally we also know that $\mathbb{E} [\xi_k|k] = \gamma_c - log(Pr[k])$. This then gives us that:
 
-$$ V = \sum_a Pr[a] \cdot \big( u(a) + \gamma_c - log(Pr[a]) \big) $$
+$$ V = \sum_k Pr[k] \cdot \big( u_k + \gamma_c - log(Pr[k]) \big) $$
 
 We then use the recursive formulation of the value function which was: 
 
 $$ \bar{V}_t(x) = \log \sum_a \exp \Big[  \mathbb{E} U(w,a,\xi) + \beta \sum_{x_{t+1}}\bar{V}_t(x_{t+1}) g(x_{t+1}|a) \Big] + \gamma_c$$
 
-where we have that $\mathbb{E} U(w,a,\xi) = \gamma S u( \mathbb{E}w)$. At this point we are interested in recovering $u(a)$ and $\gamma$. We can look at the final period and see that
+where we have that $\mathbb{E} U(w,a,\xi) = \gamma S u( \exp(\mathbb{E}\log w))$. At this point we are interested in recovering $u(a)$ and $\gamma$. We can look at the final period and see that
 
 $$ 
 \begin{align*}
-\bar{V}_T(x) &=  \mathbb{E} \max_a \Big[ \gamma \cdot S \cdot u_0(\mathbb{E}[\log w|x,t]) + u(a) \Big] \\
-&= \sum_a Pr[a|x,t] \Big(  \gamma \cdot S \cdot u_0(\mathbb{E}[\log w|x,t]) + u(a) + \gamma_c - \log Pr[a|x,t] \Big) \\
-&= \gamma \cdot \Big( \sum_a Pr[a|x,t] \cdot S \cdot u_0(\mathbb{E}[\log w|x,t]) \Big)  + u(a) \cdot \Big( \sum_a Pr[a|x,t] \cdot S \cdot u_0(\mathbb{E}[w|x,t]) \Big)  \\
+\bar{V}_T(x) &=  \mathbb{E} \max_a \Big[ \gamma \cdot S \cdot u_0(\exp(\mathbb{E}[\log w|x,t])) + u(a) \Big] \\
+&= \sum_a Pr[a|x,t] \Big(  \gamma \cdot S \cdot u_0(\exp(\mathbb{E}[\log w|x,t])) + u(a) + \gamma_c - \log Pr[a|x,t] \Big) \\
+&= \gamma \cdot \Big( \sum_a Pr[a|x,t] \cdot S \cdot u_0(\exp(\mathbb{E}[\log w|x,t])) \Big)  + u(a) \cdot \Big( \sum_a Pr[a|x,t]\Big)  \\
 & \hspace{5cm} + \gamma_c - \sum Pr[a|x,t] \log Pr[a|x,t] \\
  \end{align*}
  $$
@@ -224,7 +224,7 @@ At each period $t$ we have that the flow payoff can be expressed linearly. In ot
 
 $$ 
 \begin{align*}
-\bar{V}_{t} &= \log \sum_a \exp \Big[   S \cdot u_0(\mathbb{E}_{t} \log w_{t}) + u(a) + \beta \cdot G(a) \times \bar{V}_{t+1} \Big] + \gamma_c \\
+\bar{V}_{t} &= \log \sum_a \exp \Big[   S \cdot u_0(\exp(\mathbb{E}_{t} \log w_{t})) + u(a) + \beta \cdot G(a) \times \bar{V}_{t+1} \Big] + \gamma_c \\
 & = \log \sum_a \exp \Big[   \tilde{B}_{t}(a) \theta + \beta G(a) (A_{t+1} +  B_{t+1} \theta) \Big] + \gamma_c  \\
 & = \sum_a P_t[a] \Big[    \tilde{B}_{t}(a) \theta + \beta G(a) (A_{t+1} +  B_{t+1} \theta)  - \log Pr[a|t,x] \Big] + \gamma_c \\
 & = \underbrace{\Big( \sum_a P_t[a] ( \tilde{B}_{t}(a)+ \beta G(a) B_{t+1}) \Big)}_{B_{t}} \theta + \underbrace{ \sum_a \beta  G(a)  P_t[a] A_{t+1} + \gamma_c -  (\sum_a P_t[a] \log P_t[a]) \times  \mathbf{1}}_{A_{t}} 
