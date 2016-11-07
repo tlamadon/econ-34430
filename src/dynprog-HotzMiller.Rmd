@@ -18,7 +18,7 @@ Let's use a very simple model that we can solve exactly. The state space will be
 
 We consider the following preferences:
 
-$$ U(w,a,\xi) = \gamma \cdot \frac{w^{1-\rho}}{1-\rho} + u(a) +  \xi(a)$$
+$$ U(w,a,\xi) = \gamma \cdot \underbrace{\frac{w^{1-\rho}}{1-\rho}}_{u_0(w)} + u(a) +  \xi(a)$$
 where $\xi(a)$ is an iid, type 1 extreme value shock, and $u(a)$ is a permanent preference vector. We consider the following wage equation:
 
 $$ \log(w_{it}(a)) = \beta_a E_{it} + \beta_r t +  \epsilon_{it}(a) $$
@@ -26,7 +26,13 @@ where $E_{it}$ is a stochastic observed experience value. $\epsilon(a)$ is iid a
 
 $$ \bar{V}_t(x) = \log \sum_a \exp \Big[  \mathbb{E} U(w,a,\xi) + \beta \sum_{x_{t+1}}\bar{V}_t(x_{t+1}) g(x_{t+1}|a) \Big] + \gamma_c$$
 because of the log-normal shocks we get that 
-$$\mathbb{E} U(w,a,\xi) =   \gamma  \cdot \frac{ \exp \Big( (1-\rho)^2 \sigma_\epsilon^2/2) \Big) }{1-\rho} \exp\Big\{ (1-\rho) \cdot (\beta_a E_{it} + \beta_r t)\Big\} + u(a) +  \xi(a) .$$
+
+$$
+\begin{align*}
+\mathbb{E}_\epsilon U(w,a,\xi) &=   \gamma  \cdot \underbrace{\exp \Big( (1-\rho)^2 \sigma_\epsilon^2/2) \Big)}_{S} \cdot  \underbrace{\frac{ (\beta_a E_{it} + \beta_r t)^{(1-\rho)} }{1-\rho}}_{u_0(\mathbb{E}\log w)} + u(a) +  \xi(a) \\
+&=\gamma  S \cdot  u_0(\mathbb{E} \log w) + u(a) +  \xi(a)
+\end{align*}.
+$$
 
 ### Preparing the environment
 
@@ -205,9 +211,9 @@ where we have that $\mathbb{E} U(w,a,\xi) = \gamma S u( \mathbb{E}w)$. At this p
 
 $$ 
 \begin{align*}
-\bar{V}_T(x) &=  \mathbb{E} \max_a \Big[ \gamma \cdot S \cdot u_0(\mathbb{E}[w|x,t]) + u(a) \Big] \\
-&= \sum_a Pr[a|x,t] \Big(  \gamma \cdot S \cdot u_0(\mathbb{E}[w|x,t]) + u(a) + \gamma_c - \log Pr[a|x,t] \Big) \\
-&= \gamma \cdot \Big( \sum_a Pr[a|x,t] \cdot S \cdot u_0(\mathbb{E}[w|x,t]) \Big)  + u(a) \cdot \Big( \sum_a Pr[a|x,t] \cdot S \cdot u_0(\mathbb{E}[w|x,t]) \Big)  \\
+\bar{V}_T(x) &=  \mathbb{E} \max_a \Big[ \gamma \cdot S \cdot u_0(\mathbb{E}[\log w|x,t]) + u(a) \Big] \\
+&= \sum_a Pr[a|x,t] \Big(  \gamma \cdot S \cdot u_0(\mathbb{E}[\log w|x,t]) + u(a) + \gamma_c - \log Pr[a|x,t] \Big) \\
+&= \gamma \cdot \Big( \sum_a Pr[a|x,t] \cdot S \cdot u_0(\mathbb{E}[\log w|x,t]) \Big)  + u(a) \cdot \Big( \sum_a Pr[a|x,t] \cdot S \cdot u_0(\mathbb{E}[w|x,t]) \Big)  \\
 & \hspace{5cm} + \gamma_c - \sum Pr[a|x,t] \log Pr[a|x,t] \\
  \end{align*}
  $$
@@ -218,7 +224,7 @@ At each period $t$ we have that the flow payoff can be expressed linearly. In ot
 
 $$ 
 \begin{align*}
-\bar{V}_{t} &= \log \sum_a \exp \Big[   S \cdot u_0(\mathbb{E}_{t}w_{t}) + u(a) + \beta \cdot G(a) \times \bar{V}_{t+1} \Big] + \gamma_c \\
+\bar{V}_{t} &= \log \sum_a \exp \Big[   S \cdot u_0(\mathbb{E}_{t} \log w_{t}) + u(a) + \beta \cdot G(a) \times \bar{V}_{t+1} \Big] + \gamma_c \\
 & = \log \sum_a \exp \Big[   \tilde{B}_{t}(a) \theta + \beta G(a) (A_{t+1} +  B_{t+1} \theta) \Big] + \gamma_c  \\
 & = \sum_a P_t[a] \Big[    \tilde{B}_{t}(a) \theta + \beta G(a) (A_{t+1} +  B_{t+1} \theta)  - \log Pr[a|t,x] \Big] + \gamma_c \\
 & = \underbrace{\Big( \sum_a P_t[a] ( \tilde{B}_{t}(a)+ \beta G(a) B_{t+1}) \Big)}_{B_{t}} \theta + \underbrace{ \sum_a \beta  G(a)  P_t[a] A_{t+1} + \gamma_c -  (\sum_a P_t[a] \log P_t[a]) \times  \mathbf{1}}_{A_{t}} 
@@ -236,7 +242,7 @@ $$
 
 The current question asks you to write the code that construct this sequence of $B_{t-1},A_{t-1}$ as a function of measured choice probabilities $Pr[a|x,t]$. Provide such code (note that `RcppSimpleTensor` can help a lot here). To verify that your code is correct, construct the $B_{t-1},A_{t-1}$ associated with the true probabilities coming constructed from `model$QQa`, then using the true $\theta$, plot your generated $A_t +  B_t \theta$ against the `model$V` which should line on the 45 degree line as in the previous question.
 
-### **Q4** Use the CCP to $\gamma$ and $u(2),u(3)$
+### **Q4** Use the CCP to get $\gamma$ and $u(2),u(3)$
 
 Compute the choice probabilities in the simulated data $Pr[a|E,t]$. Use these conditional choice probabilites to reconstruct the values using the procedure you developed in the previous section (here you can use the know parameters for the wage equation). The final step is regress the log ratio of choices on the linear expression to recover $\gamma$ and $u(2),u(3)$ from the simluated dynamic data. Report the estimated paramters (once you have $B_{t-1},A_{t-1}$, this a linear regression!).
 
