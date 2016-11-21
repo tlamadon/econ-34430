@@ -29,8 +29,8 @@ because of the log-normal shocks we get that
 
 $$
 \begin{align*}
-\mathbb{E}_\epsilon U(w,a,\xi) &=   \gamma  \cdot \underbrace{\exp \Big( (1-\rho)^2 \sigma_\epsilon^2/2) \Big)}_{S} \cdot  \underbrace{\frac{ (\beta_a E_{it} + \beta_r t)^{(1-\rho)} }{1-\rho}}_{u_0(\mathbb{E}\log w)} + u(a) +  \xi(a) \\
-&=\gamma  S \cdot  u_0(\mathbb{E} \log w) + u(a) +  \xi(a)
+\mathbb{E}_\epsilon U(w,a,\xi) &=   \gamma  \cdot \underbrace{\exp \Big( (1-\rho)^2 \sigma_\epsilon^2/2) \Big)}_{S} \cdot  \underbrace{\frac{ (\beta_a E_{it} + \beta_r t)^{(1-\rho)} }{1-\rho}}_{u_0(\exp(\mathbb{E}\log w))} + u(a) +  \xi(a) \\
+&=\gamma  S \cdot  u_0(exp(\mathbb{E} \log w)) + u(a) +  \xi(a)
 \end{align*}.
 $$
 
@@ -46,7 +46,7 @@ initp <-function() {
               rho=2, # risk aversion
               wsd=1, # standard deviation of wage shock epsilon
               r1=0.1,r2=0,rt=0.05,   # return to experience in activity 1 and 2, and age effect 
-              u0=0,u1=5,u2=4,  # preference values for each choice
+              u0=0,u1=3,u2=2,  # preference values for each choice
               r=0.02,
               gamma=1.2) # discount paramter
 }
