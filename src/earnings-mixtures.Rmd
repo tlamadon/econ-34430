@@ -3,19 +3,13 @@ title: "EM for normal mixtures"
 output: html_document
 ---
 
-In this homework we will write a gaussian mixture estimator and apply it to data. 
-I recommend you to use [Rstudio](https://www.rstudio.com/products/rstudio/download/) where you might need to dowload separatly [R](https://cran.rstudio.com/).
+In this homework we will write a gaussian mixture estimator and apply it to data from the US. As in the other homeworks we will be using R. The way this will work is that I will provide pieces of code that you will need to put together to solve the overall task.
 
-First time in RStudio, you need to install some packages:
-```r
-install.packages(c('data.table','ggplot2','lattice')) # only the first time!
-```
+The goal in this homework is to estimate a model of earnings using three consecutive obersvations $(Y_1,Y_2,Y_3)$. As we covered in class, we are going to use a latent heterogeneity model. We then write down a model for $\{Y_t,\eta_t\}_t=1..3$.
 
-Here are some useful materials:
+In the first part of the homework we consider a normal mixture model. The latent variable $\eta_i$ is drawn from a distributions with probabilities $p_k$, then the wages are drawn independently according to time specific normal distributions centered at $\mu_{kt}$ with variance $\sigma^2_{kt}$. As we covered in class, the likelihood is given by:
 
- - data.table [tutorial](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.pdf) and   [cheatsheet](https://s3.amazonaws.com/assets.datacamp.com/img/blog/data+table+cheat+sheet.pdf)
- - ggplot2 [tutorial](http://www.ceb-institute.org/bbs/wp-content/uploads/2011/09/handout_ggplot2.pdf), [cheatsheet](http://www.rstudio.com/wp-content/uploads/2015/12/ggplot2-cheatsheet-2.0.pdf) and [full documentation](http://docs.ggplot2.org/current/)
-   
+$$  L(Y_{1},Y_{2},Y_{3};\theta)=Pr[Y_{1}{=}y_{1},Y_{2}{=}y_{2},Y_{3}{=}y_{3};\theta]=\sum_{k=1}^{K}p_{k}\prod_{t=1}^{3}\phi(Y_{t};\mu_{kt},\sigma_{kt}) $$
 
 ```{r,results=FALSE,message=FALSE,warning=FALSE}
 #some imports
@@ -26,16 +20,15 @@ require(reshape)
 require(readstata13)
 ```
 
+## Expectation-maximization algorithm for Gaussian Mixture
 
-## Gaussian mixture EM
+The alogirthm consists of the expecation and the maximization step. I provide some guidance on how to code them. We are going to write a mixture EM estimator for a gaussian mixture with K components. Each components has its own mean $\mu_k$ and variance $\sigma_k$. Each component also has a proportion that we will call $p_k$. The data will be a sequence of wages, we only need 3 consecutive observations, so we will focus on that. 
 
-First we write a mixture EM estimator for a gaussian mixture with K components. Each components has its own mean $\mu_k$ and variance $\sigma_k$. Each component also has a proportion that we will call $p_k$.
+### The Expectation step
 
-The data will be a sequence of wages, we only need consecutive, so we will focus on that. We can write the posterior probability for a given $k$ given $Y_1,Y_2,Y_3$ and taking our current parameters $p_k,\mu_{kt},\sigma_{kt}$
+We can write the posterior probability for a given $k$ given $Y_1,Y_2,Y_3$ and taking our current parameters $p_k,\mu_{kt},\sigma_{kt}$ as given. The posterior probabilities $\omega_{ik}$ are given by
 
-### The expectation step
-
-$$ \omega_{ik} = Pr[k|Y_{i1},Y_{i2},Y_{i3}] = \frac{p_k \prod_t \phi(Y_{it},\mu_{kt},\sigma_{kt}) }{ \sum_{k'} p_{k'} \prod_t \phi(Y_{it},\mu_{k't},\sigma_{k't})} $$
+$$ \omega_{ik} = Pr[k|Y_{i1},Y_{i2},Y_{i3}] = \frac{p_k \prod_t \phi(Y_{it},\mu_{kt},\sigma_{kt}) }{ \sum_{l} p_{l} \prod_t \phi(Y_{it},\mu_{lt},\sigma_{lt})} $$
 
 this gives us the posterior probabilities that we can use in the maximization step. Some guidance on computing the likelihood on the computer. 
 
@@ -53,7 +46,7 @@ logsumexp <- function(v) {
 }
 ```
 
-And here is an example on I would implement it where A are the means and S are the standard deviations.
+And here is an example of how I would implement it where A are the means and S are the standard deviations:
 
 ```r
    tau = array(0,c(N,nk))
@@ -74,9 +67,7 @@ And here is an example on I would implement it where A are the means and S are t
 
 ### The maximization step
 
-Given our $\omega_{ik}$ we can procede to update our parameters using our first order conditions on the $Q(\theta | \theta^{(t)})$ function. 
-
-I will let you write the code to update the $pk$ term. For the mean and variance. My favorite way of implementing is to stack up the $Y_{it}$ and duplicate them for each $k$. Something along this lines:
+Given our $\omega_{ik}$ we can procede to update our parameters using our first order conditions on the $Q(\theta | \theta^{(t)})$ function.  I will let you write the code to update the $p_k$ term. For the mean and variance, my favorite way of implementing is to stack up the $Y_{it}$ and duplicate them for each $k$. Something along this lines:
 
 ```r
   DY1     = as.matrix(kronecker(Y1 ,rep(1,nk)))
@@ -99,11 +90,13 @@ then you easily recover the means and variances using the posterior weights with
 
 where slm.wfit is in the SparseM package. Note how you have to scale the residuals when using this function. You can edit this code to recover all means and variances at once!
 
+**Question 1**: Write a function that takes the data in, and estimates the parameters of the mixture model. To that end, you can use the supplied code if you want. You need to write a loop that alternates between the expectation and the maximization step. You need to then add a termination condition. You can for instance check that the likelihood changes by very little. 
+
 ### Checking things with H and Q functions
 
-Write up a function that computes the $Q$ and $H$ function we talked about in class. Both function must decrease at every step. Note that this function needs to take in both the previous and new parameters. 
+We now want to make sure that the code is working. However there are, as usual many sources of mistakes when writing the code. We know that the likelihood will always increase when running the EM. However it is often the case that the likelihood increases even when the code is incorrect. A stronger check is to implement the $Q$ and $H$ functions of the EM algorithm which both are increasing at each EM step.
 
-Note however that both functions are very simple expression of `lpm` and `taum`. If you compute them under $\theta^(t+1)$ and $\theta^(t)$ they are given by:
+**Question 2**: Extend your EM function to include the computation of the  $Q$ and $H$ functions at every step. Note that this function needs to take in both the previous and new parameters (or at least the last $\omega_{ik}$). They are very simple expression of `lpm` and `taum`. If you compute them under $\theta^(t+1)$ and $\theta^(t)$ they are given by:
 
 ```r
   Q1 = sum( ( (res1$taum) * res1$lpm ))
@@ -111,9 +104,6 @@ Note however that both functions are very simple expression of `lpm` and `taum`.
   H1 = - sum( (res1$taum) * log(res1$taum))
   H2 = - sum( (res1$taum) * log(res2$taum))
 ```
-
-you then only need to check that they both changed in the correct direction!
-
 
 ## Testing your code
 
@@ -161,7 +151,7 @@ model.mixture.simulate <-function(model,N,sd.scale=1) {
 }
 ```
 
-### let's try this simulation code
+Here is code that simulates a data set:
 
 ```{r}
   model = model.mixture.new(3)
@@ -169,6 +159,8 @@ model.mixture.simulate <-function(model,N,sd.scale=1) {
   datal = melt(data,id="k")
   ggplot(datal,aes(x=value,group=k,fill=factor(k))) + geom_density() + facet_grid(~variable) + theme_bw()
 ```
+
+**Question 3**: Simulate from this model, use your function to estimate the parameters from the data. Show that you do receover all the parameters (plot esimated values verus true vales). Finally, also report the sequence of values of the likelihood, the $H$ function and the $Q$ function. When you update your estimator, make sure your function returns a list structure similar to the one presented right here. This way you can use the simulation code right away.
 
 ## Estimating on PSID data
 
@@ -184,12 +176,11 @@ then you can load the data
   data = data.table(read.dta13("~/Dropbox/Documents/Teaching/ECON-24030/lectures-laborsupply/homeworks/data/AER_2012_1549_data/output/data4estimation.dta"))
 ```
 
-we start by computing some kind of residual wage
+we start by computing the wage residuals
 ```{r,results='hide',message=FALSE,warning=FALSE}
   fit = lm(log(log_y) ~ year + marit + state_st ,data ,na.action=na.exclude)
   data[, log_yr := residuals(fit)]
 ```
-
 
 we then want to create a data-set in the same format as before. We can do this by selecting some given years and using the cast function.
 
@@ -204,6 +195,8 @@ we then want to create a data-set in the same format as before. We can do this b
 ```
 
 This gives 4941 to estimate your model!
+
+**Question 4**: Use your function to estimate the mixture model on this data. Try to estimate for different number of mixture component (3,4,5). For each set of parameters, report how much of the cross-sectional dispersion in wages can be attibuted to permanent heterogeneity $\eta_i$ and how much to the rest. Finally, we want to assess the fit of the model, to do that, simulate from your estimated model, then plot the quantiles from your simulated data in the cross-section versus the one in the data.
 
 ## Estimate model with auto-correlation
 
