@@ -204,9 +204,7 @@ Here we want to make things more interesting and consider the following model:
 
 $$ Y_{it} - \rho Y_{it-1} | k \sim N(\mu_{kt},\sigma_{kt}) $$ 
 
-The code does not need any modicification if we do things conditional on $\rho$. You just need to feed in the wages differences out already by rho. You run your algorithm on $Y_2 - \rho Y_1$, $Y_3 - \rho Y_2$ and $Y_4 - \rho Y_3$.
-
-How to get $\rho$ ? We can pick it using covariance restrictions! For now, just use a reasonable value for instance 0.6 . Here is the code to prepare your data:
+The code does not need any modicification if we do things conditional on $\rho$. You just need to feed in the wages differences out already by rho. You run your algorithm on $Y_2 - \rho Y_1$, $Y_3 - \rho Y_2$ and $Y_4 - \rho Y_3$. Here we use one additional time period. Here is the code to prepare your data:
 
 ```{r,results='hide',message=FALSE,warning=FALSE}
   # extract lags
@@ -216,3 +214,30 @@ How to get $\rho$ ? We can pick it using covariance restrictions! For now, just 
   # compute difference from start
   fdata = data[!is.na(log_yr*log_yr_l1*log_yr_l2)][,list(y1=log_yr_l3,y2=log_yr_l2,y3=log_yr_l1,y4=log_yr)] 
 ```
+
+**Question 5**: Use your function estimate the mixture model in differences using $\rho=0.6$. Next run your code on a grid for $\rho$ between 0 and 1. Report the likelihood plot over the values of $\rho$ and report the maximum likelihood estimator of $\rho$.
+
+
+## Bonus questions, NP estimation using joint diagonalization
+
+In class we saw that one could try to directly esimate the mixture components using SVD and eigen value decompositions. Multiple values of $y_3$ can be pulled together into a joint diagonalization. The first step is to construct the $A(y3)$ matrix for several values of $y_3$. Cut the values of $y3$ into groups and construct the matrix within each group (use 10 groups). You also need to discretize $y_1$ and $y_2$, use 20 point of supports. This should give you 10 different matrices. 
+
+The compute the $A(\infty)$ matrix which is the joint distribution of $(Y_1,y_2)$ unconditional of $y_3$. Compute the SVD decomposition of this matrix such that  $A(\infty) = U S V^\intercal$. We do have that $A(\infty) = F D(\infty) F^\intercal$.
+
+Next construct the matrices $\tilde{A}(y_3) = S^{1-/2} U^\intercal A(y_3) V S^{1-/2}$. However only select a few of vectors in $U$ and $V$. Select the K vectors associated with the highest values in $S$. $\tilde{A}(y_3)$ matrices should be $k\times K$.
+
+Note that if the model is stationary, then 
+$$
+\begin{align} 
+\tilde{A}(y_3) & = S^{1-/2} U^\intercal F D(y_3) F^\intercal S^{1-/2} \\
+               & = S^{1-/2} U^\intercal F D(\infty) D(\infty)^{-1} D(y_3)  F^\intercal S^{1-/2} \\
+               & = Q D(\infty)^{-1} D(y_3) Q^{-1} \\
+\end{align}
+$$
+
+And so at this point, to gain in efficiency, we can use a joint diagonalization of the all the $\tilde{A}(y_3)$ matrices at once. The `ffdiag` command in the `joitnDiag` package to perform this decomposition given a set of $\tilde{A}(y_3)$ matrices. It will return the $Q$ matrix.
+
+**Bonus question**: Implement this procedure, run it on simulated data (impose the stationarity) and plot the true CDF versus the estimated CDF. Finally, run it on the data and report the estimated CDF!
+
+
+
