@@ -85,7 +85,7 @@ then you easily recover the means and variances using the posterior weights with
   fit    = slm.wfit(Dkj1,DY1,rw)
   A[1,]  = coef(fit)[1:nk]
   fit_v  = slm.wfit(Dkj1,resid(fit)^2/rw,rw)
-  S[1,] = sqrt(coef(fit)[1:nk])
+  S[1,] = sqrt(coef(fit_v)[1:nk])
 ```
 
 where slm.wfit is in the SparseM package. Note how you have to scale the residuals when using this function. You can edit this code to recover all means and variances at once!
