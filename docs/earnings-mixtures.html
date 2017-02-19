@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>EM for normal mixtures</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-1.1/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.min.css" />
+<!--[if lt IE 9]>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.ie.min.css" />
+<![endif]-->
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Econ 34430</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-pencil"></span>
+     
+    Homeworks
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="static-labor-supply.html">Static LS</a>
+    </li>
+    <li>
+      <a href="dynprog-HotzMiller.html">Hotz and Miller</a>
+    </li>
+    <li>
+      <a href="hw-lifecycle-solutions.html">Lifecycle Model</a>
+    </li>
+    <li>
+      <a href="dynamic-labor-supply.html">Dynamic LS</a>
+    </li>
+    <li>
+      <a href="earnings-mixtures.html">Mixtures</a>
+    </li>
+    <li>
+      <a href="ShimerSmith.html">Sorting</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/tlamadon/econ-34430">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://github.com/tlamadon/econ-34430/issues">
+    <span class="fa fa-bug"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">EM for normal mixtures</h1>
+
+</div>
+
+
+<p>In this homework we will write a gaussian mixture estimator and apply it to data. I recommend you to use <a href="https://www.rstudio.com/products/rstudio/download/">Rstudio</a> where you might need to dowload separatly <a href="https://cran.rstudio.com/">R</a>.</p>
+<p>First time in RStudio, you need to install some packages:</p>
+<pre class="r"><code>install.packages(c(&#39;data.table&#39;,&#39;ggplot2&#39;,&#39;lattice&#39;)) # only the first time!</code></pre>
+<p>Here are some useful materials:</p>
+<ul>
+<li>data.table <a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.pdf">tutorial</a> and <a href="https://s3.amazonaws.com/assets.datacamp.com/img/blog/data+table+cheat+sheet.pdf">cheatsheet</a></li>
+<li>ggplot2 <a href="http://www.ceb-institute.org/bbs/wp-content/uploads/2011/09/handout_ggplot2.pdf">tutorial</a>, <a href="http://www.rstudio.com/wp-content/uploads/2015/12/ggplot2-cheatsheet-2.0.pdf">cheatsheet</a> and <a href="http://docs.ggplot2.org/current/">full documentation</a></li>
+</ul>
+<pre class="r"><code>#some imports
+require(gtools)
+require(data.table)
+require(ggplot2)
+require(reshape)
+require(readstata13)
+require(MCMCpack)</code></pre>
+<div id="gaussian-mixture-em" class="section level2">
+<h2>Gaussian mixture EM</h2>
+<p>First we write a mixture EM estimator for a gaussian mixture with K components. Each components has its own mean <span class="math inline">\(\mu_k\)</span> and variance <span class="math inline">\(\sigma_k\)</span>. Each component also has a proportion that we will call <span class="math inline">\(p_k\)</span>.</p>
+<p>The data will be a sequence of wages, we only need consecutive, so we will focus on that. We can write the posterior probability for a given <span class="math inline">\(k\)</span> given <span class="math inline">\(Y_1,Y_2,Y_3\)</span> and taking our current parameters <span class="math inline">\(p_k,\mu_{kt},\sigma_{kt}\)</span></p>
+<div id="the-expectation-step" class="section level3">
+<h3>The expectation step</h3>
+<p><span class="math display">\[ \omega_{ik} = Pr[k|Y_{i1},Y_{i2},Y_{i3}] = \frac{p_k \prod_t \phi(Y_{it},\mu_{kt},\sigma_{kt}) }{ \sum_{k&#39;} p_{k&#39;} \prod_t \phi(Y_{it},\mu_{k&#39;t},\sigma_{k&#39;t})} \]</span></p>
+<p>this gives us the posterior probabilities that we can use in the maximization step. Some guidance on computing the likelihood on the computer.</p>
+<ul>
+<li>usually better to compute everything in logs, and compute the sum on <span class="math inline">\(k\)</span> using a logsumexp function that removes the highest value. This avoids <a href="https://hips.seas.harvard.edu/blog/2013/01/09/computing-log-sum-exp/">underflow</a> .</li>
+<li>I recommend using the close form expression of log normal direclty.</li>
+</ul>
+<pre class="r"><code>lognormpdf &lt;- function(Y,mu=0,sigma=1)  {
+  -0.5 * (  (Y-mu) / sigma )^2   - 0.5 * log(2.0*pi) - log(sigma)  
+}
+
+logsumexp &lt;- function(v) {
+  vm = max(v)
+  log(sum(exp(v-vm))) + vm
+}</code></pre>
+<p>And here is an example on I would implement it where A are the means and S are the standard deviations.</p>
+<pre class="r"><code>   tau = array(0,c(N,nk))
+   lpm = array(0,c(N,nk))
+   lik = 0
+   for (i in 1:N) {
+      ltau = log(pk)
+      lnorm1 = lognormpdf(Y1[i], A[1,], S[1,])
+      lnorm2 = lognormpdf(Y2[i], A[2,], S[2,])
+      lnorm3 = lognormpdf(Y3[i], A[3,], S[3,])
+      lall = ltau + lnorm2 + lnorm1 +lrnorm3
+      lpm[i,] = lall
+      lik = lik + logsumexp(lall)
+      tau[i,] = exp(lall - logsumexp(lall))
+   }</code></pre>
+</div>
+<div id="the-maximization-step" class="section level3">
+<h3>The maximization step</h3>
+<p>Given our <span class="math inline">\(\omega_{ik}\)</span> we can procede to update our parameters using our first order conditions on the <span class="math inline">\(Q(\theta | \theta^{(t)})\)</span> function.</p>
+<p>I will let you write the code to update the <span class="math inline">\(pk\)</span> term. For the mean and variance. My favorite way of implementing is to stack up the <span class="math inline">\(Y_{it}\)</span> and duplicate them for each <span class="math inline">\(k\)</span>. Something along this lines:</p>
+<pre class="r"><code>  DY1     = as.matrix(kronecker(Y1 ,rep(1,nk)))
+  DY2     = as.matrix(kronecker(Y2 ,rep(1,nk)))
+  DY3     = as.matrix(kronecker(Y3 ,rep(1,nk)))
+  Dkj1    = as.matrix.csr(kronecker(rep(1,N),diag(nk)))
+  Dkj2    = as.matrix.csr(kronecker(rep(1,N),diag(nk)))  
+  Dkj3    = as.matrix.csr(kronecker(rep(1,N),diag(nk)))  </code></pre>
+<p>then you easily recover the means and variances using the posterior weights with the following expression:</p>
+<pre class="r"><code>  rw     = c(t(tau))
+  fit    = slm.wfit(Dkj1,DY1,rw)
+  A[1,]  = coef(fit)[1:nk]
+  fit_v  = slm.wfit(Dkj1,resid(fit)^2/rw,rw)
+  S[1,] = sqrt(coef(fit)[1:nk])</code></pre>
+<p>where slm.wfit is in the SparseM package. Note how you have to scale the residuals when using this function. You can edit this code to recover all means and variances at once!</p>
+</div>
+<div id="checking-things-with-h-and-q-functions" class="section level3">
+<h3>Checking things with H and Q functions</h3>
+<p>Write up a function that computes the <span class="math inline">\(Q\)</span> and <span class="math inline">\(H\)</span> function we talked about in class. Both function must decrease at every step. Note that this function needs to take in both the previous and new parameters.</p>
+<p>Note however that both functions are very simple expression of <code>lpm</code> and <code>taum</code>. If you compute them under <span class="math inline">\(\theta^(t+1)\)</span> and <span class="math inline">\(\theta^(t)\)</span> they are given by:</p>
+<pre class="r"><code>  Q1 = sum( ( (res1$taum) * res1$lpm ))
+  Q2 = sum( ( (res1$taum) * res2$lpm ))
+  H1 = - sum( (res1$taum) * log(res1$taum))
+  H2 = - sum( (res1$taum) * log(res2$taum))</code></pre>
+<p>you then only need to check that they both changed in the correct direction!</p>
+</div>
+</div>
+<div id="testing-your-code" class="section level2">
+<h2>Testing your code</h2>
+<p>Here is a simple function that will generate random data for you to estimate from. Your code should take a starting such model structure and update its parameters. This way we can easily check whether it matches in the end.</p>
+<pre class="r"><code>model.mixture.new &lt;-function(nk) {
+  
+  model = list()
+  # model for Y1,Y2,Y3|k 
+  model$A     = array(3*(1 + 0.8*runif(3*nk)),c(3,nk))
+  model$S     = array(1,c(3,nk))
+  model$pk    = rdirichlet(1,rep(1,nk))
+  model$nk    = nk
+  return(model)
+}</code></pre>
+<p>and here is code that will simulate from it:</p>
+<pre class="r"><code>model.mixture.simulate &lt;-function(model,N,sd.scale=1) {
+  
+  Y1 = array(0,sum(N)) 
+  Y2 = array(0,sum(N)) 
+  Y3 = array(0,sum(N)) 
+  K  = array(0,sum(N)) 
+  
+  A   = model$A
+  S   = model$S
+  pk  = model$pk
+  nk  = model$nk
+
+  # draw K
+  K = sample.int(nk,N,TRUE,pk)
+
+  # draw Y1, Y2, Y3
+  Y1  = A[1,K] + S[1,K] * rnorm(N) *sd.scale
+  Y2  = A[2,K] + S[2,K] * rnorm(N) *sd.scale
+  Y3  = A[3,K] + S[3,K] * rnorm(N) *sd.scale
+
+  data.sim = data.table(k=K,y1=Y1,y2=Y2,y3=Y3)
+  return(data.sim)  
+}</code></pre>
+<div id="lets-try-this-simulation-code" class="section level3">
+<h3>let’s try this simulation code</h3>
+<pre class="r"><code>  model = model.mixture.new(3)
+  data = model.mixture.simulate(model,10000,sd.scale=0.5) # simulating with lower sd to see separation
+  datal = melt(data,id=&quot;k&quot;)
+  ggplot(datal,aes(x=value,group=k,fill=factor(k))) + geom_density() + facet_grid(~variable) + theme_bw()</code></pre>
+<p><img src="earnings-mixtures_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+</div>
+<div id="estimating-on-psid-data" class="section level2">
+<h2>Estimating on PSID data</h2>
+<p>Get the prepared data from <a href="http://www.tau.ac.il/~itaysap/AER_BPS_data.zip">Blundell, Pistaferri and Saporta</a>. To load this data you will need to install the package <code>readstata13</code>. You can do that by running:</p>
+<pre class="r"><code>install.packages(&#39;readstata13&#39;)</code></pre>
+<p>then you can load the data</p>
+<pre class="r"><code>  require(readstata13)
+  data = data.table(read.dta13(&quot;/Users/florian.oswald/Dropbox/teaching/ScPo/labour2017/homeworks/data/AER_2012_1549_data/output/data4estimation.dta&quot;))</code></pre>
+<p>we start by computing some kind of residual wage</p>
+<pre class="r"><code>  fit = lm(log(log_y) ~ year + marit + state_st ,data ,na.action=na.exclude)
+  data[, log_yr := residuals(fit)]</code></pre>
+<p>we then want to create a data-set in the same format as before. We can do this by selecting some given years and using the cast function.</p>
+<pre class="r"><code>  # extract lags
+  setkey(data,person,year)
+  data[, log_yr_l1 := data[J(person,year-2),log_yr]]
+  data[, log_yr_l2 := data[J(person,year-4),log_yr]]
+
+  # compute difference from start
+  fdata = data[!is.na(log_yr*log_yr_l1*log_yr_l2)][,list(y1=log_yr_l2,y2=log_yr_l1,y3=log_yr)] </code></pre>
+<p>This gives 4941 to estimate your model!</p>
+</div>
+<div id="estimate-model-with-auto-correlation" class="section level2">
+<h2>Estimate model with auto-correlation</h2>
+<p>Here we want to make things more interesting and consider the following model:</p>
+<p><span class="math display">\[ Y_{it} - \rho Y_{it-1} | k \sim N(\mu_{kt},\sigma_{kt}) \]</span></p>
+<p>The code does not need any modicification if we do things conditional on <span class="math inline">\(\rho\)</span>. You just need to feed in the wages differences out already by rho. You run your algorithm on <span class="math inline">\(Y_2 - \rho Y_1\)</span>, <span class="math inline">\(Y_3 - \rho Y_2\)</span> and <span class="math inline">\(Y_4 - \rho Y_3\)</span>.</p>
+<p>How to get <span class="math inline">\(\rho\)</span> ? We can pick it using covariance restrictions! For now, just use a reasonable value for instance 0.6 . Here is the code to prepare your data:</p>
+<pre class="r"><code>  # extract lags
+  setkey(data,person,year)
+  data[, log_yr_l3 := data[J(person,year-2),log_yr]]
+
+  # compute difference from start
+  fdata = data[!is.na(log_yr*log_yr_l1*log_yr_l2)][,list(y1=log_yr_l3,y2=log_yr_l2,y3=log_yr_l1,y4=log_yr)] </code></pre>
+</div>
+
+<!--<a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png"></a> -->
+<a class="github-fork-ribbon right-bottom fixed" href="https://github.com/tlamadon/econ-34430" title="Fork me on GitHub">Fork me on GitHub</a>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Static Labor Supply</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-1.1/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.min.css" />
+<!--[if lt IE 9]>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.ie.min.css" />
+<![endif]-->
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Econ 34430</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-pencil"></span>
+     
+    Homeworks
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="static-labor-supply.html">Static LS</a>
+    </li>
+    <li>
+      <a href="dynprog-HotzMiller.html">Hotz and Miller</a>
+    </li>
+    <li>
+      <a href="hw-lifecycle-solutions.html">Lifecycle Model</a>
+    </li>
+    <li>
+      <a href="dynamic-labor-supply.html">Dynamic LS</a>
+    </li>
+    <li>
+      <a href="earnings-mixtures.html">Mixtures</a>
+    </li>
+    <li>
+      <a href="ShimerSmith.html">Sorting</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/tlamadon/econ-34430">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://github.com/tlamadon/econ-34430/issues">
+    <span class="fa fa-bug"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Static Labor Supply</h1>
+
+</div>
+
+
+<p>You can find the source code for this file in the class repository. The direct link is <a href="https://raw.githubusercontent.com/tlamadon/econ-34430/master/src/static-labor-supply.Rmd">here</a></p>
+<p>Let’s start with studying static labor supply. We will consider the decision of the agent under the following rule:</p>
+<p><span class="math display">\[
+\max_{c,h} \frac{c^{1+\eta}}{1+\eta} - \beta \frac{h^{1+\gamma}}{1+\gamma}\\
+\text{s.t. } c = \rho \cdot w\cdot h -r + \mu - \beta_0 \cdot 1[h&gt;0] \\ 
+\]</span> The individual takes his wage <span class="math inline">\(w\)</span> as given, he chooses hours of work <span class="math inline">\(h\)</span> and consumption <span class="math inline">\(c\)</span> subject to a given non labor income <span class="math inline">\(\mu\)</span> as well as a tax regime defined by <span class="math inline">\(\rho,r\)</span>. <span class="math inline">\(\beta_0\)</span> is a fixed cost associated with working.</p>
+<p>We note already that the non labor income can control for dynamic labor supply since we can have <span class="math inline">\(\mu= b_t - (1+r)b_{t+1}\)</span>. This is part of a larger maximization problem where the agents choose optimaly <span class="math inline">\(b_t\)</span> over time. We will get there next time.</p>
+<div id="interior-solution" class="section level3">
+<h3>Interior solution</h3>
+<p>The first order conditions give us <span class="math inline">\(w(wh +r - \mu)^\eta = \beta h^\gamma\)</span>. There is no closed-form but we can very quickly find an interior solution by using Newton maximization on the function <span class="math inline">\(f(x) = w(wh +r - \mu)^\eta - \beta h^\gamma\)</span>. We iterate on</p>
+<p><span class="math display">\[x \leftarrow x - f(x)/f&#39;x)\]</span>.</p>
+<pre class="r"><code># function which updates choice of hours using Newton step
+# R here is total unearned income (including taxes when not working and all)
+ff.newt &lt;- function(x,w,R,eta,gamma,beta) {
+  f0 = w*(w*x + R)^eta - beta*x^gamma
+  f1 =  eta*w^2 * (w*x + R)^(eta-1) - gamma * beta *x^(gamma-1)
+  x  = x - f0/f1 
+  x  = ifelse(w*x + R&lt;=0, -R/w + 0.0001,x) # make sure we do not step out of bounds for next iteration
+  x  = ifelse(x&lt;0, 0.0001,x)
+  x
+}</code></pre>
+</div>
+<div id="simulating-data" class="section level3">
+<h3>Simulating data</h3>
+<p>We are going to simulate a data set where agents will choose participation as well as the number of hours if they decide to work. To do that we will solve for the interior solution under a given tax rate and compare this to the option of no-work.</p>
+<pre class="r"><code>p  = list(eta=-1.5,gamma = 0.8,beta=1,beta0=0.1) # define preferences
+tx = list(rho=1,r=0) # define a simple tax
+N=1000
+simdata = data.table(i=1:N,X=rnorm(N))
+simdata[,lw := X     + rnorm(N)*0.2];      # add a wage which depends on X
+simdata[,mu := exp(0.3*X + rnorm(N)*0.2)]; # add non-labor income that also depends on X
+
+# we then solve for the choice of hours and consumption
+simdata[, h := pmax(-mu+tx$r + p$beta0 ,0)/exp(lw)+1] # starting value
+# for loop for newton method (30 should be enough, it is fast)
+for (i in 1:30) {
+  simdata[, h := ff.newt(h,tx$rho*exp(lw),mu-tx$r-p$beta0,p$eta,p$gamma,p$beta) ]
+}
+
+# attach consumption, value of working
+simdata[, c  := exp(lw)*h + mu - p$beta0];
+simdata[, u1 := c^(1+p$eta)/(1+p$eta) - p$beta * h^(1+p$gamma)/(1+p$gamma) ];</code></pre>
+<p>At this point we can regress <span class="math inline">\(\log(w)\)</span> on <span class="math inline">\(\log(c)\)</span> and <span class="math inline">\(\log(h)\)</span> and find precisely the parameters of labor supply:</p>
+<pre class="r"><code>pander(summary(simdata[,lm(lw ~ log(c) + log(h))]))</code></pre>
+<pre><code>## Warning in summary.lm(simdata[, lm(lw ~ log(c) + log(h))]): essentially
+## perfect fit: summary may be unreliable</code></pre>
+<table style="width:86%;">
+<colgroup>
+<col width="25%" />
+<col width="15%" />
+<col width="18%" />
+<col width="13%" />
+<col width="13%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">Estimate</th>
+<th align="center">Std. Error</th>
+<th align="center">t value</th>
+<th align="center">Pr(&gt;|t|)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>log(c)</strong></td>
+<td align="center">1.5</td>
+<td align="center">4.873e-17</td>
+<td align="center">3.078e+16</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>log(h)</strong></td>
+<td align="center">0.8</td>
+<td align="center">1.177e-16</td>
+<td align="center">6.797e+15</td>
+<td align="center">0</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>(Intercept)</strong></td>
+<td align="center">-2.247e-16</td>
+<td align="center">1.009e-16</td>
+<td align="center">-2.227</td>
+<td align="center">0.0262</td>
+</tr>
+</tbody>
+</table>
+<table style="width:85%;">
+<caption>Fitting linear model: lw ~ log(c) + log(h)</caption>
+<colgroup>
+<col width="20%" />
+<col width="30%" />
+<col width="11%" />
+<col width="22%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Observations</th>
+<th align="center">Residual Std. Error</th>
+<th align="center"><span class="math inline">\(R^2\)</span></th>
+<th align="center">Adjusted <span class="math inline">\(R^2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">1000</td>
+<td align="center">9.224e-16</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="adding-participation" class="section level2">
+<h2>Adding participation</h2>
+<p>We simply compute the value of choosing <span class="math inline">\(h=0\)</span>, then take the highest of working and not working.</p>
+<pre class="r"><code>simdata[,u0:=  mu^(1+p$eta)/(1+p$eta)];
+simdata[,p1:=u1&gt;u0]
+ggplot(simdata,aes(x=u0,y=u1)) + geom_point() + geom_abline(linetype=2)</code></pre>
+<p><img src="static-labor-supply_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>The regression still works, among ecah individual who chooses to work, the FOC is still satified.</p>
+<pre class="r"><code>pander(summary(simdata[p1==TRUE,lm(lw ~ log(c) + log(h))]))</code></pre>
+<table style="width:86%;">
+<colgroup>
+<col width="25%" />
+<col width="15%" />
+<col width="18%" />
+<col width="13%" />
+<col width="13%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">Estimate</th>
+<th align="center">Std. Error</th>
+<th align="center">t value</th>
+<th align="center">Pr(&gt;|t|)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>log(c)</strong></td>
+<td align="center">1.5</td>
+<td align="center">6.64e-17</td>
+<td align="center">2.259e+16</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>log(h)</strong></td>
+<td align="center">0.8</td>
+<td align="center">2.423e-16</td>
+<td align="center">3.302e+15</td>
+<td align="center">0</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>(Intercept)</strong></td>
+<td align="center">2.024e-15</td>
+<td align="center">1.629e-16</td>
+<td align="center">12.43</td>
+<td align="center">1.705e-32</td>
+</tr>
+</tbody>
+</table>
+<table style="width:85%;">
+<caption>Fitting linear model: lw ~ log(c) + log(h)</caption>
+<colgroup>
+<col width="20%" />
+<col width="30%" />
+<col width="11%" />
+<col width="22%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Observations</th>
+<th align="center">Residual Std. Error</th>
+<th align="center"><span class="math inline">\(R^2\)</span></th>
+<th align="center">Adjusted <span class="math inline">\(R^2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">789</td>
+<td align="center">9.989e-16</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="heterogeneity-in-beta" class="section level2">
+<h2>Heterogeneity in <span class="math inline">\(\beta\)</span></h2>
+<p>Finally we want to add heterogeneity in the <span class="math inline">\(\beta\)</span> parameter.</p>
+<pre class="r"><code>simdata[,betai := exp(0.5*X+rnorm(N)*0.1)]
+simdata[, h := pmax(-mu+tx$r + p$beta0 ,0)/exp(lw)+1]
+for (i in 1:30) {
+  simdata[, h := ff.newt(h,tx$rho*exp(lw),mu-tx$r-p$beta0,p$eta,p$gamma,betai) ]
+}
+
+# attach consumption
+simdata[, c  := exp(lw)*h + mu - p$beta0];
+simdata[, u1 := c^(1+p$eta)/(1+p$eta) - betai * h^(1+p$gamma)/(1+p$gamma) ];
+simdata[, u0:=  mu^(1+p$eta)/(1+p$eta)];
+simdata[,p1:=u1&gt;u0]
+
+# let&#39;s check that the FOC holds
+sfit = summary(simdata[,lm(lw ~ log(c) + log(h) + log(betai))])</code></pre>
+<pre><code>## Warning in summary.lm(simdata[, lm(lw ~ log(c) + log(h) + log(betai))]):
+## essentially perfect fit: summary may be unreliable</code></pre>
+<pre class="r"><code>expect_equivalent(sfit$r.squared,1)
+expect_equivalent(coef(sfit)[&quot;log(c)&quot;,1],-p$eta)
+expect_equivalent(coef(sfit)[&quot;log(h)&quot;,1],p$gamma)
+
+sfit = summary(simdata[p1==TRUE,lm(lw ~ log(c) + log(h))])
+expect_false(coef(sfit)[&quot;log(c)&quot;,1]==-p$eta)</code></pre>
+<pre class="r"><code>pander(sfit)</code></pre>
+<table style="width:86%;">
+<colgroup>
+<col width="25%" />
+<col width="15%" />
+<col width="18%" />
+<col width="13%" />
+<col width="13%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">Estimate</th>
+<th align="center">Std. Error</th>
+<th align="center">t value</th>
+<th align="center">Pr(&gt;|t|)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>log(c)</strong></td>
+<td align="center">2.142</td>
+<td align="center">0.02345</td>
+<td align="center">91.33</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>log(h)</strong></td>
+<td align="center">0.3524</td>
+<td align="center">0.03168</td>
+<td align="center">11.13</td>
+<td align="center">5.635e-27</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>(Intercept)</strong></td>
+<td align="center">-0.5161</td>
+<td align="center">0.01613</td>
+<td align="center">-32</td>
+<td align="center">5.021e-149</td>
+</tr>
+</tbody>
+</table>
+<table style="width:85%;">
+<caption>Fitting linear model: lw ~ log(c) + log(h)</caption>
+<colgroup>
+<col width="20%" />
+<col width="30%" />
+<col width="11%" />
+<col width="22%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Observations</th>
+<th align="center">Residual Std. Error</th>
+<th align="center"><span class="math inline">\(R^2\)</span></th>
+<th align="center">Adjusted <span class="math inline">\(R^2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">871</td>
+<td align="center">0.1643</td>
+<td align="center">0.9644</td>
+<td align="center">0.9643</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="short-panel-version" class="section level1">
+<h1>Short Panel version</h1>
+<p><strong>Q1:</strong> Take the simulated data from the model with heterogenous <span class="math inline">\(\beta_i\)</span>. First explain why regressing <span class="math inline">\(\log(w)\)</span> on <span class="math inline">\(\log(c)\)</span>, <span class="math inline">\(\log(h)\)</span>, and <span class="math inline">\(X\)</span> does not deliver correct estimates. <strong>Q2:</strong> Simulate 2 periods of the model (a short panel), keep everything fixed over the 2 periods, but redraw the wage. Estimate the model in differences and recover the parameters using <span class="math inline">\(\log(w)\)</span> on <span class="math inline">\(\log(c)\)</span>, <span class="math inline">\(\log(h)\)</span>. How does including or not including participation decision affect the results? Explain.</p>
+</div>
+<div id="repeated-cross-section-version" class="section level1">
+<h1>Repeated cross-section version</h1>
+<p>In this section we want to get closer to the Blundell, Duncan and Meghir (1998) exercice. We first modify the cost to allow for an increase return to X, and for the presence of a change in the tax rate. Simulate wages according to:</p>
+<pre class="r"><code>  simdata[,lw := lb*X + rnorm(N)*0.2];      # add a wage which depends on X</code></pre>
+<p>Write a function that can simulate a full cross section and that takes <code>lb</code> as inpute as well as marginal tax rate <span class="math inline">\(\rho\)</span>. It should apply the same function as before to solve for the interior solution, but use the after-tax wage every where.</p>
+<p><strong>Q3:</strong> simulate two cross-sections with <span class="math inline">\((lb=1,\rho=1)\)</span> and <span class="math inline">\((lb=1.5,\rho=0.8)\)</span> and use 10k indivduals. Simulate data without participation decision for now. Combine the data and show that previous regression provides biased estimates. Then slice X into K categories (for example using quantiles). Then compute <span class="math inline">\(\log(w)\)</span>, <span class="math inline">\(\log(c)\)</span> and <span class="math inline">\(\log(h)\)</span> within each group and time period. Run the regression in first differences and show that this recovers the structural parameters.</p>
+<p><strong>Q4:</strong> Add the participation decision to the data generating process. Show that the results are now biased.</p>
+<p><strong>Q5:</strong> Extend the model to add an excluded variable that affects participation through <span class="math inline">\(\mu\)</span> but not the wage (keep X everywhere). Devise a way improve the estimates by controling for participation.</p>
+</div>
+
+<!--<a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png"></a> -->
+<a class="github-fork-ribbon right-bottom fixed" href="https://github.com/tlamadon/econ-34430" title="Fork me on GitHub">Fork me on GitHub</a>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

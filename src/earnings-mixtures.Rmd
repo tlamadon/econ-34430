@@ -24,6 +24,7 @@ require(data.table)
 require(ggplot2)
 require(reshape)
 require(readstata13)
+require(MCMCpack)
 ```
 
 
@@ -181,7 +182,7 @@ install.packages('readstata13')
 then you can load the data
 ```{r}
   require(readstata13)
-  data = data.table(read.dta13("~/Dropbox/Documents/Teaching/ECON-24030/lectures-laborsupply/homeworks/data/AER_2012_1549_data/output/data4estimation.dta"))
+  data = data.table(read.dta13("/Users/florian.oswald/Dropbox/teaching/ScPo/labour2017/homeworks/data/AER_2012_1549_data/output/data4estimation.dta"))
 ```
 
 we start by computing some kind of residual wage
