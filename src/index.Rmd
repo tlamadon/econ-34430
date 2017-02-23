@@ -1,6 +1,9 @@
 
 <br/><br/>
-This contains the homeworks for _Graduate Labor_ at ScPo. The corresponding github repository can be found [here](https://github.com/floswald/ScPo-Labor). 
+
+# ScPo Labor Homeworks
+
+This contains the homeworks for _Graduate Labor_ at ScPo. The corresponding github repository can be found [here](https://github.com/floswald/ScPo-Labor). Please note that this site will get updated with more homeworks as we move along.
   
 <!-- Place this tag where you want the button to render. -->
 <a class="github-button" href="https://github.com/floswald/ScPo-Labor/archive/master.zip" data-icon="octicon-cloud-download" data-style="mega" aria-label="Download floswald/ScPo-Labor on GitHub">Download</a>  <a class="github-button" href="https://github.com/floswald/ScPo-Labor/fork" data-icon="octicon-repo-forked" data-style="mega" data-count-href="/floswald/ScPo-Labor/network" data-count-api="/repos/floswald/ScPo-Labor#forks_count" data-count-aria-label="# forks on GitHub" aria-label="Fork floswald/ScPo-Labor on GitHub">Fork</a>

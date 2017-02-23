@@ -177,7 +177,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Econ 34430</a>
+      <a class="navbar-brand" href="index.html">ScPo-GradLabour</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -201,32 +201,20 @@ $(document).ready(function () {
       <a href="static-labor-supply.html">Static LS</a>
     </li>
     <li>
-      <a href="dynprog-HotzMiller.html">Hotz and Miller</a>
-    </li>
-    <li>
       <a href="hw-lifecycle-solutions.html">Lifecycle Model</a>
-    </li>
-    <li>
-      <a href="dynamic-labor-supply.html">Dynamic LS</a>
-    </li>
-    <li>
-      <a href="earnings-mixtures.html">Mixtures</a>
-    </li>
-    <li>
-      <a href="ShimerSmith.html">Sorting</a>
     </li>
   </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/tlamadon/econ-34430">
+  <a href="https://github.com/floswald/ScPo-Labor">
     <span class="fa fa-github"></span>
      
   </a>
 </li>
 <li>
-  <a href="https://github.com/tlamadon/econ-34430/issues">
+  <a href="https://github.com/floswald/ScPo-Labor/issues">
     <span class="fa fa-bug"></span>
      
   </a>
@@ -289,8 +277,6 @@ simdata[, c  := exp(lw)*h + mu - p$beta0];
 simdata[, u1 := c^(1+p$eta)/(1+p$eta) - p$beta * h^(1+p$gamma)/(1+p$gamma) ];</code></pre>
 <p>At this point we can regress <span class="math inline">\(\log(w)\)</span> on <span class="math inline">\(\log(c)\)</span> and <span class="math inline">\(\log(h)\)</span> and find precisely the parameters of labor supply:</p>
 <pre class="r"><code>pander(summary(simdata[,lm(lw ~ log(c) + log(h))]))</code></pre>
-<pre><code>## Warning in summary.lm(simdata[, lm(lw ~ log(c) + log(h))]): essentially
-## perfect fit: summary may be unreliable</code></pre>
 <table style="width:86%;">
 <colgroup>
 <col width="25%" />
@@ -312,23 +298,23 @@ simdata[, u1 := c^(1+p$eta)/(1+p$eta) - p$beta * h^(1+p$gamma)/(1+p$gamma) ];</c
 <tr class="odd">
 <td align="center"><strong>log(c)</strong></td>
 <td align="center">1.5</td>
-<td align="center">4.873e-17</td>
-<td align="center">3.078e+16</td>
+<td align="center">1.451e-16</td>
+<td align="center">1.033e+16</td>
 <td align="center">0</td>
 </tr>
 <tr class="even">
 <td align="center"><strong>log(h)</strong></td>
 <td align="center">0.8</td>
-<td align="center">1.177e-16</td>
-<td align="center">6.797e+15</td>
+<td align="center">3.433e-16</td>
+<td align="center">2.331e+15</td>
 <td align="center">0</td>
 </tr>
 <tr class="odd">
 <td align="center"><strong>(Intercept)</strong></td>
-<td align="center">-2.247e-16</td>
-<td align="center">1.009e-16</td>
-<td align="center">-2.227</td>
-<td align="center">0.0262</td>
+<td align="center">3.707e-15</td>
+<td align="center">2.953e-16</td>
+<td align="center">12.56</td>
+<td align="center">1.126e-33</td>
 </tr>
 </tbody>
 </table>
@@ -351,7 +337,7 @@ simdata[, u1 := c^(1+p$eta)/(1+p$eta) - p$beta * h^(1+p$gamma)/(1+p$gamma) ];</c
 <tbody>
 <tr class="odd">
 <td align="center">1000</td>
-<td align="center">9.224e-16</td>
+<td align="center">2.696e-15</td>
 <td align="center">1</td>
 <td align="center">1</td>
 </tr>
@@ -367,6 +353,8 @@ ggplot(simdata,aes(x=u0,y=u1)) + geom_point() + geom_abline(linetype=2)</code></
 <p><img src="static-labor-supply_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <p>The regression still works, among ecah individual who chooses to work, the FOC is still satified.</p>
 <pre class="r"><code>pander(summary(simdata[p1==TRUE,lm(lw ~ log(c) + log(h))]))</code></pre>
+<pre><code>## Warning in summary.lm(simdata[p1 == TRUE, lm(lw ~ log(c) + log(h))]):
+## essentially perfect fit: summary may be unreliable</code></pre>
 <table style="width:86%;">
 <colgroup>
 <col width="25%" />
@@ -388,23 +376,23 @@ ggplot(simdata,aes(x=u0,y=u1)) + geom_point() + geom_abline(linetype=2)</code></
 <tr class="odd">
 <td align="center"><strong>log(c)</strong></td>
 <td align="center">1.5</td>
-<td align="center">6.64e-17</td>
-<td align="center">2.259e+16</td>
+<td align="center">4.631e-17</td>
+<td align="center">3.239e+16</td>
 <td align="center">0</td>
 </tr>
 <tr class="even">
 <td align="center"><strong>log(h)</strong></td>
 <td align="center">0.8</td>
-<td align="center">2.423e-16</td>
-<td align="center">3.302e+15</td>
+<td align="center">1.62e-16</td>
+<td align="center">4.939e+15</td>
 <td align="center">0</td>
 </tr>
 <tr class="odd">
 <td align="center"><strong>(Intercept)</strong></td>
-<td align="center">2.024e-15</td>
-<td align="center">1.629e-16</td>
-<td align="center">12.43</td>
-<td align="center">1.705e-32</td>
+<td align="center">1.914e-15</td>
+<td align="center">1.098e-16</td>
+<td align="center">17.43</td>
+<td align="center">1.203e-57</td>
 </tr>
 </tbody>
 </table>
@@ -426,8 +414,8 @@ ggplot(simdata,aes(x=u0,y=u1)) + geom_point() + geom_abline(linetype=2)</code></
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center">789</td>
-<td align="center">9.989e-16</td>
+<td align="center">775</td>
+<td align="center">6.724e-16</td>
 <td align="center">1</td>
 <td align="center">1</td>
 </tr>
@@ -450,10 +438,8 @@ simdata[, u0:=  mu^(1+p$eta)/(1+p$eta)];
 simdata[,p1:=u1&gt;u0]
 
 # let&#39;s check that the FOC holds
-sfit = summary(simdata[,lm(lw ~ log(c) + log(h) + log(betai))])</code></pre>
-<pre><code>## Warning in summary.lm(simdata[, lm(lw ~ log(c) + log(h) + log(betai))]):
-## essentially perfect fit: summary may be unreliable</code></pre>
-<pre class="r"><code>expect_equivalent(sfit$r.squared,1)
+sfit = summary(simdata[,lm(lw ~ log(c) + log(h) + log(betai))])
+expect_equivalent(sfit$r.squared,1)
 expect_equivalent(coef(sfit)[&quot;log(c)&quot;,1],-p$eta)
 expect_equivalent(coef(sfit)[&quot;log(h)&quot;,1],p$gamma)
 
@@ -480,24 +466,24 @@ expect_false(coef(sfit)[&quot;log(c)&quot;,1]==-p$eta)</code></pre>
 <tbody>
 <tr class="odd">
 <td align="center"><strong>log(c)</strong></td>
-<td align="center">2.142</td>
-<td align="center">0.02345</td>
-<td align="center">91.33</td>
+<td align="center">2.151</td>
+<td align="center">0.02272</td>
+<td align="center">94.68</td>
 <td align="center">0</td>
 </tr>
 <tr class="even">
 <td align="center"><strong>log(h)</strong></td>
-<td align="center">0.3524</td>
-<td align="center">0.03168</td>
-<td align="center">11.13</td>
-<td align="center">5.635e-27</td>
+<td align="center">0.3648</td>
+<td align="center">0.03069</td>
+<td align="center">11.89</td>
+<td align="center">2.73e-30</td>
 </tr>
 <tr class="odd">
 <td align="center"><strong>(Intercept)</strong></td>
-<td align="center">-0.5161</td>
-<td align="center">0.01613</td>
-<td align="center">-32</td>
-<td align="center">5.021e-149</td>
+<td align="center">-0.5235</td>
+<td align="center">0.0152</td>
+<td align="center">-34.44</td>
+<td align="center">2.253e-164</td>
 </tr>
 </tbody>
 </table>
@@ -519,10 +505,10 @@ expect_false(coef(sfit)[&quot;log(c)&quot;,1]==-p$eta)</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="center">871</td>
-<td align="center">0.1643</td>
-<td align="center">0.9644</td>
-<td align="center">0.9643</td>
+<td align="center">868</td>
+<td align="center">0.1582</td>
+<td align="center">0.9665</td>
+<td align="center">0.9664</td>
 </tr>
 </tbody>
 </table>
@@ -542,7 +528,7 @@ expect_false(coef(sfit)[&quot;log(c)&quot;,1]==-p$eta)</code></pre>
 </div>
 
 <!--<a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png"></a> -->
-<a class="github-fork-ribbon right-bottom fixed" href="https://github.com/tlamadon/econ-34430" title="Fork me on GitHub">Fork me on GitHub</a>
+<a class="github-fork-ribbon right-bottom fixed" href="https://github.com/floswald/ScPo-Labor" title="Fork me on GitHub">Fork me on GitHub</a>
 
 
 

@@ -11,16 +11,8 @@ navbar:
       menu:
         - text: "Static LS"
           href: static-labor-supply.html
-        - text: "Hotz and Miller"
-          href: dynprog-HotzMiller.html
         - text: "Lifecycle Model"
           href: hw-lifecycle-solutions.html
-        - text: "Dynamic LS"
-          href: dynamic-labor-supply.html
-        - text: "Mixtures"
-          href: earnings-mixtures.html
-        - text: "Sorting"
-          href: ShimerSmith.html
   right:
     - icon: fa-github
       href: https://github.com/floswald/ScPo-Labor
