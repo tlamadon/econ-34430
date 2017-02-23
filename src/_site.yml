@@ -1,7 +1,7 @@
-name: "Econ 34430 "
+name: "ScPo-GradLabour"
 output_dir: "../docs"
 navbar:
-  title: "Econ 34430"
+  title: "ScPo-GradLabour"
   left:
     - text: "Home"
       icon: fa-home      
@@ -23,9 +23,9 @@ navbar:
           href: ShimerSmith.html
   right:
     - icon: fa-github
-      href: https://github.com/tlamadon/econ-34430
+      href: https://github.com/floswald/ScPo-Labor
     - icon: fa-bug
-      href: https://github.com/tlamadon/econ-34430/issues
+      href: https://github.com/floswald/ScPo-Labor/issues
 output:
   html_document:
     theme: cosmo

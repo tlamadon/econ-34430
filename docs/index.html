@@ -177,7 +177,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Econ 34430</a>
+      <a class="navbar-brand" href="index.html">ScPo-GradLabour</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -204,7 +204,7 @@ $(document).ready(function () {
       <a href="dynprog-HotzMiller.html">Hotz and Miller</a>
     </li>
     <li>
-      <a href="hw-lifecycle-solutions.html">Lifecycle Model (Sol)</a>
+      <a href="hw-lifecycle-solutions.html">Lifecycle Model</a>
     </li>
     <li>
       <a href="dynamic-labor-supply.html">Dynamic LS</a>
@@ -220,13 +220,13 @@ $(document).ready(function () {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/tlamadon/econ-34430">
+  <a href="https://github.com/floswald/ScPo-Labor">
     <span class="fa fa-github"></span>
      
   </a>
 </li>
 <li>
-  <a href="https://github.com/tlamadon/econ-34430/issues">
+  <a href="https://github.com/floswald/ScPo-Labor/issues">
     <span class="fa fa-bug"></span>
      
   </a>
@@ -244,9 +244,9 @@ $(document).ready(function () {
 </div>
 
 
-<p><br/><br/> This contains help files for homeworks for <em>Econ 34430</em>. The corresponding github repository can be found <a href="https://github.com/tlamadon/econ-34430">here</a>.</p>
+<p><br/><br/> This contains the homeworks for <em>Graduate Labor</em> at ScPo. The corresponding github repository can be found <a href="https://github.com/floswald/ScPo-Labor">here</a>.</p>
 <!-- Place this tag where you want the button to render. -->
-<p><a class="github-button" href="https://github.com/tlamadon/econ-34430/archive/master.zip" data-icon="octicon-cloud-download" data-style="mega" aria-label="Download tlamadon/econ-34430 on GitHub">Download</a> <a class="github-button" href="https://github.com/tlamadon/econ-34430/fork" data-icon="octicon-repo-forked" data-style="mega" data-count-href="/tlamadon/econ-34430/network" data-count-api="/repos/tlamadon/econ-34430#forks_count" data-count-aria-label="# forks on GitHub" aria-label="Fork tlamadon/econ-34430 on GitHub">Fork</a></p>
+<p><a class="github-button" href="https://github.com/floswald/ScPo-Labor/archive/master.zip" data-icon="octicon-cloud-download" data-style="mega" aria-label="Download floswald/ScPo-Labor on GitHub">Download</a> <a class="github-button" href="https://github.com/floswald/ScPo-Labor/fork" data-icon="octicon-repo-forked" data-style="mega" data-count-href="/floswald/ScPo-Labor/network" data-count-api="/repos/floswald/ScPo-Labor#forks_count" data-count-aria-label="# forks on GitHub" aria-label="Fork floswald/ScPo-Labor on GitHub">Fork</a></p>
 <div id="start" class="section level2">
 <h2>Getting started</h2>
 <p>You will first need to install <code>R</code> and <code>Rstudio</code>. To do use the following links:</p>
@@ -254,15 +254,27 @@ $(document).ready(function () {
 <li><a href="https://cran.rstudio.com/">R</a></li>
 <li><a href="https://www.rstudio.com/products/rstudio/download/">RStudio</a></li>
 </ul>
-<p>Here is a <a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.pdf">tutorial</a> and a <a href="https://s3.amazonaws.com/assets.datacamp.com/img/blog/data+table+cheat+sheet.pdf">cheatsheet</a> for <code>data.table</code></p>
+<div id="new-to-r" class="section level3">
+<h3>New to R?</h3>
+<p>There are gazillions of R tutorials online. <a href="http://scs.math.yorku.ca/index.php/R:_Getting_started_with_R#Starting_to_learn_R:_Tutorials_on_the_Web">this seems like a good place to start</a>.</p>
+<p>I like to use the data.table package. Here is a <a href="https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.pdf">tutorial</a> and a <a href="https://s3.amazonaws.com/assets.datacamp.com/img/blog/data+table+cheat+sheet.pdf">cheatsheet</a> for <code>data.table</code></p>
 <p>Here is a <a href="http://www.ceb-institute.org/bbs/wp-content/uploads/2011/09/handout_ggplot2.pdf">tutorial</a>, a <a href="http://www.rstudio.com/wp-content/uploads/2015/12/ggplot2-cheatsheet-2.0.pdf">cheatsheet</a> and the <a href="http://docs.ggplot2.org/current/">full documentation</a> for <code>ggplot2</code>.</p>
 <p>You can install most packages directly:</p>
 <pre class="r"><code>install.packages(c(&quot;devtools&quot;,&quot;data.table&quot;,&quot;ggplot2&quot;,&quot;plyr&quot;))</code></pre>
 <p>Other packages need to be installed from github using the devtools package:</p>
 <pre class="r"><code>require(devtools)
 install_github(&quot;tlamadon/RcppSimpleTensor&quot;)</code></pre>
+</div>
+<div id="submitting-homeworks" class="section level3">
+<h3>Submitting Homeworks</h3>
+<p>There are 2 ways. In both cases please make sure to write who was in the group.</p>
+<ol style="list-style-type: decimal">
+<li>You can either fork this repo (button above), do your homework on your fork <strong>in the .Rmd file of the homework</strong> and submit as a pull request <a href="https://github.com/floswald/ScPo-Labor">on this github repo</a></li>
+<li>Or you down just download this (again button above), and send me your homework (again, the corresponding .Rmd file which you changed with your work) as a direct message on our <strong>Slack channel</strong>.</li>
+</ol>
 <!-- Place this tag in your head or just before your close body tag. -->
 <script async defer src="https://buttons.github.io/buttons.js"></script>
+</div>
 </div>
 
 <!--<a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png"></a> -->
