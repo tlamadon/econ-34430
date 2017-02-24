@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Three period lifecycle</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-1.1/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.min.css" />
+<!--[if lt IE 9]>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.ie.min.css" />
+<![endif]-->
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">ScPo-GradLabour</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-pencil"></span>
+     
+    Homeworks
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="static-labor-supply.html">Static LS</a>
+    </li>
+    <li>
+      <a href="hw-lifecycle-solutions.html">Lifecycle Model</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/floswald/ScPo-Labor">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://github.com/floswald/ScPo-Labor/issues">
+    <span class="fa fa-bug"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Three period lifecycle</h1>
+
+</div>
+
+
+
+<p>Agents are assumed to live for three periods in this model. In periods 1 and 2 they work, in period 3 they retire. Wages are given by <span class="math inline">\(w_{1},w_{2}\)</span> in periods 1 and 2. All agents are identical conditional on age. There exists a perfect capital market with constant interest rate <span class="math inline">\(r\)</span>, individuals are standard exponential discounters with discount factor <span class="math inline">\(\beta\)</span> and the price of consumption acts as the numeraire in each period, i.e. it is normalized to one. Let’s call assets at the start of period 1 <span class="math inline">\(A_{1}\)</span>, and we assume that after period 3 all individuals die, and they must have non-negative assets at that point. There is no bequest motive, so everything needs to be consumed by the end of period 3. We assume the following period perferences in an otherwise time-separable lifetime utility function (very standard): <span class="math display">\[
+U(c_{t},l_{t})=\alpha\ln c_{t}+(1-\alpha)\ln l_{t}
+\]</span> and point out that <span class="math inline">\(L-h_{t}=l_{t}\)</span>, i.e. <span class="math inline">\(h\)</span> is hours worked and <span class="math inline">\(L\)</span> is total time endowment.</p>
+<ol style="list-style-type: decimal">
+<li>Write down the consumers lifecycle maximization problem at age 1.</li>
+<li>Call <span class="math inline">\(\lambda\)</span> the Lagrange Multiplier on the budget constraint and solve this problem. Provide an expression for <span class="math inline">\(\lambda\)</span>. Show and provide intuition for <span class="math inline">\(\frac{\partial\lambda}{\partial A_{1}}&lt;0,\frac{\partial\lambda}{\partial w_{t}}&lt;0\)</span>.</li>
+<li>Find both the Marshallian and Frischian Labor Supply functions <span class="math inline">\(h_{t}^{*}(w_{1},w_{2},A_{1})\)</span> and <span class="math inline">\(h_{t}^{F}(w_{t},\lambda)\)</span>.</li>
+<li>Take the following parameter values and evaluate your optimal policy functions for consumption, leisure and assets: <span class="math display">\[\alpha=0.3,\beta=0.9,L=8700,A_{1}=1000,r=0.05,w_{1}=5,w_{2}=10\]</span></li>
+<li>Your friend estimates the regression equation <span class="math display">\[\Delta\ln h_{2}=\sigma\Delta\ln w_{2}+u_{2}\]</span> using OLS and he claims to be estimating the Frisch elasticity of labor supply. What’s the value of the estimate <span class="math inline">\(\hat{\sigma}\)</span>? What’s the estimate’s standard error? (Hint: no statistics software needed to answer this question.)</li>
+<li>Evalute the Frisch elasticity under the numerical values from question 4. How would those results change if <span class="math inline">\(A_{1}=20000\)</span>? Why? For the rest of the problem, use <span class="math inline">\(A_{1}=1000\)</span>. Then calculate the Hicksian elasticity of labor supply in period 1 (i.e. keep discounted lifetime utility constant).</li>
+</ol>
+
+<!--<a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png"></a> -->
+<a class="github-fork-ribbon right-bottom fixed" href="https://github.com/floswald/ScPo-Labor" title="Fork me on GitHub">Fork me on GitHub</a>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,9 +1,12 @@
 
 <br/><br/>
-This contains help files for homeworks for _Econ 34430_. The corresponding github repository can be found [here](https://github.com/tlamadon/econ-34430).
+
+# ScPo Labor Homeworks
+
+This contains the homeworks for _Graduate Labor_ at ScPo. The corresponding github repository can be found [here](https://github.com/floswald/ScPo-Labor). Please note that this site will get updated with more homeworks as we move along.
   
 <!-- Place this tag where you want the button to render. -->
-<a class="github-button" href="https://github.com/tlamadon/econ-34430/archive/master.zip" data-icon="octicon-cloud-download" data-style="mega" aria-label="Download tlamadon/econ-34430 on GitHub">Download</a>  <a class="github-button" href="https://github.com/tlamadon/econ-34430/fork" data-icon="octicon-repo-forked" data-style="mega" data-count-href="/tlamadon/econ-34430/network" data-count-api="/repos/tlamadon/econ-34430#forks_count" data-count-aria-label="# forks on GitHub" aria-label="Fork tlamadon/econ-34430 on GitHub">Fork</a>
+<a class="github-button" href="https://github.com/floswald/ScPo-Labor/archive/master.zip" data-icon="octicon-cloud-download" data-style="mega" aria-label="Download floswald/ScPo-Labor on GitHub">Download</a>  <a class="github-button" href="https://github.com/floswald/ScPo-Labor/fork" data-icon="octicon-repo-forked" data-style="mega" data-count-href="/floswald/ScPo-Labor/network" data-count-api="/repos/floswald/ScPo-Labor#forks_count" data-count-aria-label="# forks on GitHub" aria-label="Fork floswald/ScPo-Labor on GitHub">Fork</a>
 
 
 
@@ -13,8 +16,12 @@ You will first need to install `R` and `Rstudio`. To do use the following links:
 
  - [R](https://cran.rstudio.com/)
  - [RStudio](https://www.rstudio.com/products/rstudio/download/)
+ 
+### New to R?
 
-Here is a [tutorial](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.pdf) and a [cheatsheet](https://s3.amazonaws.com/assets.datacamp.com/img/blog/data+table+cheat+sheet.pdf) for `data.table`
+There are gazillions of R tutorials online. [this seems like a good place to start](http://scs.math.yorku.ca/index.php/R:_Getting_started_with_R#Starting_to_learn_R:_Tutorials_on_the_Web).
+
+I like to use the data.table package. Here is a [tutorial](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.pdf) and a [cheatsheet](https://s3.amazonaws.com/assets.datacamp.com/img/blog/data+table+cheat+sheet.pdf) for `data.table`
 
 Here is a [tutorial](http://www.ceb-institute.org/bbs/wp-content/uploads/2011/09/handout_ggplot2.pdf), a [cheatsheet](http://www.rstudio.com/wp-content/uploads/2015/12/ggplot2-cheatsheet-2.0.pdf) and the [full documentation](http://docs.ggplot2.org/current/) for `ggplot2`.
 
@@ -31,6 +38,12 @@ require(devtools)
 install_github("tlamadon/RcppSimpleTensor")
 ```
 
+### Submitting Homeworks
+
+There are 2 ways. In both cases please make sure to write who was in the group.
+
+1. You can either fork this repo (button above), do your homework on your fork **in the .Rmd file of the homework** and submit as a pull request [on this github repo](https://github.com/floswald/ScPo-Labor)
+1. Or you down just download this (again button above), and send me your homework (again, the corresponding .Rmd file which you changed with your work) as a direct message on our **Slack channel**. 
 
 <!-- Place this tag in your head or just before your close body tag. -->
 <script async defer src="https://buttons.github.io/buttons.js"></script>  

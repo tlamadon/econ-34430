@@ -1,0 +1,34 @@
+---
+title: "Three period lifecycle"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+\section*{Problem Set 1: The Lifecycle Model}
+
+Agents are assumed to live for three periods in this model. In periods
+1 and 2 they work, in period 3 they retire. Wages are given by $w_{1},w_{2}$
+in periods 1 and 2. All agents are identical conditional on age. There
+exists a perfect capital market with constant interest rate $r$, individuals are standard exponential discounters with discount factor $\beta$ and
+the price of consumption acts as the numeraire in each period, i.e.
+it is normalized to one. Let's call assets at the start of period
+1 $A_{1}$, and we assume that after period 3 all individuals die,
+and they must have non-negative assets at that point. There is no
+bequest motive, so everything needs to be consumed by the end of period
+3. We assume the following period perferences in an otherwise time-separable lifetime utility function (very standard):
+\[
+U(c_{t},l_{t})=\alpha\ln c_{t}+(1-\alpha)\ln l_{t}
+\]
+and point out that $L-h_{t}=l_{t}$, i.e. $h$ is hours worked and
+$L$ is total time endowment. 
+
+1. Write down the consumers lifecycle maximization problem at age 1.
+1. Call $\lambda$ the Lagrange Multiplier on the budget constraint and solve this problem. Provide an expression for $\lambda$. Show and provide intuition for $\frac{\partial\lambda}{\partial A_{1}}<0,\frac{\partial\lambda}{\partial w_{t}}<0$.
+1. Find both the Marshallian and Frischian Labor Supply functions $h_{t}^{*}(w_{1},w_{2},A_{1})$ and $h_{t}^{F}(w_{t},\lambda)$.
+1. Take the following parameter values and evaluate your optimal policy functions for consumption, leisure and assets: $$\alpha=0.3,\beta=0.9,L=8700,A_{1}=1000,r=0.05,w_{1}=5,w_{2}=10$$
+1. Your friend estimates the regression equation $$\Delta\ln h_{2}=\sigma\Delta\ln w_{2}+u_{2}$$ using OLS and he claims to be estimating the Frisch elasticity of labor supply. What's the value of the estimate $\hat{\sigma}$? What's the estimate's standard error? (Hint: no statistics software needed to answer this question.)
+1. Evalute the Frisch elasticity under the numerical values from question 4. How would those results change if $A_{1}=20000$? Why? For the rest of the problem, use $A_{1}=1000$. Then calculate the Hicksian elasticity of labor supply in period 1 (i.e. keep discounted lifetime utility constant).
+
+

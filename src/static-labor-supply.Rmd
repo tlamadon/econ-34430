@@ -7,6 +7,8 @@ knitr::opts_chunk$set(echo = TRUE)
 require(testthat)
 require(xtable)
 require(pander)
+require(data.table)
+require(ggplot2)
 ```
 
 You can find the source code for this file in the class repository. The direct link is [here](https://raw.githubusercontent.com/tlamadon/econ-34430/master/src/static-labor-supply.Rmd)
