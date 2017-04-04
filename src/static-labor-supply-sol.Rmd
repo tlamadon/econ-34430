@@ -11,6 +11,7 @@ require(data.table)
 require(ggplot2)
 ```
 
+
 Let's start with studying static labor supply. We will consider the decision of the agent under the following rule:
 
 $$
@@ -25,7 +26,7 @@ We note already that the non labor income can control for dynamic labor supply s
 
 The first order conditions give us $w(wh +r - \mu)^\eta = \beta h^\gamma$. There is no closed-form but we can very quickly find an interior solution by using Newton maximization on the function $f(x) = w(wh +r - \mu)^\eta - \beta h^\gamma$. We iterate on 
 
-$$x \leftarrow x - f(x)/f'(x)$$.
+$$x \leftarrow x - f(x)/f'x)$$.
 
 ```{r}
 # function which updates choice of hours using Newton step
@@ -67,8 +68,16 @@ simdata[, u1 := c^(1+p$eta)/(1+p$eta) - p$beta * h^(1+p$gamma)/(1+p$gamma) ];
 At this point we can regress $\log(w)$ on $\log(c)$ and $\log(h)$ and find precisely the parameters of labor supply:
 
 ```{r}
-pander(summary(simdata[,lm(lw ~ log(c) + log(h))]))
+pander(summary(simdata[,lm(lw ~ log(c) + log(h) )]))
 ```
+
+**Why does this work?**
+
+FOC is 
+
+$$w(c)^\eta = \beta h^\gamma$$
+
+take the log of that.
 
 ## Adding participation
 
@@ -84,7 +93,11 @@ The regression still works, among ecah individual who chooses to work, the FOC i
 
 ```{r}
 pander(summary(simdata[p1==TRUE,lm(lw ~ log(c) + log(h))]))
+# all who don't work, have zero hours and unknown wage
+# cannot run regression for p1==FALSE
+simdata[p1==FALSE,c("lw","h") := list(NA,0)]
 ```
+
 
 ## Heterogeneity in $\beta$
 
@@ -109,6 +122,7 @@ expect_equivalent(sfit$r.squared,1)
 expect_equivalent(coef(sfit)["log(c)",1],-p$eta)
 expect_equivalent(coef(sfit)["log(h)",1],p$gamma)
 
+# check that it's wrong
 sfit = summary(simdata[p1==TRUE,lm(lw ~ log(c) + log(h))])
 expect_false(coef(sfit)["log(c)",1]==-p$eta)
 ```
@@ -119,9 +133,37 @@ pander(sfit)
 
 # Short Panel version 
 
- **Q1:** Take the simulated data from the model with heterogenous $\beta_i$. First explain why regressing $\log(w)$ on $\log(c)$, $\log(h)$ does not deliver correct estimates.
+ **Q1:** Take the simulated data from the model with heterogenous $\beta_i$. First explain why regressing $\log(w)$ on $\log(c)$, $\log(h)$, and $X$ does not deliver correct estimates.
+ 
+ The regression $\log(w)$ on $\log(c)$, $\log(h)$, and $X$ is now misspecified. There is an individual fixed effect $\beta_i$ which invalidates the previous regression. 
+ 
  **Q2:** Simulate 2 periods of the model (a short panel), keep everything fixed over the 2 periods, but redraw the wage. Estimate the model in differences and recover the parameters using $\log(w)$ on $\log(c)$, $\log(h)$. How does including or not including participation decision affect the results? Explain.
  
+```{r}
+# add second period income, hours, participation and cons
+simdata[,lw2 := X     + rnorm(N)*0.2];      # add a wage which depends on X
+simdata[, h2 := pmax(-mu+tx$r + p$beta0 ,0)/exp(lw2)+1];
+for (i in 1:30) {
+  simdata[, h2 := ff.newt(h2,tx$rho*exp(lw2),mu-tx$r-p$beta0,p$eta,p$gamma,betai) ];
+}
+simdata[, c2  := exp(lw2)*h2 + mu - p$beta0];
+simdata[, u1_2 := c2^(1+p$eta)/(1+p$eta) - betai * h2^(1+p$gamma)/(1+p$gamma) ];
+simdata[, u0_2 :=  mu^(1+p$eta)/(1+p$eta)];
+simdata[,p2 :=u1_2>u0_2];
+
+sim2 <- simdata[,list(dlw = lw2-lw,dh=log(h2)-log(h),dc=log(c2)-log(c),p1,p2)]
+
+d_mod <- sim2[,lm(dlw ~ dc + dh)]
+pander(summary(d_mod))
+```
+
+```{r}
+tfit = summary(sim2[p1==TRUE&p2==TRUE,lm(dlw ~ dc + dh)])
+expect_equivalent(coef(tfit)["dc",1],-p$eta)
+expect_equivalent(coef(tfit)["dh",1],p$gamma)
+```
+ 
+
 # Repeated cross-section version
 
 In this section we want to get closer to the Blundell, Duncan and Meghir (1998) exercice. We first modify the cost to allow for an increase return to X, and for the presence of a change in the tax rate. Simulate wages according to:
@@ -130,13 +172,115 @@ In this section we want to get closer to the Blundell, Duncan and Meghir (1998) 
   simdata[,lw := lb*X + rnorm(N)*0.2];      # add a wage which depends on X
 ```
 
-Write a function that can simulate a full cross section and that takes `lb` as inpute as well as marginal tax rate $\rho$. It should apply the same function as before to solve for the interior solution, but use the after-tax wage every where.
+Write a function that can simulate a full cross section and that takes `lb` as input as well as marginal tax rate $\rho$. It should apply the same function as before to solve for the interior solution, but use the after-tax wage every where.
+
+```{r}
+make_sim <- function(p,lb,rho,N,time_idx){
+  tx = list(rho=rho,r=0) # define a simple tax
+
+  simdata = data.table(i=1:N,X=rnorm(N))
+  simdata[,lw := lb*X + rnorm(N)*0.2];      # add a wage which depends on X
+  simdata[,mu := exp(0.3*X + rnorm(N)*0.2)]; # add non-labor income that also depends on X
+
+  # we then solve for the choice of hours and consumption
+  simdata[, h := pmax(-mu+tx$r + p$beta0 ,0)/exp(lw)+1] # starting value
+  # for loop for newton method (30 should be enough, it is fast)
+  for (i in 1:30) {
+    simdata[, h := ff.newt(h,tx$rho*exp(lw),mu-tx$r-p$beta0,p$eta,p$gamma,p$beta) ]
+  }
+
+  # attach consumption, value of working
+  simdata[, c  := exp(lw)*h*rho + mu - p$beta0];
+  simdata[, u1 := c^(1+p$eta)/(1+p$eta) - p$beta * h^(1+p$gamma)/(1+p$gamma) ];
+  simdata[,u0:=  mu^(1+p$eta)/(1+p$eta)];
+
+  # add time index
+  simdata[,period := time_idx]
+  return(simdata)
+}
+
+```
 
  **Q3:** simulate two cross-sections with $(lb=1,\rho=1)$ and $(lb=1.5,\rho=0.8)$ and use 10k indivduals. Simulate data without participation decision for now. Combine the data and show that previous regression provides biased estimates. Then slice X into K categories (for example using quantiles). Then compute $\log(w)$, $\log(c)$ and $\log(h)$ within each group and time period. Run the regression in first differences and show that this recovers the structural parameters.
+ 
+```{r}
+dat = rbind(make_sim(p,1,1,N=10000,time_idx=1),
+            make_sim(p,1.5,0.8,N=10000,time_idx=2))
+
+# show biased results when just combining periods
+pander(summary(dat[,lm(lw ~ log(c) + log(h))]))
+
+# now do BDM
+# slice X: construct groups
+dat[,iX := cut_number(X,5,label=FALSE)];
+# group means
+dat2 = dat[,list(lw=mean(lw),lc = mean(log(c)),lh=mean(log(h))),by=list(iX,period)][order(iX,period)];
+setkey(dat2,iX,period)
+# time differences
+dat2[,c("lag_lw","lag_lc","lag_lh") := dat2[list(iX,period-1)][,list(lw,lc,lh)]];
+dat2[,c("dlw","dlc","dlh") := list(lw - lag_lw,lc-lag_lc,lh=lh-lag_lh)];
+pander(summary(dat2[,lm(dlw ~ dlc + dlh)]))
+```
 
  **Q4:** Add the participation decision to the data generating process. Show that the results are now biased.
  
+```{r}
+make_sim_part <- function(p,lb,rho,N,time_idx){
+  tx = list(rho=rho,r=0) # define a simple tax
+
+  simdata = data.table(i=1:N,X=rnorm(N))
+  simdata[,lw := lb*X + rnorm(N)*0.2];      # add a wage which depends on X
+  simdata[, z :=  rnorm(N)*0.5]   # an instrument
+  simdata[,mu := exp(0.3*X + rnorm(N)*0.2 + z)]; # add non-labor income that also depends on X
+
+  # we then solve for the choice of hours and consumption
+  simdata[, h := pmax(-mu+tx$r + p$beta0 ,0)/exp(lw)+1] # starting value
+  # for loop for newton method (30 should be enough, it is fast)
+  for (i in 1:30) {
+    simdata[, h := ff.newt(h,tx$rho*exp(lw),mu-tx$r-p$beta0,p$eta,p$gamma,p$beta) ]
+  }
+
+  # attach consumption, value of working
+  simdata[, c  := exp(lw)*h*rho + mu - p$beta0];
+  simdata[, u1 := c^(1+p$eta)/(1+p$eta) - p$beta * h^(1+p$gamma)/(1+p$gamma) ];
+  simdata[,u0  :=  mu^(1+p$eta)/(1+p$eta)];
+  simdata[,p1 := u1>u0]
+  simdata[p1==FALSE,lw:=NA]  # no wage if don't work
+
+  # add time index
+  simdata[,period := time_idx]
+  return(simdata)
+}
+```
+
+
+```{r}
+# BDM with participation: biased
+dat = rbind(make_sim_part(p,1,1,N=10000,time_idx=1),
+            make_sim_part(p,1.5,0.8,N=10000,time_idx=2))
+# slice X: construct groups
+dat[,iX := cut_number(X,5,label=FALSE)]
+# group means
+dat2 = dat[,list(lw=mean(lw,na.rm=TRUE),lc = mean(log(c)),lh=mean(log(h))),by=list(iX,period)][order(iX,period)];
+setkey(dat2,iX,period)
+# time differences
+dat2[,c("lag_lw","lag_lc","lag_lh") := dat2[list(iX,period-1)][,list(lw,lc,lh)]];
+dat2[,c("dlw","dlc","dlh") := list(lw - lag_lw,lc-lag_lc,lh=lh-lag_lh)];
+pander(summary(dat2[,lm(dlw ~ dlc + dlh)]))
+```
+ 
  **Q5:** Extend the model to add an excluded variable that affects participation through $\mu$ but not the wage (keep X everywhere). Devise a way improve the estimates by controling for participation.
+ 
+```{r}
+# we want to do a correction for sample selection
+# we have an exclusion restriction: z appears only in mu but not in outcome equation.
+library(sampleSelection)
+select_eq = p1~X+z
+outcome_eq = lw ~ log(c) + log(h)
+summary(heckit(select_eq,outcome_eq,data=dat))
+```
+ 
+
  
 
 
