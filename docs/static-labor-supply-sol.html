@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Static Labor Supply</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-1.1/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.min.css" />
+<!--[if lt IE 9]>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.ie.min.css" />
+<![endif]-->
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">ScPo-GradLabour</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-pencil"></span>
+     
+    Homeworks
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="static-labor-supply.html">Static LS</a>
+    </li>
+    <li>
+      <a href="hw-lifecycle-solutions.html">Lifecycle Model</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/floswald/ScPo-Labor">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://github.com/floswald/ScPo-Labor/issues">
+    <span class="fa fa-bug"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Static Labor Supply</h1>
+
+</div>
+
+
+<p>Let’s start with studying static labor supply. We will consider the decision of the agent under the following rule:</p>
+<p><span class="math display">\[
+\max_{c,h} \frac{c^{1+\eta}}{1+\eta} - \beta \frac{h^{1+\gamma}}{1+\gamma}\\
+\text{s.t. } c = \rho \cdot w\cdot h -r + \mu - \beta_0 \cdot 1[h&gt;0] \\ 
+\]</span> The individual takes his wage <span class="math inline">\(w\)</span> as given, he chooses hours of work <span class="math inline">\(h\)</span> and consumption <span class="math inline">\(c\)</span> subject to a given non labor income <span class="math inline">\(\mu\)</span> as well as a tax regime defined by <span class="math inline">\(\rho,r\)</span>. <span class="math inline">\(\beta_0\)</span> is a fixed cost associated with working.</p>
+<p>We note already that the non labor income can control for dynamic labor supply since we can have <span class="math inline">\(\mu= b_t - (1+r)b_{t+1}\)</span>. This is part of a larger maximization problem where the agents choose optimaly <span class="math inline">\(b_t\)</span> over time. We will get there next time.</p>
+<div id="interior-solution" class="section level3">
+<h3>Interior solution</h3>
+<p>The first order conditions give us <span class="math inline">\(w(wh +r - \mu)^\eta = \beta h^\gamma\)</span>. There is no closed-form but we can very quickly find an interior solution by using Newton maximization on the function <span class="math inline">\(f(x) = w(wh +r - \mu)^\eta - \beta h^\gamma\)</span>. We iterate on</p>
+<p><span class="math display">\[x \leftarrow x - f(x)/f&#39;x)\]</span>.</p>
+<pre class="r"><code># function which updates choice of hours using Newton step
+# R here is total unearned income (including taxes when not working and all)
+ff.newt &lt;- function(x,w,R,eta,gamma,beta) {
+  f0 = w*(w*x + R)^eta - beta*x^gamma
+  f1 =  eta*w^2 * (w*x + R)^(eta-1) - gamma * beta *x^(gamma-1)
+  x  = x - f0/f1 
+  x  = ifelse(w*x + R&lt;=0, -R/w + 0.0001,x) # make sure we do not step out of bounds for next iteration
+  x  = ifelse(x&lt;0, 0.0001,x)
+  x
+}</code></pre>
+</div>
+<div id="simulating-data" class="section level3">
+<h3>Simulating data</h3>
+<p>We are going to simulate a data set where agents will choose participation as well as the number of hours if they decide to work. To do that we will solve for the interior solution under a given tax rate and compare this to the option of no-work.</p>
+<pre class="r"><code>p  = list(eta=-1.5,gamma = 0.8,beta=1,beta0=0.1) # define preferences
+tx = list(rho=1,r=0) # define a simple tax
+N=1000
+simdata = data.table(i=1:N,X=rnorm(N))
+simdata[,lw := X     + rnorm(N)*0.2];      # add a wage which depends on X
+simdata[,mu := exp(0.3*X + rnorm(N)*0.2)]; # add non-labor income that also depends on X
+
+# we then solve for the choice of hours and consumption
+simdata[, h := pmax(-mu+tx$r + p$beta0 ,0)/exp(lw)+1] # starting value
+# for loop for newton method (30 should be enough, it is fast)
+for (i in 1:30) {
+  simdata[, h := ff.newt(h,tx$rho*exp(lw),mu-tx$r-p$beta0,p$eta,p$gamma,p$beta) ]
+}
+
+# attach consumption, value of working
+simdata[, c  := exp(lw)*h + mu - p$beta0];
+simdata[, u1 := c^(1+p$eta)/(1+p$eta) - p$beta * h^(1+p$gamma)/(1+p$gamma) ];</code></pre>
+<p>At this point we can regress <span class="math inline">\(\log(w)\)</span> on <span class="math inline">\(\log(c)\)</span> and <span class="math inline">\(\log(h)\)</span> and find precisely the parameters of labor supply:</p>
+<pre class="r"><code>pander(summary(simdata[,lm(lw ~ log(c) + log(h) )]))</code></pre>
+<pre><code>## Warning in summary.lm(simdata[, lm(lw ~ log(c) + log(h))]): essentially
+## perfect fit: summary may be unreliable</code></pre>
+<table style="width:86%;">
+<colgroup>
+<col width="25%" />
+<col width="15%" />
+<col width="18%" />
+<col width="13%" />
+<col width="13%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">Estimate</th>
+<th align="center">Std. Error</th>
+<th align="center">t value</th>
+<th align="center">Pr(&gt;|t|)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>log(c)</strong></td>
+<td align="center">1.5</td>
+<td align="center">3.24e-17</td>
+<td align="center">4.63e+16</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>log(h)</strong></td>
+<td align="center">0.8</td>
+<td align="center">7.957e-17</td>
+<td align="center">1.005e+16</td>
+<td align="center">0</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>(Intercept)</strong></td>
+<td align="center">-7.864e-16</td>
+<td align="center">6.825e-17</td>
+<td align="center">-11.52</td>
+<td align="center">6.329e-29</td>
+</tr>
+</tbody>
+</table>
+<table style="width:85%;">
+<caption>Fitting linear model: lw ~ log(c) + log(h)</caption>
+<colgroup>
+<col width="20%" />
+<col width="30%" />
+<col width="11%" />
+<col width="22%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Observations</th>
+<th align="center">Residual Std. Error</th>
+<th align="center"><span class="math inline">\(R^2\)</span></th>
+<th align="center">Adjusted <span class="math inline">\(R^2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">1000</td>
+<td align="center">6.061e-16</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Why does this work?</strong></p>
+<p>FOC is</p>
+<p><span class="math display">\[w(c)^\eta = \beta h^\gamma\]</span></p>
+<p>take the log of that.</p>
+</div>
+<div id="adding-participation" class="section level2">
+<h2>Adding participation</h2>
+<p>We simply compute the value of choosing <span class="math inline">\(h=0\)</span>, then take the highest of working and not working.</p>
+<pre class="r"><code>simdata[,u0:=  mu^(1+p$eta)/(1+p$eta)];
+simdata[,p1:=u1&gt;u0]
+ggplot(simdata,aes(x=u0,y=u1)) + geom_point() + geom_abline(linetype=2)</code></pre>
+<p><img src="static-labor-supply-sol_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>The regression still works, among ecah individual who chooses to work, the FOC is still satified.</p>
+<pre class="r"><code>pander(summary(simdata[p1==TRUE,lm(lw ~ log(c) + log(h))]))</code></pre>
+<table style="width:86%;">
+<colgroup>
+<col width="25%" />
+<col width="15%" />
+<col width="18%" />
+<col width="13%" />
+<col width="13%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">Estimate</th>
+<th align="center">Std. Error</th>
+<th align="center">t value</th>
+<th align="center">Pr(&gt;|t|)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>log(c)</strong></td>
+<td align="center">1.5</td>
+<td align="center">8.854e-17</td>
+<td align="center">1.694e+16</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>log(h)</strong></td>
+<td align="center">0.8</td>
+<td align="center">3.556e-16</td>
+<td align="center">2.25e+15</td>
+<td align="center">0</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>(Intercept)</strong></td>
+<td align="center">-5.121e-16</td>
+<td align="center">2.399e-16</td>
+<td align="center">-2.134</td>
+<td align="center">0.03312</td>
+</tr>
+</tbody>
+</table>
+<table style="width:85%;">
+<caption>Fitting linear model: lw ~ log(c) + log(h)</caption>
+<colgroup>
+<col width="20%" />
+<col width="30%" />
+<col width="11%" />
+<col width="22%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Observations</th>
+<th align="center">Residual Std. Error</th>
+<th align="center"><span class="math inline">\(R^2\)</span></th>
+<th align="center">Adjusted <span class="math inline">\(R^2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">770</td>
+<td align="center">1.316e-15</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># all who don&#39;t work, have zero hours and unknown wage
+# cannot run regression for p1==FALSE
+simdata[p1==FALSE,c(&quot;lw&quot;,&quot;h&quot;) := list(NA,0)]</code></pre>
+<pre><code>##          i          X          lw        mu         h         c        u1
+##    1:    1 -1.2935968          NA 0.5959253 0.0000000 0.5718775 -2.742282
+##    2:    2 -0.3046566 -0.50066231 0.9882107 0.4174640 1.1412477 -1.987451
+##    3:    3  0.1323005 -0.05609018 1.1459793 0.4512269 1.4725936 -1.780748
+##    4:    4  0.7819102  0.87254925 1.4580357 0.5067761 2.5707526 -1.410837
+##    5:    5 -1.2763141          NA 0.6646847 0.0000000 0.6671563 -2.553060
+##   ---                                                                    
+##  996:  996  2.1327314  1.96173072 2.1891952 0.4775163 5.4851120 -1.000820
+##  997:  997 -0.2498827 -0.27916214 0.8653344 0.5292225 1.1656474 -2.029166
+##  998:  998  1.1680953  1.12637532 1.6108368 0.5021458 3.0596834 -1.304159
+##  999:  999  0.5862581  0.61797802 1.4662721 0.4745951 2.2467282 -1.479552
+## 1000: 1000 -1.1414405 -0.95434773 0.6204624 0.5461665 0.7307710 -2.526618
+##              u0    p1
+##    1: -2.590801 FALSE
+##    2: -2.011895  TRUE
+##    3: -1.868278  TRUE
+##    4: -1.656326  TRUE
+##    5: -2.453139 FALSE
+##   ---                
+##  996: -1.351723  TRUE
+##  997: -2.149998  TRUE
+##  998: -1.575811  TRUE
+##  999: -1.651668  TRUE
+## 1000: -2.539056  TRUE</code></pre>
+</div>
+<div id="heterogeneity-in-beta" class="section level2">
+<h2>Heterogeneity in <span class="math inline">\(\beta\)</span></h2>
+<p>Finally we want to add heterogeneity in the <span class="math inline">\(\beta\)</span> parameter.</p>
+<pre class="r"><code>simdata[,betai := exp(0.5*X+rnorm(N)*0.1)]
+simdata[, h := pmax(-mu+tx$r + p$beta0 ,0)/exp(lw)+1]
+for (i in 1:30) {
+  simdata[, h := ff.newt(h,tx$rho*exp(lw),mu-tx$r-p$beta0,p$eta,p$gamma,betai) ]
+}
+
+# attach consumption
+simdata[, c  := exp(lw)*h + mu - p$beta0];
+simdata[, u1 := c^(1+p$eta)/(1+p$eta) - betai * h^(1+p$gamma)/(1+p$gamma) ];
+simdata[, u0:=  mu^(1+p$eta)/(1+p$eta)];
+simdata[,p1:=u1&gt;u0]
+
+# let&#39;s check that the FOC holds
+sfit = summary(simdata[,lm(lw ~ log(c) + log(h) + log(betai))])
+expect_equivalent(sfit$r.squared,1)
+expect_equivalent(coef(sfit)[&quot;log(c)&quot;,1],-p$eta)
+expect_equivalent(coef(sfit)[&quot;log(h)&quot;,1],p$gamma)
+
+# check that it&#39;s wrong
+sfit = summary(simdata[p1==TRUE,lm(lw ~ log(c) + log(h))])
+expect_false(coef(sfit)[&quot;log(c)&quot;,1]==-p$eta)</code></pre>
+<pre class="r"><code>pander(sfit)</code></pre>
+<table style="width:86%;">
+<colgroup>
+<col width="25%" />
+<col width="15%" />
+<col width="18%" />
+<col width="13%" />
+<col width="13%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">Estimate</th>
+<th align="center">Std. Error</th>
+<th align="center">t value</th>
+<th align="center">Pr(&gt;|t|)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>log(c)</strong></td>
+<td align="center">2.061</td>
+<td align="center">0.02309</td>
+<td align="center">89.24</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>log(h)</strong></td>
+<td align="center">0.2344</td>
+<td align="center">0.03164</td>
+<td align="center">7.408</td>
+<td align="center">3.392e-13</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>(Intercept)</strong></td>
+<td align="center">-0.5521</td>
+<td align="center">0.01616</td>
+<td align="center">-34.17</td>
+<td align="center">2.88e-156</td>
+</tr>
+</tbody>
+</table>
+<table style="width:85%;">
+<caption>Fitting linear model: lw ~ log(c) + log(h)</caption>
+<colgroup>
+<col width="20%" />
+<col width="30%" />
+<col width="11%" />
+<col width="22%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Observations</th>
+<th align="center">Residual Std. Error</th>
+<th align="center"><span class="math inline">\(R^2\)</span></th>
+<th align="center">Adjusted <span class="math inline">\(R^2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">770</td>
+<td align="center">0.1442</td>
+<td align="center">0.968</td>
+<td align="center">0.9679</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="short-panel-version" class="section level1">
+<h1>Short Panel version</h1>
+<p><strong>Q1:</strong> Take the simulated data from the model with heterogenous <span class="math inline">\(\beta_i\)</span>. First explain why regressing <span class="math inline">\(\log(w)\)</span> on <span class="math inline">\(\log(c)\)</span>, <span class="math inline">\(\log(h)\)</span>, and <span class="math inline">\(X\)</span> does not deliver correct estimates.</p>
+<p>The regression <span class="math inline">\(\log(w)\)</span> on <span class="math inline">\(\log(c)\)</span>, <span class="math inline">\(\log(h)\)</span>, and <span class="math inline">\(X\)</span> is now misspecified. There is an individual fixed effect <span class="math inline">\(\beta_i\)</span> which invalidates the previous regression.</p>
+<p><strong>Q2:</strong> Simulate 2 periods of the model (a short panel), keep everything fixed over the 2 periods, but redraw the wage. Estimate the model in differences and recover the parameters using <span class="math inline">\(\log(w)\)</span> on <span class="math inline">\(\log(c)\)</span>, <span class="math inline">\(\log(h)\)</span>. How does including or not including participation decision affect the results? Explain.</p>
+<pre class="r"><code># add second period income, hours, participation and cons
+simdata[,lw2 := X     + rnorm(N)*0.2];      # add a wage which depends on X</code></pre>
+<pre><code>##          i          X          lw        mu         h         c        u1
+##    1:    1 -1.2935968          NA 0.5959253        NA        NA        NA
+##    2:    2 -0.3046566 -0.50066231 0.9882107 0.4875223 1.1837121 -1.965733
+##    3:    3  0.1323005 -0.05609018 1.1459793 0.4315722 1.4540110 -1.787909
+##    4:    4  0.7819102  0.87254925 1.4580357 0.3644802 2.2302382 -1.484712
+##    5:    5 -1.2763141          NA 0.6646847        NA        NA        NA
+##   ---                                                                    
+##  996:  996  2.1327314  1.96173072 2.1891952 0.2361867 3.7688664 -1.157744
+##  997:  997 -0.2498827 -0.27916214 0.8653344 0.5764552 1.2013751 -2.008662
+##  998:  998  1.1680953  1.12637532 1.6108368 0.3250964 2.5135823 -1.401280
+##  999:  999  0.5862581  0.61797802 1.4662721 0.3700116 2.0527076 -1.525608
+## 1000: 1000 -1.1414405 -0.95434773 0.6204624 0.7057904 0.7922363 -2.461116
+##              u0   p1     betai        lw2
+##    1: -2.590801   NA 0.6161120 -1.2777856
+##    2: -2.011895 TRUE 0.8361811 -0.3685270
+##    3: -1.868278 TRUE 1.0561998  0.3891387
+##    4: -1.656326 TRUE 1.6109322  0.5589031
+##    5: -2.453139   NA 0.5116795 -1.0966222
+##   ---                                    
+##  996: -1.351723 TRUE 3.0835311  2.0905445
+##  997: -2.149998 TRUE 0.8925469 -0.3947363
+##  998: -1.575811 TRUE 1.9016439  1.1211709
+##  999: -1.651668 TRUE 1.3974027  0.5218500
+## 1000: -2.539056 TRUE 0.7216212 -1.1884886</code></pre>
+<pre class="r"><code>simdata[, h2 := pmax(-mu+tx$r + p$beta0 ,0)/exp(lw2)+1];</code></pre>
+<pre><code>##          i          X          lw        mu         h         c        u1
+##    1:    1 -1.2935968          NA 0.5959253        NA        NA        NA
+##    2:    2 -0.3046566 -0.50066231 0.9882107 0.4875223 1.1837121 -1.965733
+##    3:    3  0.1323005 -0.05609018 1.1459793 0.4315722 1.4540110 -1.787909
+##    4:    4  0.7819102  0.87254925 1.4580357 0.3644802 2.2302382 -1.484712
+##    5:    5 -1.2763141          NA 0.6646847        NA        NA        NA
+##   ---                                                                    
+##  996:  996  2.1327314  1.96173072 2.1891952 0.2361867 3.7688664 -1.157744
+##  997:  997 -0.2498827 -0.27916214 0.8653344 0.5764552 1.2013751 -2.008662
+##  998:  998  1.1680953  1.12637532 1.6108368 0.3250964 2.5135823 -1.401280
+##  999:  999  0.5862581  0.61797802 1.4662721 0.3700116 2.0527076 -1.525608
+## 1000: 1000 -1.1414405 -0.95434773 0.6204624 0.7057904 0.7922363 -2.461116
+##              u0   p1     betai        lw2 h2
+##    1: -2.590801   NA 0.6161120 -1.2777856  1
+##    2: -2.011895 TRUE 0.8361811 -0.3685270  1
+##    3: -1.868278 TRUE 1.0561998  0.3891387  1
+##    4: -1.656326 TRUE 1.6109322  0.5589031  1
+##    5: -2.453139   NA 0.5116795 -1.0966222  1
+##   ---                                       
+##  996: -1.351723 TRUE 3.0835311  2.0905445  1
+##  997: -2.149998 TRUE 0.8925469 -0.3947363  1
+##  998: -1.575811 TRUE 1.9016439  1.1211709  1
+##  999: -1.651668 TRUE 1.3974027  0.5218500  1
+## 1000: -2.539056 TRUE 0.7216212 -1.1884886  1</code></pre>
+<pre class="r"><code>for (i in 1:30) {
+  simdata[, h2 := ff.newt(h2,tx$rho*exp(lw2),mu-tx$r-p$beta0,p$eta,p$gamma,betai) ];
+}
+simdata[, c2  := exp(lw2)*h2 + mu - p$beta0];</code></pre>
+<pre><code>##          i          X          lw        mu         h         c        u1
+##    1:    1 -1.2935968          NA 0.5959253        NA        NA        NA
+##    2:    2 -0.3046566 -0.50066231 0.9882107 0.4875223 1.1837121 -1.965733
+##    3:    3  0.1323005 -0.05609018 1.1459793 0.4315722 1.4540110 -1.787909
+##    4:    4  0.7819102  0.87254925 1.4580357 0.3644802 2.2302382 -1.484712
+##    5:    5 -1.2763141          NA 0.6646847        NA        NA        NA
+##   ---                                                                    
+##  996:  996  2.1327314  1.96173072 2.1891952 0.2361867 3.7688664 -1.157744
+##  997:  997 -0.2498827 -0.27916214 0.8653344 0.5764552 1.2013751 -2.008662
+##  998:  998  1.1680953  1.12637532 1.6108368 0.3250964 2.5135823 -1.401280
+##  999:  999  0.5862581  0.61797802 1.4662721 0.3700116 2.0527076 -1.525608
+## 1000: 1000 -1.1414405 -0.95434773 0.6204624 0.7057904 0.7922363 -2.461116
+##              u0   p1     betai        lw2        h2        c2
+##    1: -2.590801   NA 0.6161120 -1.2777856 0.7268941 0.6984770
+##    2: -2.011895 TRUE 0.8361811 -0.3685270 0.5205507 1.2483029
+##    3: -1.868278 TRUE 1.0561998  0.3891387 0.5073729 1.7947141
+##    4: -1.656326 TRUE 1.6109322  0.5589031 0.3244171 1.9253611
+##    5: -2.453139   NA 0.5116795 -1.0966222 0.8176469 0.8377767
+##   ---                                                        
+##  996: -1.351723 TRUE 3.0835311  2.0905445 0.2424174 4.0501869
+##  997: -2.149998 TRUE 0.8925469 -0.3947363 0.5525627 1.1376830
+##  998: -1.575811 TRUE 1.9016439  1.1211709 0.3246090 2.5068815
+##  999: -1.651668 TRUE 1.3974027  0.5218500 0.3558170 1.9658744
+## 1000: -2.539056 TRUE 0.7216212 -1.1884886 0.6384361 0.7149820</code></pre>
+<pre class="r"><code>simdata[, u1_2 := c2^(1+p$eta)/(1+p$eta) - betai * h2^(1+p$gamma)/(1+p$gamma) ];</code></pre>
+<pre><code>##          i          X          lw        mu         h         c        u1
+##    1:    1 -1.2935968          NA 0.5959253        NA        NA        NA
+##    2:    2 -0.3046566 -0.50066231 0.9882107 0.4875223 1.1837121 -1.965733
+##    3:    3  0.1323005 -0.05609018 1.1459793 0.4315722 1.4540110 -1.787909
+##    4:    4  0.7819102  0.87254925 1.4580357 0.3644802 2.2302382 -1.484712
+##    5:    5 -1.2763141          NA 0.6646847        NA        NA        NA
+##   ---                                                                    
+##  996:  996  2.1327314  1.96173072 2.1891952 0.2361867 3.7688664 -1.157744
+##  997:  997 -0.2498827 -0.27916214 0.8653344 0.5764552 1.2013751 -2.008662
+##  998:  998  1.1680953  1.12637532 1.6108368 0.3250964 2.5135823 -1.401280
+##  999:  999  0.5862581  0.61797802 1.4662721 0.3700116 2.0527076 -1.525608
+## 1000: 1000 -1.1414405 -0.95434773 0.6204624 0.7057904 0.7922363 -2.461116
+##              u0   p1     betai        lw2        h2        c2      u1_2
+##    1: -2.590801   NA 0.6161120 -1.2777856 0.7268941 0.6984770 -2.585830
+##    2: -2.011895 TRUE 0.8361811 -0.3685270 0.5205507 1.2483029 -1.933507
+##    3: -1.868278 TRUE 1.0561998  0.3891387 0.5073729 1.7947141 -1.665912
+##    4: -1.656326 TRUE 1.6109322  0.5589031 0.3244171 1.9253611 -1.559340
+##    5: -2.453139   NA 0.5116795 -1.0966222 0.8176469 0.8377767 -2.382926
+##   ---                                                                  
+##  996: -1.351723 TRUE 3.0835311  2.0905445 0.2424174 4.0501869 -1.127442
+##  997: -2.149998 TRUE 0.8925469 -0.3947363 0.5525627 1.1376830 -2.045547
+##  998: -1.575811 TRUE 1.9016439  1.1211709 0.3246090 2.5068815 -1.402587
+##  999: -1.651668 TRUE 1.3974027  0.5218500 0.3558170 1.9658744 -1.547288
+## 1000: -2.539056 TRUE 0.7216212 -1.1884886 0.6384361 0.7149820 -2.544030</code></pre>
+<pre class="r"><code>simdata[, u0_2 :=  mu^(1+p$eta)/(1+p$eta)];</code></pre>
+<pre><code>##          i          X          lw        mu         h         c        u1
+##    1:    1 -1.2935968          NA 0.5959253        NA        NA        NA
+##    2:    2 -0.3046566 -0.50066231 0.9882107 0.4875223 1.1837121 -1.965733
+##    3:    3  0.1323005 -0.05609018 1.1459793 0.4315722 1.4540110 -1.787909
+##    4:    4  0.7819102  0.87254925 1.4580357 0.3644802 2.2302382 -1.484712
+##    5:    5 -1.2763141          NA 0.6646847        NA        NA        NA
+##   ---                                                                    
+##  996:  996  2.1327314  1.96173072 2.1891952 0.2361867 3.7688664 -1.157744
+##  997:  997 -0.2498827 -0.27916214 0.8653344 0.5764552 1.2013751 -2.008662
+##  998:  998  1.1680953  1.12637532 1.6108368 0.3250964 2.5135823 -1.401280
+##  999:  999  0.5862581  0.61797802 1.4662721 0.3700116 2.0527076 -1.525608
+## 1000: 1000 -1.1414405 -0.95434773 0.6204624 0.7057904 0.7922363 -2.461116
+##              u0   p1     betai        lw2        h2        c2      u1_2
+##    1: -2.590801   NA 0.6161120 -1.2777856 0.7268941 0.6984770 -2.585830
+##    2: -2.011895 TRUE 0.8361811 -0.3685270 0.5205507 1.2483029 -1.933507
+##    3: -1.868278 TRUE 1.0561998  0.3891387 0.5073729 1.7947141 -1.665912
+##    4: -1.656326 TRUE 1.6109322  0.5589031 0.3244171 1.9253611 -1.559340
+##    5: -2.453139   NA 0.5116795 -1.0966222 0.8176469 0.8377767 -2.382926
+##   ---                                                                  
+##  996: -1.351723 TRUE 3.0835311  2.0905445 0.2424174 4.0501869 -1.127442
+##  997: -2.149998 TRUE 0.8925469 -0.3947363 0.5525627 1.1376830 -2.045547
+##  998: -1.575811 TRUE 1.9016439  1.1211709 0.3246090 2.5068815 -1.402587
+##  999: -1.651668 TRUE 1.3974027  0.5218500 0.3558170 1.9658744 -1.547288
+## 1000: -2.539056 TRUE 0.7216212 -1.1884886 0.6384361 0.7149820 -2.544030
+##            u0_2
+##    1: -2.590801
+##    2: -2.011895
+##    3: -1.868278
+##    4: -1.656326
+##    5: -2.453139
+##   ---          
+##  996: -1.351723
+##  997: -2.149998
+##  998: -1.575811
+##  999: -1.651668
+## 1000: -2.539056</code></pre>
+<pre class="r"><code>simdata[,p2 :=u1_2&gt;u0_2];</code></pre>
+<pre><code>##          i          X          lw        mu         h         c        u1
+##    1:    1 -1.2935968          NA 0.5959253        NA        NA        NA
+##    2:    2 -0.3046566 -0.50066231 0.9882107 0.4875223 1.1837121 -1.965733
+##    3:    3  0.1323005 -0.05609018 1.1459793 0.4315722 1.4540110 -1.787909
+##    4:    4  0.7819102  0.87254925 1.4580357 0.3644802 2.2302382 -1.484712
+##    5:    5 -1.2763141          NA 0.6646847        NA        NA        NA
+##   ---                                                                    
+##  996:  996  2.1327314  1.96173072 2.1891952 0.2361867 3.7688664 -1.157744
+##  997:  997 -0.2498827 -0.27916214 0.8653344 0.5764552 1.2013751 -2.008662
+##  998:  998  1.1680953  1.12637532 1.6108368 0.3250964 2.5135823 -1.401280
+##  999:  999  0.5862581  0.61797802 1.4662721 0.3700116 2.0527076 -1.525608
+## 1000: 1000 -1.1414405 -0.95434773 0.6204624 0.7057904 0.7922363 -2.461116
+##              u0   p1     betai        lw2        h2        c2      u1_2
+##    1: -2.590801   NA 0.6161120 -1.2777856 0.7268941 0.6984770 -2.585830
+##    2: -2.011895 TRUE 0.8361811 -0.3685270 0.5205507 1.2483029 -1.933507
+##    3: -1.868278 TRUE 1.0561998  0.3891387 0.5073729 1.7947141 -1.665912
+##    4: -1.656326 TRUE 1.6109322  0.5589031 0.3244171 1.9253611 -1.559340
+##    5: -2.453139   NA 0.5116795 -1.0966222 0.8176469 0.8377767 -2.382926
+##   ---                                                                  
+##  996: -1.351723 TRUE 3.0835311  2.0905445 0.2424174 4.0501869 -1.127442
+##  997: -2.149998 TRUE 0.8925469 -0.3947363 0.5525627 1.1376830 -2.045547
+##  998: -1.575811 TRUE 1.9016439  1.1211709 0.3246090 2.5068815 -1.402587
+##  999: -1.651668 TRUE 1.3974027  0.5218500 0.3558170 1.9658744 -1.547288
+## 1000: -2.539056 TRUE 0.7216212 -1.1884886 0.6384361 0.7149820 -2.544030
+##            u0_2    p2
+##    1: -2.590801  TRUE
+##    2: -2.011895  TRUE
+##    3: -1.868278  TRUE
+##    4: -1.656326  TRUE
+##    5: -2.453139  TRUE
+##   ---                
+##  996: -1.351723  TRUE
+##  997: -2.149998  TRUE
+##  998: -1.575811  TRUE
+##  999: -1.651668  TRUE
+## 1000: -2.539056 FALSE</code></pre>
+<pre class="r"><code>sim2 &lt;- simdata[,list(dlw = lw2-lw,dh=log(h2)-log(h),dc=log(c2)-log(c),p1,p2)]
+
+d_mod &lt;- sim2[,lm(dlw ~ dc + dh)]
+pander(summary(d_mod))</code></pre>
+<table style="width:86%;">
+<colgroup>
+<col width="25%" />
+<col width="15%" />
+<col width="18%" />
+<col width="13%" />
+<col width="13%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">Estimate</th>
+<th align="center">Std. Error</th>
+<th align="center">t value</th>
+<th align="center">Pr(&gt;|t|)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>dc</strong></td>
+<td align="center">1.5</td>
+<td align="center">1.23e-16</td>
+<td align="center">1.219e+16</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>dh</strong></td>
+<td align="center">0.8</td>
+<td align="center">1.943e-16</td>
+<td align="center">4.118e+15</td>
+<td align="center">0</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>(Intercept)</strong></td>
+<td align="center">2e-17</td>
+<td align="center">1.066e-17</td>
+<td align="center">1.877</td>
+<td align="center">0.06095</td>
+</tr>
+</tbody>
+</table>
+<table style="width:85%;">
+<caption>Fitting linear model: dlw ~ dc + dh</caption>
+<colgroup>
+<col width="20%" />
+<col width="30%" />
+<col width="11%" />
+<col width="22%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Observations</th>
+<th align="center">Residual Std. Error</th>
+<th align="center"><span class="math inline">\(R^2\)</span></th>
+<th align="center">Adjusted <span class="math inline">\(R^2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">770</td>
+<td align="center">2.923e-16</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>tfit = summary(sim2[p1==TRUE&amp;p2==TRUE,lm(dlw ~ dc + dh)])
+expect_equivalent(coef(tfit)[&quot;dc&quot;,1],-p$eta)
+expect_equivalent(coef(tfit)[&quot;dh&quot;,1],p$gamma)</code></pre>
+</div>
+<div id="repeated-cross-section-version" class="section level1">
+<h1>Repeated cross-section version</h1>
+<p>In this section we want to get closer to the Blundell, Duncan and Meghir (1998) exercice. We first modify the cost to allow for an increase return to X, and for the presence of a change in the tax rate. Simulate wages according to:</p>
+<pre class="r"><code>  simdata[,lw := lb*X + rnorm(N)*0.2];      # add a wage which depends on X</code></pre>
+<p>Write a function that can simulate a full cross section and that takes <code>lb</code> as input as well as marginal tax rate <span class="math inline">\(\rho\)</span>. It should apply the same function as before to solve for the interior solution, but use the after-tax wage every where.</p>
+<pre class="r"><code>make_sim &lt;- function(p,lb,rho,N,time_idx){
+  tx = list(rho=rho,r=0) # define a simple tax
+
+  simdata = data.table(i=1:N,X=rnorm(N))
+  simdata[,lw := lb*X + rnorm(N)*0.2];      # add a wage which depends on X
+  simdata[,mu := exp(0.3*X + rnorm(N)*0.2)]; # add non-labor income that also depends on X
+
+  # we then solve for the choice of hours and consumption
+  simdata[, h := pmax(-mu+tx$r + p$beta0 ,0)/exp(lw)+1] # starting value
+  # for loop for newton method (30 should be enough, it is fast)
+  for (i in 1:30) {
+    simdata[, h := ff.newt(h,tx$rho*exp(lw),mu-tx$r-p$beta0,p$eta,p$gamma,p$beta) ]
+  }
+
+  # attach consumption, value of working
+  simdata[, c  := exp(lw)*h*rho + mu - p$beta0];
+  simdata[, u1 := c^(1+p$eta)/(1+p$eta) - p$beta * h^(1+p$gamma)/(1+p$gamma) ];
+  simdata[,u0:=  mu^(1+p$eta)/(1+p$eta)];
+
+  # add time index
+  simdata[,period := time_idx]
+  return(simdata)
+}</code></pre>
+<p><strong>Q3:</strong> simulate two cross-sections with <span class="math inline">\((lb=1,\rho=1)\)</span> and <span class="math inline">\((lb=1.5,\rho=0.8)\)</span> and use 10k indivduals. Simulate data without participation decision for now. Combine the data and show that previous regression provides biased estimates. Then slice X into K categories (for example using quantiles). Then compute <span class="math inline">\(\log(w)\)</span>, <span class="math inline">\(\log(c)\)</span> and <span class="math inline">\(\log(h)\)</span> within each group and time period. Run the regression in first differences and show that this recovers the structural parameters.</p>
+<pre class="r"><code>dat = rbind(make_sim(p,1,1,N=10000,time_idx=1),
+            make_sim(p,1.5,0.8,N=10000,time_idx=2))
+
+# show biased results when just combining periods
+pander(summary(dat[,lm(lw ~ log(c) + log(h))]))</code></pre>
+<table style="width:86%;">
+<colgroup>
+<col width="25%" />
+<col width="15%" />
+<col width="18%" />
+<col width="13%" />
+<col width="13%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">Estimate</th>
+<th align="center">Std. Error</th>
+<th align="center">t value</th>
+<th align="center">Pr(&gt;|t|)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>log(c)</strong></td>
+<td align="center">1.523</td>
+<td align="center">0.001189</td>
+<td align="center">1281</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>log(h)</strong></td>
+<td align="center">0.7182</td>
+<td align="center">0.001798</td>
+<td align="center">399.4</td>
+<td align="center">0</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>(Intercept)</strong></td>
+<td align="center">0.03074</td>
+<td align="center">0.00199</td>
+<td align="center">15.45</td>
+<td align="center">1.558e-53</td>
+</tr>
+</tbody>
+</table>
+<table style="width:85%;">
+<caption>Fitting linear model: lw ~ log(c) + log(h)</caption>
+<colgroup>
+<col width="20%" />
+<col width="30%" />
+<col width="11%" />
+<col width="22%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Observations</th>
+<th align="center">Residual Std. Error</th>
+<th align="center"><span class="math inline">\(R^2\)</span></th>
+<th align="center">Adjusted <span class="math inline">\(R^2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">20000</td>
+<td align="center">0.1062</td>
+<td align="center">0.9932</td>
+<td align="center">0.9932</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code># now do BDM
+# slice X: construct groups
+dat[,iX := cut_number(X,5,label=FALSE)];</code></pre>
+<pre><code>##            i          X         lw        mu          h         c
+##     1:     1 -0.6924735 -0.6694984 0.8244082 0.46517923 0.9625638
+##     2:     2 -0.2272907 -0.3382009 1.5200972 0.26793131 1.6111462
+##     3:     3  1.6018477  1.5831659 2.1455768 0.46624052 4.3163316
+##     4:     4 -0.9217850 -1.3723939 0.6211731 0.42814108 0.6297066
+##     5:     5  0.4266260  0.4296498 1.0397992 0.56426589 1.8069175
+##    ---                                                           
+## 19996:  9996 -0.7512663 -1.2542366 0.8252159 0.24999438 0.7822733
+## 19997:  9997  1.3076796  2.1413306 1.2958183 0.55006860 4.9410173
+## 19998:  9998  1.5204630  2.2689569 1.8893243 0.50026786 5.6591201
+## 19999:  9999 -2.2828134 -3.4451705 0.4080109 0.09149102 0.3103457
+## 20000: 10000 -1.1197310 -1.4368261 0.9663403 0.15436804 0.8956926
+##               u1        u0 period iX
+##     1: -2.178623 -2.202718      1  2
+##     2: -1.627560 -1.622162      1  3
+##     3: -1.103337 -1.365394      1  5
+##     4: -2.641016 -2.537603      1  1
+##     5: -1.686190 -1.961351      1  4
+##    ---                              
+## 19996: -2.307076 -2.201640      2  2
+## 19997: -1.089193 -1.756944      2  5
+## 19998: -1.000423 -1.455046      2  5
+## 19999: -3.597607 -3.131080      2  1
+## 20000: -2.132485 -2.034534      2  1</code></pre>
+<pre class="r"><code># group means
+dat2 = dat[,list(lw=mean(lw),lc = mean(log(c)),lh=mean(log(h))),by=list(iX,period)][order(iX,period)];
+setkey(dat2,iX,period)
+# time differences
+dat2[,c(&quot;lag_lw&quot;,&quot;lag_lc&quot;,&quot;lag_lh&quot;) := dat2[list(iX,period-1)][,list(lw,lc,lh)]];</code></pre>
+<pre><code>##     iX period            lw          lc         lh      lag_lw      lag_lc
+##  1:  1      1 -1.3886934788 -0.39722532 -0.9910694          NA          NA
+##  2:  1      2 -2.0838167394 -0.54209017 -1.8672813 -1.38869348 -0.39722532
+##  3:  2      1 -0.5260257109  0.05231662 -0.7556258          NA          NA
+##  4:  2      2 -0.7815319769 -0.10174899 -1.0650651 -0.52602571  0.05231662
+##  5:  3      1 -0.0012580498  0.36469214 -0.6853703          NA          NA
+##  6:  3      2  0.0007845292  0.26619403 -0.7770626 -0.00125805  0.36469214
+##  7:  4      1  0.5275828405  0.69314929 -0.6401764          NA          NA
+##  8:  4      2  0.7926426388  0.72232441 -0.6424844  0.52758284  0.69314929
+##  9:  5      1  1.4041056530  1.28871519 -0.6612089          NA          NA
+## 10:  5      2  2.0967599464  1.59873137 -0.6556008  1.40410565  1.28871519
+##         lag_lh
+##  1:         NA
+##  2: -0.9910694
+##  3:         NA
+##  4: -0.7556258
+##  5:         NA
+##  6: -0.6853703
+##  7:         NA
+##  8: -0.6401764
+##  9:         NA
+## 10: -0.6612089</code></pre>
+<pre class="r"><code>dat2[,c(&quot;dlw&quot;,&quot;dlc&quot;,&quot;dlh&quot;) := list(lw - lag_lw,lc-lag_lc,lh=lh-lag_lh)];</code></pre>
+<pre><code>##     iX period            lw          lc         lh      lag_lw      lag_lc
+##  1:  1      1 -1.3886934788 -0.39722532 -0.9910694          NA          NA
+##  2:  1      2 -2.0838167394 -0.54209017 -1.8672813 -1.38869348 -0.39722532
+##  3:  2      1 -0.5260257109  0.05231662 -0.7556258          NA          NA
+##  4:  2      2 -0.7815319769 -0.10174899 -1.0650651 -0.52602571  0.05231662
+##  5:  3      1 -0.0012580498  0.36469214 -0.6853703          NA          NA
+##  6:  3      2  0.0007845292  0.26619403 -0.7770626 -0.00125805  0.36469214
+##  7:  4      1  0.5275828405  0.69314929 -0.6401764          NA          NA
+##  8:  4      2  0.7926426388  0.72232441 -0.6424844  0.52758284  0.69314929
+##  9:  5      1  1.4041056530  1.28871519 -0.6612089          NA          NA
+## 10:  5      2  2.0967599464  1.59873137 -0.6556008  1.40410565  1.28871519
+##         lag_lh          dlw         dlc          dlh
+##  1:         NA           NA          NA           NA
+##  2: -0.9910694 -0.695123261 -0.14486485 -0.876211921
+##  3:         NA           NA          NA           NA
+##  4: -0.7556258 -0.255506266 -0.15406561 -0.309439262
+##  5:         NA           NA          NA           NA
+##  6: -0.6853703  0.002042579 -0.09849811 -0.091692263
+##  7:         NA           NA          NA           NA
+##  8: -0.6401764  0.265059798  0.02917512 -0.002308045
+##  9:         NA           NA          NA           NA
+## 10: -0.6612089  0.692654293  0.31001619  0.005608079</code></pre>
+<pre class="r"><code>pander(summary(dat2[,lm(dlw ~ dlc + dlh)]))</code></pre>
+<pre><code>## Warning in summary.lm(dat2[, lm(dlw ~ dlc + dlh)]): essentially perfect
+## fit: summary may be unreliable</code></pre>
+<table style="width:86%;">
+<colgroup>
+<col width="25%" />
+<col width="15%" />
+<col width="18%" />
+<col width="13%" />
+<col width="13%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">Estimate</th>
+<th align="center">Std. Error</th>
+<th align="center">t value</th>
+<th align="center">Pr(&gt;|t|)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>dlc</strong></td>
+<td align="center">1.5</td>
+<td align="center">1.777e-16</td>
+<td align="center">8.442e+15</td>
+<td align="center">1.403e-32</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>dlh</strong></td>
+<td align="center">0.8</td>
+<td align="center">9.324e-17</td>
+<td align="center">8.58e+15</td>
+<td align="center">1.358e-32</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>(Intercept)</strong></td>
+<td align="center">0.2231</td>
+<td align="center">3.357e-17</td>
+<td align="center">6.648e+15</td>
+<td align="center">2.263e-32</td>
+</tr>
+</tbody>
+</table>
+<table style="width:85%;">
+<caption>Fitting linear model: dlw ~ dlc + dlh</caption>
+<colgroup>
+<col width="20%" />
+<col width="30%" />
+<col width="11%" />
+<col width="22%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Observations</th>
+<th align="center">Residual Std. Error</th>
+<th align="center"><span class="math inline">\(R^2\)</span></th>
+<th align="center">Adjusted <span class="math inline">\(R^2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">5</td>
+<td align="center">5.551e-17</td>
+<td align="center">1</td>
+<td align="center">1</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Q4:</strong> Add the participation decision to the data generating process. Show that the results are now biased.</p>
+<pre class="r"><code>make_sim_part &lt;- function(p,lb,rho,N,time_idx){
+  tx = list(rho=rho,r=0) # define a simple tax
+
+  simdata = data.table(i=1:N,X=rnorm(N))
+  simdata[,lw := lb*X + rnorm(N)*0.2];      # add a wage which depends on X
+  simdata[, z :=  rnorm(N)*0.5]   # an instrument
+  simdata[,mu := exp(0.3*X + rnorm(N)*0.2 + z)]; # add non-labor income that also depends on X
+
+  # we then solve for the choice of hours and consumption
+  simdata[, h := pmax(-mu+tx$r + p$beta0 ,0)/exp(lw)+1] # starting value
+  # for loop for newton method (30 should be enough, it is fast)
+  for (i in 1:30) {
+    simdata[, h := ff.newt(h,tx$rho*exp(lw),mu-tx$r-p$beta0,p$eta,p$gamma,p$beta) ]
+  }
+
+  # attach consumption, value of working
+  simdata[, c  := exp(lw)*h*rho + mu - p$beta0];
+  simdata[, u1 := c^(1+p$eta)/(1+p$eta) - p$beta * h^(1+p$gamma)/(1+p$gamma) ];
+  simdata[,u0  :=  mu^(1+p$eta)/(1+p$eta)];
+  simdata[,p1 := u1&gt;u0]
+  simdata[p1==FALSE,lw:=NA]  # no wage if don&#39;t work
+
+  # add time index
+  simdata[,period := time_idx]
+  return(simdata)
+}</code></pre>
+<pre class="r"><code># BDM with participation: biased
+dat = rbind(make_sim_part(p,1,1,N=10000,time_idx=1),
+            make_sim_part(p,1.5,0.8,N=10000,time_idx=2))
+# slice X: construct groups
+dat[,iX := cut_number(X,5,label=FALSE)]</code></pre>
+<pre><code>##            i            X         lw           z        mu         h
+##     1:     1 -0.336619432 -0.4134807 -0.39374551 0.6953004 0.6030342
+##     2:     2 -0.653021395 -0.3721141 -0.36413622 0.4827940 0.7574700
+##     3:     3 -0.320143331 -0.1815842  0.23582726 1.4203600 0.3314069
+##     4:     4  1.601065494  1.7830494 -0.12232329 1.0498144 0.5789878
+##     5:     5  0.349718700  0.7098544  0.38819243 1.4547437 0.4893556
+##    ---                                                              
+## 19996:  9996  0.572618158  0.9494227  0.24720627 1.6438397 0.4520605
+## 19997:  9997  0.325357362  0.5582449  0.17883865 1.0951979 0.5357166
+## 19998:  9998 -1.170527335         NA  0.18084571 0.7782652 0.1771198
+## 19999:  9999 -1.253779428         NA -0.07436464 0.5240329 0.3726111
+## 20000: 10000  0.007756045  0.1409008  0.15132826 1.3154178 0.3866027
+##                c        u1        u0    p1 period iX
+##     1: 0.9941136 -2.229446 -2.398522  TRUE      1  2
+##     2: 0.9048996 -2.439435 -2.878386  TRUE      1  2
+##     3: 1.5967362 -1.658853 -1.678150  TRUE      1  2
+##     4: 4.3936149 -1.161901 -1.951973  TRUE      1  5
+##     5: 2.3499438 -1.458152 -1.658199  TRUE      1  4
+##    ---                                              
+## 19996: 2.4784179 -1.403477 -1.559913  TRUE      2  4
+## 19997: 1.7441737 -1.695020 -1.911101  TRUE      2  4
+## 19998: 0.7044888 -2.407468 -2.267077 FALSE      2  1
+## 19999: 0.4803432 -2.979690 -2.762808 FALSE      2  1
+## 20000: 1.5714976 -1.695829 -1.743806  TRUE      2  3</code></pre>
+<pre class="r"><code># group means
+dat2 = dat[,list(lw=mean(lw,na.rm=TRUE),lc = mean(log(c)),lh=mean(log(h))),by=list(iX,period)][order(iX,period)];
+setkey(dat2,iX,period)
+# time differences
+dat2[,c(&quot;lag_lw&quot;,&quot;lag_lc&quot;,&quot;lag_lh&quot;) := dat2[list(iX,period-1)][,list(lw,lc,lh)]];</code></pre>
+<pre><code>##     iX period          lw          lc         lh     lag_lw     lag_lc
+##  1:  1      1 -0.99134989 -0.31792161 -1.0973687         NA         NA
+##  2:  1      2 -1.21740258 -0.53908888 -1.8751918 -0.9913499 -0.3179216
+##  3:  2      1 -0.46337646  0.12026146 -0.8855435         NA         NA
+##  4:  2      2 -0.54604576 -0.05288134 -1.1600330 -0.4633765  0.1202615
+##  5:  3      1  0.01421540  0.42137379 -0.7967321         NA         NA
+##  6:  3      2  0.06875105  0.32042426 -0.8652081  0.0142154  0.4213738
+##  7:  4      1  0.54845191  0.74730297 -0.7220522         NA         NA
+##  8:  4      2  0.80945459  0.76152382 -0.7023075  0.5484519  0.7473030
+##  9:  5      1  1.38069351  1.30696636 -0.7263431         NA         NA
+## 10:  5      2  2.09645981  1.62538599 -0.7059534  1.3806935  1.3069664
+##         lag_lh
+##  1:         NA
+##  2: -1.0973687
+##  3:         NA
+##  4: -0.8855435
+##  5:         NA
+##  6: -0.7967321
+##  7:         NA
+##  8: -0.7220522
+##  9:         NA
+## 10: -0.7263431</code></pre>
+<pre class="r"><code>dat2[,c(&quot;dlw&quot;,&quot;dlc&quot;,&quot;dlh&quot;) := list(lw - lag_lw,lc-lag_lc,lh=lh-lag_lh)];</code></pre>
+<pre><code>##     iX period          lw          lc         lh     lag_lw     lag_lc
+##  1:  1      1 -0.99134989 -0.31792161 -1.0973687         NA         NA
+##  2:  1      2 -1.21740258 -0.53908888 -1.8751918 -0.9913499 -0.3179216
+##  3:  2      1 -0.46337646  0.12026146 -0.8855435         NA         NA
+##  4:  2      2 -0.54604576 -0.05288134 -1.1600330 -0.4633765  0.1202615
+##  5:  3      1  0.01421540  0.42137379 -0.7967321         NA         NA
+##  6:  3      2  0.06875105  0.32042426 -0.8652081  0.0142154  0.4213738
+##  7:  4      1  0.54845191  0.74730297 -0.7220522         NA         NA
+##  8:  4      2  0.80945459  0.76152382 -0.7023075  0.5484519  0.7473030
+##  9:  5      1  1.38069351  1.30696636 -0.7263431         NA         NA
+## 10:  5      2  2.09645981  1.62538599 -0.7059534  1.3806935  1.3069664
+##         lag_lh         dlw         dlc         dlh
+##  1:         NA          NA          NA          NA
+##  2: -1.0973687 -0.22605269 -0.22116727 -0.77782310
+##  3:         NA          NA          NA          NA
+##  4: -0.8855435 -0.08266930 -0.17314280 -0.27448954
+##  5:         NA          NA          NA          NA
+##  6: -0.7967321  0.05453565 -0.10094953 -0.06847605
+##  7:         NA          NA          NA          NA
+##  8: -0.7220522  0.26100268  0.01422085  0.01974476
+##  9:         NA          NA          NA          NA
+## 10: -0.7263431  0.71576630  0.31841963  0.02038971</code></pre>
+<pre class="r"><code>pander(summary(dat2[,lm(dlw ~ dlc + dlh)]))</code></pre>
+<table style="width:86%;">
+<colgroup>
+<col width="25%" />
+<col width="15%" />
+<col width="18%" />
+<col width="13%" />
+<col width="13%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">Estimate</th>
+<th align="center">Std. Error</th>
+<th align="center">t value</th>
+<th align="center">Pr(&gt;|t|)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>dlc</strong></td>
+<td align="center">1.537</td>
+<td align="center">0.02849</td>
+<td align="center">53.95</td>
+<td align="center">0.0003434</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>dlh</strong></td>
+<td align="center">0.1465</td>
+<td align="center">0.01824</td>
+<td align="center">8.035</td>
+<td align="center">0.01514</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>(Intercept)</strong></td>
+<td align="center">0.2262</td>
+<td align="center">0.005235</td>
+<td align="center">43.2</td>
+<td align="center">0.0005353</td>
+</tr>
+</tbody>
+</table>
+<table style="width:85%;">
+<caption>Fitting linear model: dlw ~ dlc + dlh</caption>
+<colgroup>
+<col width="20%" />
+<col width="30%" />
+<col width="11%" />
+<col width="22%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Observations</th>
+<th align="center">Residual Std. Error</th>
+<th align="center"><span class="math inline">\(R^2\)</span></th>
+<th align="center">Adjusted <span class="math inline">\(R^2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">5</td>
+<td align="center">0.008946</td>
+<td align="center">0.9997</td>
+<td align="center">0.9994</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Q5:</strong> Extend the model to add an excluded variable that affects participation through <span class="math inline">\(\mu\)</span> but not the wage (keep X everywhere). Devise a way improve the estimates by controling for participation.</p>
+<pre class="r"><code># we want to do a correction for sample selection
+# we have an exclusion restriction: z appears only in mu but not in outcome equation.
+library(sampleSelection)</code></pre>
+<pre><code>## Loading required package: maxLik</code></pre>
+<pre><code>## Loading required package: miscTools</code></pre>
+<pre><code>## 
+## Please cite the &#39;maxLik&#39; package as:
+## Henningsen, Arne and Toomet, Ott (2011). maxLik: A package for maximum likelihood estimation in R. Computational Statistics 26(3), 443-458. DOI 10.1007/s00180-010-0217-1.
+## 
+## If you have questions, suggestions, or comments regarding the &#39;maxLik&#39; package, please use a forum or &#39;tracker&#39; at maxLik&#39;s R-Forge site:
+## https://r-forge.r-project.org/projects/maxlik/</code></pre>
+<pre class="r"><code>select_eq = p1~X+z
+outcome_eq = lw ~ log(c) + log(h)
+summary(heckit(select_eq,outcome_eq,data=dat))</code></pre>
+<pre><code>## --------------------------------------------
+## Tobit 2 model (sample selection model)
+## 2-step Heckman / heckit estimation
+## 20000 observations (6236 censored and 13764 observed)
+## 9 free parameters (df = 19992)
+## Probit selection equation:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  1.56120    0.02670   58.47   &lt;2e-16 ***
+## X            2.82291    0.04353   64.85   &lt;2e-16 ***
+## z           -2.24731    0.04520  -49.72   &lt;2e-16 ***
+## Outcome equation:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 0.104286   0.002134   48.88   &lt;2e-16 ***
+## log(c)      1.511067   0.001811  834.23   &lt;2e-16 ***
+## log(h)      0.800319   0.003536  226.32   &lt;2e-16 ***
+## Multiple R-Squared:0.9875,   Adjusted R-Squared:0.9875
+##    Error terms:
+##                Estimate Std. Error t value Pr(&gt;|t|)    
+## invMillsRatio -0.065922   0.003097  -21.29   &lt;2e-16 ***
+## sigma          0.110953         NA      NA       NA    
+## rho           -0.594142         NA      NA       NA    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## --------------------------------------------</code></pre>
+</div>
+
+<!--<a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png"></a> -->
+<a class="github-fork-ribbon right-bottom fixed" href="https://github.com/floswald/ScPo-Labor" title="Fork me on GitHub">Fork me on GitHub</a>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

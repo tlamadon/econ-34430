@@ -5,6 +5,8 @@ The goal of this homework is to
 1. learn how to solve an equilibrium search model and 
 2. estimate a two-way fixed effect model on the data generated from the model. We will use the model from Shimer and Smith.
 
+This is the version from `r lubridate:::today()`. Please check for updates later on.
+
 
 ```{r,results=FALSE,message=FALSE,warning=FALSE}
   #some imports
@@ -114,7 +116,7 @@ and here is some code that initializes the different functions needed inside you
   S  = FF / p$r                              # surplus of a match (starting values)
 ```
 
-As guidance here is how I compute the $S(x,y)$ function and the $\kappa$. You can use and install RcppSimpleTensor, or directly use the spread, colSums and rowSums functions. Note that it can be important to use relaxation parameters such as `ctrl$rs` here. This is because the Bellman equation is a contraction mapping, but the distribution jointly with the Bellman equations might note be. 
+As guidance here is how I compute the $S(x,y)$ function and the $\kappa$. You can use and install [`RcppSimpleTensor`](https://github.com/tlamadon/RcppSimpleTensor), or directly use the `spread`, `colSums` and `rowSums` functions. Note that it can be important to use relaxation parameters such as `ctrl$rs` here. This is because the Bellman equation is a contraction mapping, but the distribution jointly with the Bellman equations might note be. 
 
 ```r
     kp =  pmin(pmin(sum(U), p$m*sum(U)^.5 * sum(V)^.5),sum(V))/(sum(U) * sum(V))
@@ -126,7 +128,7 @@ As guidance here is how I compute the $S(x,y)$ function and the $\kappa$. You ca
     wage = p$alpha * (p$sep + p$r) * S + p$r * spread(W0,2,p$ny)
 ```
 
-**Question 1**: Write a function that will iterate on the value functions and the distributions to find the fix point of the problem. Stop the loop when `dS<1e-7`. This requires for you to write down the equations to update $H(x,y),V(y),U(x)$. Getting these flow equations is crucial. Instead using the adding up constraint, I suggest you try to write the updating equations for H,V,U and then check that the total mass of workers is still 1 at each step of your loop. You may want to stick to this strategy:
+**Question 1**: Write a function that will iterate on the value functions and the distributions to find the fix point of the problem. Stop the loop when `dS<1e-7`. This requires for you to write down the equations to update $H(x,y),V(y),U(x)$. Getting these flow equations is crucial. Instead of using the adding up constraint, I suggest you try to write the updating equations for H,V,U and then check that the total mass of workers is still 1 at each step of your loop. You may want to stick to this strategy:
 
 1. Given current distributions in $U,V$, compute $\kappa$
 1. Compute $S$
@@ -144,7 +146,7 @@ As guidance here is how I compute the $S(x,y)$ function and the $\kappa$. You ca
     1. if yes, break
     1. else, repeat
 
-To test your code, install the libary test_that and write a few test cases that will verify that your code is doing what you expect it to do! For instance, check that the h and u distribution sum to 1 for each x.
+To test your code, install the libary `test_that` and write a few test cases that will verify that your code is doing what you expect it to do! For instance, check that the h and u distribution sum to 1 for each x.
 
 ```r
 require(testthat)
@@ -209,7 +211,7 @@ sim[y>0, wage := model$wage[x,y]*exp(rnorm(.N)*noise),list(x,y)]
 sim[y==0, wage := p$b]
 ```
 
-__Hint:__  The command makes use of many of the functionalities of data.table. When calling `sim[param1, param2 , param3]`, param1 subset the table, param2 execute a commmand and using `:=` assigns a new column. Finally param3 allows us to run the param2 within each values of $x,y$. Within each we then use the variable `.N` which gives the size of the sub-group within $(x,y)$, which allows us to draw exactly the right number of iid noises!
+__Hint:__  The command makes use of many of the functionalities of data.table. When calling `sim[param1, param2 ,by=param3]`, param1 subset the table, param2 execute a commmand and using `:=` assigns a new column. Finally param3 allows us to run the param2 within each values of `param3`, i.e. it `group`s the command. Within each we then use the variable `.N` which gives the size of the sub-group within `param3`, which allows us to draw exactly the right number of iid noises!
 
 ### Testing your simulation code
 
@@ -219,7 +221,7 @@ __Hint:__  The command makes use of many of the functionalities of data.table. W
 
 ## Estimate AKM
 
-We now want to estimate the two-way fixed effect model of Abowd Kramarz and Margolis. AKM requires to compute the smallest connected set among firms, but we are going to ignore this for now. Because of the way we simulated data, it is very unlikely that the connected set will not encompass all workers/firms.
+We now want to estimate the two-way fixed effect model of Abowd, Kramarz and Margolis. AKM requires to compute the smallest connected set among firms, but we are going to ignore this for now. Because of the way we simulated data, it is very unlikely that the connected set will not encompass all workers/firms.
 
 __Important:__ form now on, we work with log-wages.
 
