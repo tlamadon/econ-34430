@@ -1,9 +1,4 @@
 
-<br/><br/>
-This contains help files for homeworks for _Econ 34430_. The corresponding github repository can be found [here](https://github.com/tlamadon/econ-34430).
-  
-<!-- Place this tag where you want the button to render. -->
-<a class="github-button" href="https://github.com/tlamadon/econ-34430/archive/master.zip" data-icon="octicon-cloud-download" data-style="mega" aria-label="Download tlamadon/econ-34430 on GitHub">Download</a>  <a class="github-button" href="https://github.com/tlamadon/econ-34430/fork" data-icon="octicon-repo-forked" data-style="mega" data-count-href="/tlamadon/econ-34430/network" data-count-api="/repos/tlamadon/econ-34430#forks_count" data-count-aria-label="# forks on GitHub" aria-label="Fork tlamadon/econ-34430 on GitHub">Fork</a>
 
 
 

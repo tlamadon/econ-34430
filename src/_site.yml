@@ -6,6 +6,9 @@ navbar:
     - text: "Home"
       icon: fa-home      
       href: index.html
+    - text: "Notes"
+      icon: fa-home      
+      href: notes.html
     - text: "Homeworks"
       icon: fa-pencil     
       menu:

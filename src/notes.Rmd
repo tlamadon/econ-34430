@@ -1,0 +1,20 @@
+<br/><br/>
+This contains help files for homeworks for _Econ 34430_. The corresponding github repository can be found [here](https://github.com/tlamadon/econ-34430).
+  
+## Labor supply
+
+ - intro [slides](slides-laborsupply-micro.pdf)
+ - Imai and Keane [slides](slides-laborsupply-IK.pdf)
+ - Dynamic programing [slides](slides-laborsupply-IK.pdf) [Aguiragaberia and Mira]()
+ - Imai and Keane [slides](slides-laborsupply-IK.pdf) [Aguiragaberia and Mira]()
+ - Blundel Duncan and Meghir [slides](slides-laborsupply-bdm.pdf)
+ - Micro-Macro [slides1](slides-laborsupply-micromacro.pdf) [slides2](slides-laborsupply-micromacro2.pdf)
+
+## Sorting in the labor market
+
+ - 
+
+
+## Earnings and consumption
+
+## Firm shocks and contracting
