@@ -1,20 +1,42 @@
 <br/><br/>
-This contains help files for homeworks for _Econ 34430_. The corresponding github repository can be found [here](https://github.com/tlamadon/econ-34430).
-  
+
+[Here](pdf/syllabus-econ-34430.pdf) is the syllabus for the course.
+
 ## Labor supply
 
- - intro [slides](slides-laborsupply-micro.pdf)
- - Imai and Keane [slides](slides-laborsupply-IK.pdf)
- - Dynamic programing [slides](slides-laborsupply-IK.pdf) [Aguiragaberia and Mira]()
- - Imai and Keane [slides](slides-laborsupply-IK.pdf) [Aguiragaberia and Mira]()
- - Blundel Duncan and Meghir [slides](slides-laborsupply-bdm.pdf)
- - Micro-Macro [slides1](slides-laborsupply-micromacro.pdf) [slides2](slides-laborsupply-micromacro2.pdf)
+ - Intro [slides](pdf/slides-laborsupply-micro.pdf) 
+ - Kink and Budget set analysis [slides](pdf/slides-laborsupply-kink.pdf)
+ - Imai and Keane [slides](pdf/slides-laborsupply-IK.pdf)
+ - Dynamic programing [slides](pdf/slides-laborsupply-IK.pdf) and Aguiragaberia and Mira [paper]()
+ - Imai and Keane [slides](pdf/slides-laborsupply-IK.pdf) 
+ - Blundel Duncan and Meghir [slides](pdf/slides-laborsupply-bdm.pdf)
+ - Micro-Macro [slides1](pdf/slides-laborsupply-micromacro.pdf) [slides2](pdf/slides-laborsupply-micromacro2.pdf)
+
+Additional references:
+
+ - Blundell MacCurdy Handbook [paper](http://www.ucl.ac.uk/~uctp39a/Blundell-MaCurdy-1999.pdf)
+ - Keane review paper [paper](https://www.aeaweb.org/articles?id=10.1257/jel.49.4.961)
+ - [Saez,Slemrod and giertz](https://eml.berkeley.edu/~saez/saez-slemrod-giertzJEL12.pdf)
 
 ## Sorting in the labor market
 
+ - slides [part1](pdf/slides-sorting-part1.pdf) [part2](pdf/slides-sorting-part2.pdf) [part3](pdf/slides-sorting-part3.pdf)
+ 
+### Other papers
+
+ - [peers effects ](http://www.christiandustmann.com/content/4-research/8-peer-effects-in-the-workplace/cornelissen_etal_2017_aer.pdf)
+ - [Card and Kline]
  - 
+ 
+ 
+## Partial insurance
 
+ - Blundel Pistaferi Preston  [slides]()
+ - Heathcote Sorestleten and Violante [slides]()
+ - [Notes](pdf/contracting.pdf) on contracting 
+ - [Notes](pdf/PartialInsurance.pdf) on earnings and consumtpion 
+  
+## Other notes
 
-## Earnings and consumption
+ - Diamond Mortensen Pissarides [notes](pdf/LaborSearch.pdf).
 
-## Firm shocks and contracting

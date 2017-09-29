@@ -1,8 +1,17 @@
 
+<br>
 
+This website contains content for the graduate course Econ 34430 taught by [T. Lamadon](http://www.lamadon.com) in the Econ department at University of Chicago. 
 
+## Course description
 
-## Getting started {#start}
+The class covers recent developments in the understanding of the determinants of employment and earnings in the labor market. We start by studying extensive and intensive labor supply decisions in the short and long run. We then look at the effect of uncertainty in earnings by studying the joint dynamics of earnings and consumption. We continue by studying contracting between firms and workers and look at the link between firm shocks and employee earnings. Finally, the course covers models with two-sided heterogeneity with complementarities, sorting and mobility frictions. The methods presented in the course range from nonparametric econometrics methods to solving equilibrium and dynamic contracting problems. Students should expect to learn how to work with data and how to develop, solve and evaluate structural models of the labor market.
+
+## Getting in touch
+
+If you are a student for the course, please sign on the [SLACK group](https://join.slack.com/t/chicago-econ-34430/signup).
+
+## Getting started with R {#start}
 
 You will first need to install `R` and `Rstudio`. To do use the following links:
 
