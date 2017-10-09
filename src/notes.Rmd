@@ -1,33 +1,48 @@
+---
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+---
+
 <br/><br/>
 
-[Here](pdf/syllabus-econ-34430.pdf) is the syllabus for the course.
+# Class content
 
 ## Labor supply
 
- - Intro [slides](pdf/slides-laborsupply-micro.pdf) 
- - Kink and Budget set analysis [slides](pdf/slides-laborsupply-kink.pdf)
- - Imai and Keane [slides](pdf/slides-laborsupply-IK.pdf)
- - Dynamic programing [slides](pdf/slides-laborsupply-IK.pdf) and Aguiragaberia and Mira [paper]()
- - Imai and Keane [slides](pdf/slides-laborsupply-IK.pdf) 
- - Blundel Duncan and Meghir [slides](pdf/slides-laborsupply-bdm.pdf)
- - Micro-Macro [slides1](pdf/slides-laborsupply-micromacro.pdf) [slides2](pdf/slides-laborsupply-micromacro2.pdf)
+  - Classical labor supply [slides <i class="fa fa-download" aria-hidden="true"></i> ](pdf/slides-laborsupply-micro.pdf) 
+    - Keane review [paper <i class="fa fa-external-link" aria-hidden="true"></i> ](https://www.aeaweb.org/articles?id=10.1257/jel.49.4.961)
+  - Kink and Budget set analysis [slides <i class="fa fa-download" aria-hidden="true"></i>](pdf/slides-laborsupply-kink.pdf)
+    - Hausman (79) [paper <i class="fa fa-external-link" aria-hidden="true"></i>](http://www.sciencedirect.com/science/article/pii/0165176579901125)
+    - Saez (99) [paper <i class="fa fa-external-link" aria-hidden="true"></i>](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=0ahUKEwi-n6nJ29LWAhUrjVQKHbMqAvcQFggoMAA&url=https%3A%2F%2Feml.berkeley.edu%2F~saez%2FsaezAEJ10bunching.pdf&usg=AOvVaw3V2fUdMXmYWDStnsPlmwZh)
+    - Blomquist, Kumar, Liang & Newey (WP) [paper <i class="fa fa-external-link" aria-hidden="true"></i>](https://economics.mit.edu/files/9732)
+  - Dynamic programing [slides <i class="fa fa-download" aria-hidden="true"></i>](pdf/slides-laborsupply-dynprog2.pdf) 
+    - Aguiragaberia and Mira [review paper <i class="fa fa-external-link" aria-hidden="true"></i>](http://www.sciencedirect.com/science/article/pii/S0304407609001985)
+    - The EM algorithm [notes](), Dynamic programing [notes <i class="fa fa-download" aria-hidden="true"></i>](pdf/slides-laborsupply-dynprog1.pdf)
+    - Hotz and Miller (93) [paper <i class="fa fa-external-link" aria-hidden="true"></i>](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=0ahUKEwjp0PuP8-PWAhVEI1AKHeszDsoQFgguMAA&url=https%3A%2F%2Fwww.jstor.org%2Fstable%2F2298122&usg=AOvVaw1hZLKkCNQ6un9Fbw_tvQyx)
+    - Imai and Keane (04) [slides <i class="fa fa-download" aria-hidden="true"></i>](pdf/slides-laborsupply-IK.pdf) and [paper <i class="fa fa-external-link" aria-hidden="true"></i>](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=0ahUKEwjW88_r29LWAhUExFQKHfU9AD4QFggoMAA&url=http%3A%2F%2Ffaculty.smu.edu%2Fmillimet%2Fclasses%2Feco7321%2Fpapers%2Fimai%2520keane%25202004.pdf&usg=AOvVaw2-05Q9lgrUj3hPLTl7_WdP)
 
-Additional references:
+#### Additional Material:
 
- - Blundell MacCurdy Handbook [paper](http://www.ucl.ac.uk/~uctp39a/Blundell-MaCurdy-1999.pdf)
- - Keane review paper [paper](https://www.aeaweb.org/articles?id=10.1257/jel.49.4.961)
- - [Saez,Slemrod and giertz](https://eml.berkeley.edu/~saez/saez-slemrod-giertzJEL12.pdf)
+ - Blundel Duncan and Meghir [slides <i class="fa fa-download" aria-hidden="true"></i>](pdf/slides-laborsupply-bdm.pdf)
+ - Micro-Macro [slides <i class="fa fa-download" aria-hidden="true"></i>](pdf/slides-laborsupply-micromacro.pdf) [slides <i class="fa fa-download" aria-hidden="true"></i>](pdf/slides-laborsupply-micromacro2.pdf)
+ -  Saez, Slemrod and Giertz [paper <i class="fa fa-external-link" aria-hidden="true"></i>](https://eml.berkeley.edu/~saez/saez-slemrod-giertzJEL12.pdf)
 
 ## Sorting in the labor market
 
  - slides [part1](pdf/slides-sorting-part1.pdf) [part2](pdf/slides-sorting-part2.pdf) [part3](pdf/slides-sorting-part3.pdf)
  
-### Other papers
+#### Additional Material:
 
  - [peers effects ](http://www.christiandustmann.com/content/4-research/8-peer-effects-in-the-workplace/cornelissen_etal_2017_aer.pdf)
- - [Card and Kline]
- - 
- 
+ - Card D, Heining J, Kline P [paper <i class="fa fa-external-link" aria-hidden="true"></i>](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=0ahUKEwjXh-C24NLWAhXmz1QKHXWcAEsQFggoMAA&url=http%3A%2F%2Fwww.nber.org%2Fpapers%2Fw18522&usg=AOvVaw2SE0O9buy8MBSzys-GSDwM)
+ - Econometric Analysis of Bipartite Networks, review by S. Bonhomme [paper <i class="fa fa-external-link" aria-hidden="true"></i>](https://drive.google.com/file/d/0B13ohL0_ULTDN2xlVWxFbXRkVkE/view)
+ - A Distributional Framework for
+Matched Employer Employee Data [paper <i class="fa fa-external-link" aria-hidden="true"></i>](https://drive.google.com/file/d/0B13ohL0_ULTDTFJwUEdPOW5BX28/view)
  
 ## Partial insurance
 
@@ -36,7 +51,7 @@ Additional references:
  - [Notes](pdf/contracting.pdf) on contracting 
  - [Notes](pdf/PartialInsurance.pdf) on earnings and consumtpion 
   
-## Other notes
+## Extra topics
 
  - Diamond Mortensen Pissarides [notes](pdf/LaborSearch.pdf).
 

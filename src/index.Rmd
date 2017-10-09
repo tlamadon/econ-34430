@@ -3,13 +3,16 @@
 
 This website contains content for the graduate course Econ 34430 taught by [T. Lamadon](http://www.lamadon.com) in the Econ department at University of Chicago. 
 
+<a class="btn btn-danger" href="https://chicago-econ-34430.slack.com/signup" role="button">Slack group</a>  <a class="btn btn-info" href="pdf/econ-34430-syllabus.pdf" role="button">Syllabus</a> 
+
 ## Course description
 
 The class covers recent developments in the understanding of the determinants of employment and earnings in the labor market. We start by studying extensive and intensive labor supply decisions in the short and long run. We then look at the effect of uncertainty in earnings by studying the joint dynamics of earnings and consumption. We continue by studying contracting between firms and workers and look at the link between firm shocks and employee earnings. Finally, the course covers models with two-sided heterogeneity with complementarities, sorting and mobility frictions. The methods presented in the course range from nonparametric econometrics methods to solving equilibrium and dynamic contracting problems. Students should expect to learn how to work with data and how to develop, solve and evaluate structural models of the labor market.
 
 ## Getting in touch
 
-If you are a student for the course, please sign on the [SLACK group](https://join.slack.com/t/chicago-econ-34430/signup).
+If you are a student for the course, please sign on the [slack group](https://join.slack.com/t/chicago-econ-34430/signup).
+
 
 ## Getting started with R {#start}
 
@@ -21,6 +24,10 @@ You will first need to install `R` and `Rstudio`. To do use the following links:
 Here is a [tutorial](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.pdf) and a [cheatsheet](https://s3.amazonaws.com/assets.datacamp.com/img/blog/data+table+cheat+sheet.pdf) for `data.table`
 
 Here is a [tutorial](http://www.ceb-institute.org/bbs/wp-content/uploads/2011/09/handout_ggplot2.pdf), a [cheatsheet](http://www.rstudio.com/wp-content/uploads/2015/12/ggplot2-cheatsheet-2.0.pdf) and the [full documentation](http://docs.ggplot2.org/current/) for `ggplot2`.
+
+Also here is an interactive online course to learn `ggplto2` [datacamp](https://www.datacamp.com/courses/data-visualization-with-ggplot2-1)
+
+
 
 You can install most packages directly:
 

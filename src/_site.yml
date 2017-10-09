@@ -6,8 +6,8 @@ navbar:
     - text: "Home"
       icon: fa-home      
       href: index.html
-    - text: "Notes"
-      icon: fa-home      
+    - text: "Sched"
+      icon: fa-calendar      
       href: notes.html
     - text: "Homeworks"
       icon: fa-pencil     

@@ -1,5 +1,12 @@
 ---
 title: "Static Labor Supply"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
 ---
 
 ```{r setup, include=FALSE}
@@ -9,7 +16,7 @@ require(xtable)
 require(pander)
 ```
 
-You can find the source code for this file in the class repository. The direct link is [here](https://raw.githubusercontent.com/tlamadon/econ-34430/master/src/static-labor-supply.Rmd)
+You can find the source code for this file in the class repository. The direct link is [here](https://raw.githubusercontent.com/tlamadon/econ-34430/master/src/static-labor-supply.Rmd).
 
 Let's start with studying static labor supply. We will consider the decision of the agent under the following rule:
 
@@ -21,7 +28,7 @@ The individual takes his wage $w$ as given, he chooses hours of work $h$ and con
 
 We note already that the non labor income can control for dynamic labor supply since we can have $\mu= b_t - (1+r)b_{t+1}$. This is part of a larger maximization problem where the agents choose optimaly $b_t$ over time. We will get there next time.
 
-### Interior solution
+## Interior solution
 
 The first order conditions give us $w(wh +r - \mu)^\eta = \beta h^\gamma$. There is no closed-form but we can very quickly find an interior solution by using Newton maximization on the function $f(x) = w(wh +r - \mu)^\eta - \beta h^\gamma$. We iterate on 
 
@@ -40,7 +47,7 @@ ff.newt <- function(x,w,R,eta,gamma,beta) {
 }
 ```
 
-### Simulating data
+## Simulating data
 
 We are going to simulate a data set where agents will choose participation as well as the number of hours if they decide to work. To do that we will solve for the interior solution under a given tax rate and compare this to the option of no-work.
 
@@ -77,7 +84,7 @@ We simply compute the value of choosing $h=0$, then take the highest of working 
 ```{r, results='hide'}
 simdata[,u0:=  mu^(1+p$eta)/(1+p$eta)];
 simdata[,p1:=u1>u0]
-ggplot(simdata,aes(x=u0,y=u1)) + geom_point() + geom_abline(linetype=2)
+ggplot(simdata,aes(x=u0,y=u1)) + geom_point() + geom_abline(linetype=2) + theme_bw()
 ```
 
 The regression still works, among ecah individual who chooses to work, the FOC is still satified.
@@ -117,12 +124,13 @@ expect_false(coef(sfit)["log(c)",1]==-p$eta)
 pander(sfit)
 ```
 
-# Short Panel version 
+## Short Panel version 
 
  **Q1:** Take the simulated data from the model with heterogenous $\beta_i$. First explain why regressing $\log(w)$ on $\log(c)$, $\log(h)$, and $X$ does not deliver correct estimates.
+
  **Q2:** Simulate 2 periods of the model (a short panel), keep everything fixed over the 2 periods, but redraw the wage. Estimate the model in differences and recover the parameters using $\log(w)$ on $\log(c)$, $\log(h)$. How does including or not including participation decision affect the results? Explain.
  
-# Repeated cross-section version
+## Repeated cross-section
 
 In this section we want to get closer to the Blundell, Duncan and Meghir (1998) exercice. We first modify the cost to allow for an increase return to X, and for the presence of a change in the tax rate. Simulate wages according to:
 
