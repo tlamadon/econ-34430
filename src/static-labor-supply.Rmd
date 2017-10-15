@@ -126,9 +126,9 @@ pander(sfit)
 
 ## Short Panel version 
 
- **Q1:** Take the simulated data from the model with heterogenous $\beta_i$. First explain why regressing $\log(w)$ on $\log(c)$, $\log(h)$, and $X$ does not deliver correct estimates.
+<span class="label label-success">Question 1</span> Take the simulated data from the model with heterogenous $\beta_i$. First explain why regressing $\log(w)$ on $\log(c)$, $\log(h)$, and $X$ does not deliver correct estimates.
 
- **Q2:** Simulate 2 periods of the model (a short panel), keep everything fixed over the 2 periods, but redraw the wage. Estimate the model in differences and recover the parameters using $\log(w)$ on $\log(c)$, $\log(h)$. How does including or not including participation decision affect the results? Explain.
+<span class="label label-success">Question 2</span> Simulate 2 periods of the model (a short panel), keep everything fixed over the 2 periods, but redraw the wage. Estimate the model in differences and recover the parameters using $\log(w)$ on $\log(c)$, $\log(h)$. How does including or not including participation decision affect the results? Explain.
  
 ## Repeated cross-section
 
@@ -140,11 +140,11 @@ In this section we want to get closer to the Blundell, Duncan and Meghir (1998) 
 
 Write a function that can simulate a full cross section and that takes `lb` as inpute as well as marginal tax rate $\rho$. It should apply the same function as before to solve for the interior solution, but use the after-tax wage every where.
 
- **Q3:** simulate two cross-sections with $(lb=1,\rho=1)$ and $(lb=1.5,\rho=0.8)$ and use 10k indivduals. Simulate data without participation decision for now. Combine the data and show that previous regression provides biased estimates. Then slice X into K categories (for example using quantiles). Then compute $\log(w)$, $\log(c)$ and $\log(h)$ within each group and time period. Run the regression in first differences and show that this recovers the structural parameters.
+<span class="label label-success">Question 3</span> simulate two cross-sections with $(lb=1,\rho=1)$ and $(lb=1.5,\rho=0.8)$ and use 10k individuals. Simulate data without the participation decision for now. Combine the two cross-sections data and show that previous regression provides biased estimates. Then slice X into K categories (for example using quantiles, or discritize X from the start). Then compute $\log(w)$, $\log(c)$ and $\log(h)$ within each group and cross-section. Run the regression in first differences (differencing between cross-sections) and show that this recovers the structural parameters in simulation.
 
- **Q4:** Add the participation decision to the data generating process. Show that the results are now biased.
+<span class="label label-success">Question 4</span> Re-introduce the participation decision to the data generating process. Show that the results are now biased.
  
- **Q5:** Extend the model to add an excluded variable that affects participation through $\mu$ but not the wage (keep X everywhere). Devise a way improve the estimates by controling for participation.
+<span class="label label-success">Question 5</span> Extend the DGP to add an observable excluded variable that affects participation through $\mu$ but not the wage (keep X everywhere). Devise a way improve the estimates by controling for participation (for example, use a control function aprroach).
  
 
 
