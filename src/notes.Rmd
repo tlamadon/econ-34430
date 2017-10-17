@@ -14,15 +14,15 @@ output:
 
 ## Labor supply
 
-  - Classical labor supply [slides <i class="fa fa-download" aria-hidden="true"></i> ](pdf/slides-laborsupply-micro.pdf) 
+  - Classical labor supply [slides <i class="fa fa-download" aria-hidden="true"></i> ](pdf/slides-laborsupply-micro.pdf)
     - Keane review [paper <i class="fa fa-external-link" aria-hidden="true"></i> ](https://www.aeaweb.org/articles?id=10.1257/jel.49.4.961)
   - Kink and Budget set analysis [slides <i class="fa fa-download" aria-hidden="true"></i>](pdf/slides-laborsupply-kink.pdf)
     - Hausman (79) [paper <i class="fa fa-external-link" aria-hidden="true"></i>](http://www.sciencedirect.com/science/article/pii/0165176579901125)
     - Saez (99) [paper <i class="fa fa-external-link" aria-hidden="true"></i>](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=0ahUKEwi-n6nJ29LWAhUrjVQKHbMqAvcQFggoMAA&url=https%3A%2F%2Feml.berkeley.edu%2F~saez%2FsaezAEJ10bunching.pdf&usg=AOvVaw3V2fUdMXmYWDStnsPlmwZh)
     - Blomquist, Kumar, Liang & Newey (WP) [paper <i class="fa fa-external-link" aria-hidden="true"></i>](https://economics.mit.edu/files/9732)
-  - Dynamic programing [slides <i class="fa fa-download" aria-hidden="true"></i>](pdf/slides-laborsupply-dynprog2.pdf) 
+  - Dynamic programing [slides <i class="fa fa-download" aria-hidden="true"></i>](pdf/slides-laborsupply-dynprog2.pdf)
     - Aguiragaberia and Mira [review paper <i class="fa fa-external-link" aria-hidden="true"></i>](http://www.sciencedirect.com/science/article/pii/S0304407609001985)
-    - The EM algorithm [notes](), Dynamic programing [notes <i class="fa fa-download" aria-hidden="true"></i>](pdf/slides-laborsupply-dynprog.pdf)
+    - The EM algorithm [notes](pdf/em.pdf), Dynamic programing [notes <i class="fa fa-download" aria-hidden="true"></i>](pdf/slides-laborsupply-dynprog.pdf)
     - Hotz and Miller (93) [paper <i class="fa fa-external-link" aria-hidden="true"></i>](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=0ahUKEwjp0PuP8-PWAhVEI1AKHeszDsoQFgguMAA&url=https%3A%2F%2Fwww.jstor.org%2Fstable%2F2298122&usg=AOvVaw1hZLKkCNQ6un9Fbw_tvQyx)
     - Imai and Keane (04) [slides <i class="fa fa-download" aria-hidden="true"></i>](pdf/slides-laborsupply-IK.pdf) and [paper <i class="fa fa-external-link" aria-hidden="true"></i>](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&cad=rja&uact=8&ved=0ahUKEwjW88_r29LWAhUExFQKHfU9AD4QFggoMAA&url=http%3A%2F%2Ffaculty.smu.edu%2Fmillimet%2Fclasses%2Feco7321%2Fpapers%2Fimai%2520keane%25202004.pdf&usg=AOvVaw2-05Q9lgrUj3hPLTl7_WdP)
 
@@ -37,7 +37,7 @@ output:
 ## Sorting in the labor market
 
  - slides [part1](pdf/slides-sorting-part1.pdf) [part2](pdf/slides-sorting-part2.pdf) [part3](pdf/slides-sorting-part3.pdf)
- 
+
 #### Additional Material:
 
  - [peers effects ](http://www.christiandustmann.com/content/4-research/8-peer-effects-in-the-workplace/cornelissen_etal_2017_aer.pdf)
@@ -47,19 +47,16 @@ output:
 Matched Employer Employee Data [paper <i class="fa fa-external-link" aria-hidden="true"></i>](https://drive.google.com/file/d/0B13ohL0_ULTDTFJwUEdPOW5BX28/view)
 
 <hr>
- 
+
 ## Partial insurance
 
  - Blundel Pistaferi Preston  [slides]()
  - Heathcote Sorestleten and Violante [slides]()
- - [Notes](pdf/contracting.pdf) on contracting 
- - [Notes](pdf/PartialInsurance.pdf) on earnings and consumtpion 
+ - [Notes](pdf/contracting.pdf) on contracting
+ - [Notes](pdf/PartialInsurance.pdf) on earnings and consumtpion
 
 <hr>
-  
+
 ## Extra topics
 
  - Diamond Mortensen Pissarides [notes](pdf/LaborSearch.pdf).
-
-
-
