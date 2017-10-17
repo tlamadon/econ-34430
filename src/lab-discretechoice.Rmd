@@ -1,0 +1,157 @@
+---
+title: "Lab on Discrete Choice"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+---
+
+ 1. consider estimation of demand model for transport
+ 2. look at IIA assumption (potential pitt-falls)
+ 3. extend with 3 types, check substitution patterns
+ 4. consider max-rank substitution
+
+We consider here discrete choices over a set of alernatives. THe utility of the agent is modeled as 
+
+# Discrete Choices
+
+$$u_i(j) = \beta X_i + \epsilon_{ij}$$
+
+and when the error term is type 2 extreme value:
+
+$$F(\epsilon_{ij}) = \exp( -\exp( -\epsilon_{ij}  ) )$$
+
+the choice probability is given by 
+
+$$ Pr[j(i)^*=j] = \frac{ \exp[ u_i(j)  ] }{ \sum_j'  \exp[ u_i(j')  ]} $$
+
+Armed with these tools we can tackle the data we are given.
+
+## Data
+```{r,message=FALSE}
+library(AER)
+library(mlogit)
+library(kableExtra)
+library(knitr)
+library(foreach)
+data("TravelMode")
+data = TravelMode
+
+kable(data[1:10,])
+```
+
+## Mlogit results
+
+```{r,message=FALSE}
+library(AER)
+library(mlogit)
+library(kableExtra)
+library(knitr)
+library(reshape2)
+data("TravelMode")
+TravelMode <- mlogit.data(TravelMode, choice = "choice", shape = "long", alt.var = "mode", chid.var = "individual")
+data = TravelMode
+
+## overall proportions for chosen mode
+with(data, prop.table(table(mode[choice == TRUE])))
+
+## travel vs. waiting time for different travel modes
+ggplot(data,aes(x=wait, y=travel)) + geom_point() + facet_wrap(~mode)
+
+## Greene (2003), Table 21.11, conditional logit model
+fit1 <- mlogit(choice ~ gcost + wait, data = data, reflevel = "car")
+# fit1 <- mlogit(choice ~ gcost + wait | income, data = data, reflevel = "car")
+# fit1 <- mlogit(choice ~ gcost + wait + income, data = data, reflevel = "car") # why doesn't it work?
+summary(fit1)
+
+```
+
+
+##  Nested logit
+
+One way to test the assumption is to estimate without one alternative and see if it affects the parameters. For instance we can focus on whether `air` or `train` is chosen and estimate within.
+
+```{r}
+fit.nested <- mlogit(choice ~ wait + gcost, TravelMode, reflevel = "car",
+           nests = list(fly = "air", ground = c("train", "bus", "car")),
+           unscaled = TRUE)
+
+summary(fit.nested)
+```
+
+```{r}
+data2 =copy(data)
+I=paste(data2$mode)=="bus"
+
+# force other alternatives to mean value
+for (mm in c('car','train','air')) {
+  #data2$gcost[paste(data2$mode)==mm] = mean(data2$gcost[paste(data2$mode)==mm])
+  data2$wait[paste(data2$mode)==mm]  = mean(data2$wait[paste(data2$mode)==mm])
+}
+
+
+# run a for lopp for different prices
+# save shares for each option
+rr = foreach(dprice = seq(-100,100,l=20), .combine = rbind)  %do% {
+  data2$gcost[I] = data$gcost[I] + dprice
+  res = colMeans(predict(fit.nested,newdata=data2))
+  res['dprice'] = dprice
+  res
+} 
+
+rr = melt(data.frame(rr),id.vars = "dprice")
+ggplot(rr,aes(x=dprice,y=value,color=factor(variable))) + geom_line()
+```
+
+## Random coefficient model
+
+Let's try with 2 groups of people to run an EM
+
+```{r}
+C = acast(data,individual ~ mode,value.var="choice")
+C = C[,c(4,1,2,3)]
+p1=0.5
+
+I = sample(unique(data$individua),nrow(data)/8)
+I  =data$individual %in% I
+
+# we start with the very first mlogit (we randomly sub-sample to create some variation)
+fit1 <- mlogit(choice ~ gcost , data = data[I,], reflevel = "car")
+fit2 <- mlogit(choice ~ gcost , data = data[!I,], reflevel = "car")
+
+liks = rep(0,15)
+for (i in 1:15) {
+  # for each individual we compute the posterior probability given their data
+  p1v = predict(fit1,newdata=data)
+  p2v = predict(fit2,newdata=data)
+  
+  p1v = rowSums(p1v * C)*p1
+  p2v = rowSums(p2v * C)*(1-p1)
+  
+  liks[i] = sum(log(p1v+p2v))
+  #cat(sprintf("ll=%f\n",ll))
+  
+  p1v  = p1v/(p1v+p2v)
+  p1v  = as.numeric( p1v %x% c(1,1,1,1) )
+  
+  # finally we run the 2 mlogit with weights
+  fit1 <- mlogit(choice ~ gcost , data = data,weights = p1v, reflevel = "car")
+  fit2 <- mlogit(choice ~ gcost , data = data,weights = as.numeric(1-p1v), reflevel = "car")
+  
+  p1 = mean(p1v)
+}
+print(fit1)
+print(fit2)
+print(p1)
+```
+
+```{r}
+
+plot(liks)
+
+```
+
