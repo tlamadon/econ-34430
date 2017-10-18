@@ -9,6 +9,11 @@ navbar:
     - text: "Sched"
       icon: fa-calendar      
       href: notes.html
+    - text: "Labs"
+      icon: fa-book     
+      menu:
+        - text: "EM mlogit"
+          href: lab-discretechoice.html
     - text: "Homeworks"
       icon: fa-pencil     
       menu:
