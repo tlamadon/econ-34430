@@ -29,7 +29,7 @@ because of the log-normal shocks we get that
 
 $$
 \begin{align*}
-\mathbb{E}_\epsilon U(w,a,\xi) &=   \gamma  \cdot \underbrace{\exp \Big( (1-\rho)^2 \sigma_\epsilon^2/2) \Big)}_{S} \cdot  \underbrace{\frac{ (\beta_a E_{it} + \beta_r t)^{(1-\rho)} }{1-\rho}}_{u_0(\exp(\mathbb{E}\log w))} + u(a) +  \xi(a) \\
+\mathbb{E}_\epsilon U(w,a,\xi) &=   \gamma  \cdot \underbrace{\exp \Big( (1-\rho)^2 \sigma_\epsilon^2/2) \Big)}_{S} \cdot  \underbrace{\frac{ \Big( \exp (\beta_a E_{it} + \beta_r t) \Big)^{(1-\rho)} }{1-\rho}}_{u_0(\exp(\mathbb{E}\log w))} + u(a) +  \xi(a) \\
 &=\gamma  S \cdot  u_0(exp(\mathbb{E} \log w)) + u(a) +  \xi(a)
 \end{align*}.
 $$
@@ -205,18 +205,18 @@ $$ V = \sum_k Pr[k] \cdot \big( u_k + \gamma_c - log(Pr[k]) \big) $$
 
 We then use the recursive formulation of the value function which was: 
 
-$$ \bar{V}_t(x) = \log \sum_a \exp \Big[  \mathbb{E} U(w,a,\xi) + \beta \sum_{x_{t+1}}\bar{V}_t(x_{t+1}) g(x_{t+1}|a) \Big] + \gamma_c$$
+$$ \bar{V}_t(x) = \log \sum_a \exp \Big[  \gamma \cdot S \cdot u_0(\exp(\mathbb{E}[\log w|x,t])) + u(a) + \beta \sum_{x_{t+1}}\bar{V}_t(x_{t+1}) g(x_{t+1}|a) \Big] + \gamma_c$$
 
 where we have that $\mathbb{E} U(w,a,\xi) = \gamma S u( \exp(\mathbb{E}\log w))$. At this point we are interested in recovering $u(a)$ and $\gamma$. We can look at the final period and see that
 
 $$ 
 \begin{align*}
-\bar{V}_T(x) &=  \mathbb{E} \max_a \Big[ \gamma \cdot S \cdot u_0(\exp(\mathbb{E}[\log w|x,t])) + u(a) \Big] \\
+\bar{V}_T(x) &=  \mathbb{E} \max_a \Big[ \gamma \cdot S \cdot u_0(\exp(\mathbb{E}[\log w|x,t])) + u(a) + \xi(a) \Big] \\
 &= \sum_a Pr[a|x,t] \Big(  \gamma \cdot S \cdot u_0(\exp(\mathbb{E}[\log w|x,t])) + u(a) + \gamma_c - \log Pr[a|x,t] \Big) \\
 &= \gamma \cdot \Big( \sum_a Pr[a|x,t] \cdot S \cdot u_0(\exp(\mathbb{E}[\log w|x,t])) \Big)  + u(a) \cdot \Big( \sum_a Pr[a|x,t]\Big)  \\
 & \hspace{5cm} + \gamma_c - \sum Pr[a|x,t] \log Pr[a|x,t] \\
  \end{align*}
- $$
+$$
 
 Call $\theta = (\gamma,u(2),u(3))$, we have found a matrix $B_T$ which is $n_e \times 3$ and a vector $A_T$, functions only of data and of known parameters, such that $\bar{V}_T = A_T + B_T \theta$. Strictly speaking we could just recover the parameters directly here! But for the sake of the exercice we are going to use all time periods.
 
@@ -224,7 +224,7 @@ At each period $t$ we have that the flow payoff can be expressed linearly. In ot
 
 $$ 
 \begin{align*}
-\bar{V}_{t} &= \log \sum_a \exp \Big[   S \cdot u_0(\exp(\mathbb{E}_{t} \log w_{t})) + u(a) + \beta \cdot G(a) \times \bar{V}_{t+1} \Big] + \gamma_c \\
+\bar{V}_{t} &= \log \sum_a \exp \Big[   \gamma S \cdot u_0(\exp(\mathbb{E}_{t} \log w_{t})) + u(a) + \beta \cdot G(a) \times \bar{V}_{t+1} \Big] + \gamma_c \\
 & = \log \sum_a \exp \Big[   \tilde{B}_{t}(a) \theta + \beta G(a) (A_{t+1} +  B_{t+1} \theta) \Big] + \gamma_c  \\
 & = \sum_a P_t[a] \Big[    \tilde{B}_{t}(a) \theta + \beta G(a) (A_{t+1} +  B_{t+1} \theta)  - \log Pr[a|t,x] \Big] + \gamma_c \\
 & = \underbrace{\Big( \sum_a P_t[a] ( \tilde{B}_{t}(a)+ \beta G(a) B_{t+1}) \Big)}_{B_{t}} \theta + \underbrace{ \sum_a \beta  G(a)  P_t[a] A_{t+1} + \gamma_c -  (\sum_a P_t[a] \log P_t[a]) \times  \mathbf{1}}_{A_{t}} 
@@ -249,9 +249,10 @@ Compute the choice probabilities in the simulated data $Pr[a|E,t]$. Use these co
 ### **Q5** Full estimation
 
 In this final question we want to put it all together:
+
  1. Recover the wage and transition parameters as in the first question
  2. Recover $\gamma$ and $u(2),u(3)$ using steps of the previous question for a fixed value of $\rho$
- 3. Run the previous step for a grid on $\rho$ (report this plot)
+ 3. Run the previous steps 1 and 2 for a grid on $\rho$.  Report a plot of the recovered likelihood as a function $\rho$. It should be the highest at the true parameter.
 
  
 
