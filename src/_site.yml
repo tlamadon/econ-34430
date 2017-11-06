@@ -20,6 +20,8 @@ navbar:
           href: dynamic-labor-supply.html
         - text: "Mixtures"
           href: earnings-mixtures.html
+        - text: "Two-way FE"
+          href: hw-akm.html
         - text: "Sorting"
           href: ShimerSmith.html
   right:

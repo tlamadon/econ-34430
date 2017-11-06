@@ -16,7 +16,7 @@ To learn more, see [Interactive Documents](http://rmarkdown.rstudio.com/authorin
 
 You can embed Shiny inputs and outputs in your document. Outputs are automatically updated whenever inputs change.  This demonstrates how a standard R plot can be made interactive by wrapping it in the Shiny `renderPlot` function. The `selectInput` and `sliderInput` functions create the input widgets used to drive the plot.
 
-```{r eruptions, echo=FALSE}
+```{r eruptions, echo=FALSE,eval=FALSE}
 inputPanel(
   sliderInput("beta", label = "elasticity:",
               min = 0, max = 2, value = 1, step = 0.2),

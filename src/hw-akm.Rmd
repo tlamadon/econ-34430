@@ -1,0 +1,212 @@
+---
+title: "Homework on two-way fixed effects"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+---
+
+The goal of the following homework is to develop our understanding of the two-way fixed effect models. See the original paper by [Abowd Kramartz and Margolis](http://onlinelibrary.wiley.com/doi/10.1111/1468-0262.00020/full).
+
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
+require(data.table)
+require(reshape)
+require(lattice)
+require(gridExtra)
+```
+
+# Constructing Employer-Employee matched data
+
+
+
+## Simulating a network
+
+One central piece is to have a network of workers and firms over time. We then start by simulating such an object. The rest of homework will focus on adding wages to this model. As we know from the lectures, a central issue of the network will be the number of movers.
+
+We are going to model the mobility between workers and firms. Given a transition matrix we can solve for a stationary distrubtion, and then construct our panel from there.
+
+```{r}
+nk = 30
+nl = 10
+
+alpha_sd = 1
+psi_sd   = 1
+
+# let's draw some FE
+psi   = qnorm(1:nk/(nk+1)) * alpha_sd
+alpha = qnorm(1:nl/(nl+1)) * psi_sd
+
+# let's assume moving PR is fixed
+lambda = 0.1
+
+csort = 0.5 # sorting effect
+cnetw = 0.2 # network effect
+csig  = 0.5
+
+# lets create type specific transition matrices
+# we are going to use joint normal centered on different values
+G = array(0,c(nl,nk,nk))
+for (l in 1:nl) for (k in 1:nk) {
+  G[l,k,] = dnorm(csort*(psi[k] - alpha[l])) * dnorm(cnetw*(psi[k] - psi))
+  G[l,k,] = dnorm( psi - cnetw *psi[k] - csort * alpha[l],sd = csig )
+  G[l,k,] = G[l,k,]/sum(G[l,k,])
+} 
+
+
+# we then solve for the stationary distribution over psis for each alpha value
+H = array(1/nk,c(nl,nk))
+for (l in 1:nl) {
+ M = G[l,,]
+ for (i in 1:100) {
+   H[l,] = t(G[l,,]) %*% H[l,]
+ }
+}
+
+Plot1=wireframe(G[1,,],aspect = c(1,1),xlab = "previous firm",ylab="next firm")
+Plot2=wireframe(G[nl,,],aspect = c(1,1),xlab = "previous firm",ylab="next firm")
+grid.arrange(Plot1, Plot2,nrow=1)
+```
+
+And we can plot the joint distribution of matches
+
+```{r}
+wireframe(H,aspect = c(1,1),xlab = "worker",ylab="firm")
+```
+
+The next step is to simulate our network given our transitions rules. 
+
+```{r}
+nt = 10
+ni = 10000
+
+# we simulate a panel
+network    = array(0,c(ni,nt))
+spellcount = array(0,c(ni,nt))
+A = rep(0,ni)
+
+for (i in 1:ni) {
+  # we draw the worker type
+  l = sample.int(nl,1)
+  A[i]=l
+  # at time 1, we draw from H
+  network[i,1] = sample.int(nk,1,prob = H[l,])
+  for (t in 2:nt) {
+    if (runif(1)<lambda) {
+      network[i,t] = sample.int(nk,1,prob = G[l,network[i,t-1],])
+      spellcount[i,t] = spellcount[i,t-1] +1
+    } else {
+      network[i,t]    = network[i,t-1]
+      spellcount[i,t] = spellcount[i,t-1]
+    }
+  }
+}
+
+data  = data.table(melt(network,c('i','t')))
+data2 = data.table(melt(spellcount,c('i','t')))
+setnames(data,"value","k")
+data <- data[,spell := data2$value]
+data <- data[,l := A[i],i]
+data <- data[,alpha := alpha[l],l]
+data <- data[,psi := psi[k],k]
+```
+
+
+The final step is a to assign identities to the firm. We are going to do this is a relatively simple way, by simply randomly assigning firm ids to spells.
+
+```{r}
+firm_size = 15
+within_firm_count = ni/(firm_size*nk*nt)
+
+dspell <- data[,list(len=.N),list(i,spell,k)]
+dspell <- dspell[,fid := sample( 1: pmax(1,sum(len)/(firm_size*nt) ) ,.N,replace=TRUE) , k]
+dspell <- dspell[,fid := .GRP, list(k,fid)]
+
+setkey(data,i,spell)
+setkey(dspell,i,spell)
+
+data <- data[, fid:= dspell[data,fid]]
+```
+<span class="label label-success">Question 1</span> We are going to do some `R-golfing` (see [wikipedia](https://en.wikipedia.org/wiki/Code_golf)). I want you to use a one line code to evaluate the following 2 quantities:
+
+ - mean firm size, in the crossection, expect something like 15.
+ - mean number of movers per firm in total in our panel.
+
+To evaluate the number of strokes that you needed to use run the following on your line of code: `all.names(expression( YOUR_CODE ))`. My scores for the previous two are `9` and `18`.
+
+## Simulating AKM wages
+
+We start with just AKM wages, which is log additive with some noise.
+
+```{r}
+w_sigma = 0.2
+data <- data[, lw := alpha + psi + w_sigma * rnorm(.N) ]
+```
+
+<span class="label label-success">Question 2</span> Before we finish with the simulation code. Use this generated data to create the event study plot from Card-Heining-Kline:
+
+ 1. Compute the mean wage within firm
+ 2. group firms into quartiles
+ 3. select workers around a move (2 periods pre, 2 periods post)
+ 4. compute wages before/after the mover for each transitions (from each quartile to each quartile)
+ 5. plot the lines associated with each transition
+ 
+## Calibrating the parameters
+ 
+<span class="label label-success">Question 3</span> Pick the parameters `psi_sd`,`alpha_sd`,`csort`, `csig` and `w_sigma` to roughly match the decomposition in the Card-Heining-Kline [paper](http://www.nber.org/papers/w18522) (note that they often report numbers in standard deviations, not in variances). 
+ 
+# Estimating two-way fixed effects
+
+This requires to first extract a large connected set, and then to estimate the linear problem with many dummies.
+
+## Extracting the connected set
+
+Because we are not going to deal with extremely large data-sets, we can use of the shelf algorithms to extract the connected set. Use the function `conComp` from the package `ggm` to extract the connected set from our data. To do so you will need to construct first an adgency matrix between teh firms. Here is how I would proceed to construct the adjency matrix:
+
+ 1. Append the lag firm id as a new row in your data `data[ ,fid.l1 := data[J(i,t-1),fid]]`, for which you need to first run `setkey(data,i,t)`
+ 2. Extract all moves from this data set `jdata = data[fid.l1!=fid]` and only keep unique pairs
+ 3. Then create a column `value:=1` and cast this new data to an array using the `acast` command with `fill=0`
+
+<span class="label label-success">Question 4</span> Use the previous procedure, extract the connected set, drop firms not in the set (I expect that all firms will be in the set).
+
+## Estimating worker and firms FE
+
+The part of the problem set is for you to implement the AKM estimator. As discussed in class, this can be done simply by updating in turn the worker FE and the firms FE. 
+
+Start by appending 2 new columns `alpha_hat` and `psi_hat` to your data. Then loop over the following:
+
+ 1. update `alpha_hat` by just taking the mean within `i` net of firm FE, use data.table to do that very efficiently
+ 2. update `psi_hat`   by just taking the mean within `fid` net of worker FE, use data.table to do that very efficiently
+ 
+<span class="label label-success">Question 5</span>  Run the privious steps in a loop, at each step evaluates by how much as the total mean square error changed. Check that is goes down with every step. Stops when the MSE decreases by less than 1e-9.
+
+<span class="label label-info">Note</span> You can increase speed by focusing on movers only first.
+
+# Limited mobility bias
+
+We now have every thing we need to look at the impact of limited mobility bias. Compute the following:
+
+ 1. Compute the estimated variance of firm FE
+ 2. Do it for varying level of mobility $\lambda$. Collect for each the number of movers, the actual variance and the estimated variance. Run it for diffenrent panel lengths: 5,6,8,10,15.
+
+<span class="label label-success">Question 6</span> Report this in a plot. This should look like the [Andrews and Al](http://www.sciencedirect.com/science/article/pii/S0165176512004272) plot.
+
+## Alleviating the bias using split sample
+
+Pick a relatively short $T$ together with a low $\lambda$. Simulate one data-set. Next conduct the following procedure:
+
+ 1. Estimate AKM on the full sample
+ 2. Split your sample within firm, ie, within firm, split your movers in a balanced way between group 1 and group 2. Do the same for the individual who don't move. You can do that by assigning a random number to each worker within firm and then defining the group as being below or above the median.
+ 3. Perform AKM on eash split-sample
+ 4. Compute biased-corrected estimates for variance of firm-effects and covariances between worker and firm effects.
+
+<span class="label label-success">Question 7</span> Report the true values, the non biased corrected and the bias corrected. 
+
+
+
+
+
+
