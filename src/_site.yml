@@ -1,44 +1,47 @@
-name: "Econ 34430 "
-output_dir: "../docs"
+name: 'Econ 34430 '
+output_dir: ../docs
 navbar:
-  title: "Econ 34430"
+  title: Econ 34430
   left:
-    - text: "Home"
-      icon: fa-home      
-      href: index.html
-    - text: "Sched"
-      icon: fa-calendar      
-      href: notes.html
-    - text: "Labs"
-      icon: fa-book     
-      menu:
-        - text: "EM mlogit"
-          href: lab-discretechoice.html
-    - text: "Homeworks"
-      icon: fa-pencil     
-      menu:
-        - text: "Static LS"
-          href: static-labor-supply.html
-        - text: "Hotz and Miller"
-          href: dynprog-HotzMiller.html
-        - text: "Dynamic LS"
-          href: dynamic-labor-supply.html
-        - text: "Mixtures"
-          href: earnings-mixtures.html
-        - text: "Two-way FE"
-          href: hw-akm.html
-        - text: "Sorting"
-          href: ShimerSmith.html
+  - text: Home
+    icon: fa-home
+    href: index.html
+  - text: Sched
+    icon: fa-calendar
+    href: notes.html
+  - text: Labs
+    icon: fa-book
+    menu:
+    - text: EM mlogit
+      href: lab-discretechoice.html
+  - text: Homeworks
+    icon: fa-pencil
+    menu:
+    - text: Static LS
+      href: static-labor-supply.html
+    - text: Hotz and Miller
+      href: dynprog-HotzMiller.html
+    - text: Dynamic LS
+      href: dynamic-labor-supply.html
+    - text: Mixtures
+      href: earnings-mixtures.html
+    - text: Two-way FE
+      href: hw-akm.html
+    - text: Sorting
+      href: ShimerSmith.html
   right:
-    - icon: fa-github
-      href: https://github.com/tlamadon/econ-34430
-    - icon: fa-bug
-      href: https://github.com/tlamadon/econ-34430/issues
+  - icon: fa-github
+    href: https://github.com/tlamadon/econ-34430
+  - icon: fa-bug
+    href: https://github.com/tlamadon/econ-34430/issues
 output:
   html_document:
     theme: cosmo
     highlight: textmate
     include:
       after_body: footer.html
-      in_header:  header.html
+      in_header: header.html
     css: styles.css
+    lib_dir: site_libs
+    self_contained: no
+

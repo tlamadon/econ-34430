@@ -41,7 +41,7 @@ psi   = qnorm(1:nk/(nk+1)) * alpha_sd
 alpha = qnorm(1:nl/(nl+1)) * psi_sd
 
 # let's assume moving PR is fixed
-lambda = 0.1
+lambda = 0.05
 
 csort = 0.5 # sorting effect
 cnetw = 0.2 # network effect
@@ -80,8 +80,8 @@ wireframe(H,aspect = c(1,1),xlab = "worker",ylab="firm")
 The next step is to simulate our network given our transitions rules. 
 
 ```{r}
-nt = 10
-ni = 10000
+nt = 5
+ni = 100000
 
 # we simulate a panel
 network    = array(0,c(ni,nt))
@@ -118,7 +118,7 @@ data <- data[,psi := psi[k],k]
 The final step is a to assign identities to the firm. We are going to do this is a relatively simple way, by simply randomly assigning firm ids to spells.
 
 ```{r}
-firm_size = 15
+firm_size = 10
 within_firm_count = ni/(firm_size*nk*nt)
 
 dspell <- data[,list(len=.N),list(i,spell,k)]
@@ -133,7 +133,7 @@ data <- data[, fid:= dspell[data,fid]]
 <span class="label label-success">Question 1</span> We are going to do some `R-golfing` (see [wikipedia](https://en.wikipedia.org/wiki/Code_golf)). I want you to use a one line code to evaluate the following 2 quantities:
 
  - mean firm size, in the crossection, expect something like 15.
- - mean number of movers per firm in total in our panel.
+ - mean number of movers per firm in total in our panel (a worker that moved from firm i to j is counted as mover in firm i as well as in firm j).
 
 To evaluate the number of strokes that you needed to use run the following on your line of code: `all.names(expression( YOUR_CODE ))`. My scores for the previous two are `9` and `18`.
 
@@ -142,7 +142,7 @@ To evaluate the number of strokes that you needed to use run the following on yo
 We start with just AKM wages, which is log additive with some noise.
 
 ```{r}
-w_sigma = 0.2
+w_sigma = 0.8
 data <- data[, lw := alpha + psi + w_sigma * rnorm(.N) ]
 ```
 
@@ -156,8 +156,8 @@ data <- data[, lw := alpha + psi + w_sigma * rnorm(.N) ]
  
 ## Calibrating the parameters
  
-<span class="label label-success">Question 3</span> Pick the parameters `psi_sd`,`alpha_sd`,`csort`, `csig` and `w_sigma` to roughly match the decomposition in the Card-Heining-Kline [paper](http://www.nber.org/papers/w18522) (note that they often report numbers in standard deviations, not in variances). 
- 
+<span class="label label-success">Question 3</span> Pick the parameters `psi_sd`,`alpha_sd`,`csort`, `csig` and `w_sigma` to roughly match the decomposition in the Card-Heining-Kline [paper](http://www.nber.org/papers/w18522) (note that they often report numbers in standard deviations, not in variances).  `psi_sd`, `alpha_sd`, `w_sigma` can be directly calibrated from CHK. On the other hand, `csort` and `csig` needs to be calibrated to match the numbers in CHK after AKM estimation. If AKM estimation on psi and alpha is too slow, use the true psi and alpha and get residuals directly. 
+  
 # Estimating two-way fixed effects
 
 This requires to first extract a large connected set, and then to estimate the linear problem with many dummies.
@@ -181,9 +181,9 @@ Start by appending 2 new columns `alpha_hat` and `psi_hat` to your data. Then lo
  1. update `alpha_hat` by just taking the mean within `i` net of firm FE, use data.table to do that very efficiently
  2. update `psi_hat`   by just taking the mean within `fid` net of worker FE, use data.table to do that very efficiently
  
-<span class="label label-success">Question 5</span>  Run the privious steps in a loop, at each step evaluates by how much as the total mean square error changed. Check that is goes down with every step. Stops when the MSE decreases by less than 1e-9.
+<span class="label label-success">Question 5</span>  Run the privious steps in a loop, at each step evaluates by how much as the total mean square error changed. Check that is goes down with every step. Stops when the MSE decreases by less than 1e-9. Get MSE only from movers. 
 
-<span class="label label-info">Note</span> You can increase speed by focusing on movers only first.
+<span class="label label-info">Note</span> You can increase speed by focusing on movers only first to recover the `psi`.
 
 # Limited mobility bias
 
@@ -192,7 +192,7 @@ We now have every thing we need to look at the impact of limited mobility bias. 
  1. Compute the estimated variance of firm FE
  2. Do it for varying level of mobility $\lambda$. Collect for each the number of movers, the actual variance and the estimated variance. Run it for diffenrent panel lengths: 5,6,8,10,15.
 
-<span class="label label-success">Question 6</span> Report this in a plot. This should look like the [Andrews and Al](http://www.sciencedirect.com/science/article/pii/S0165176512004272) plot.
+<span class="label label-success">Question 6</span> Report this in a plot. Fix T and vary lambda. Plot (i) correlation between firm fixed effect and individual fixed effect and (ii) variance of firm fixed effect against the number of movers. This should look like the [Andrews and Al](http://www.sciencedirect.com/science/article/pii/S0165176512004272) plot.
 
 ## Alleviating the bias using split sample
 
@@ -202,6 +202,8 @@ Pick a relatively short $T$ together with a low $\lambda$. Simulate one data-set
  2. Split your sample within firm, ie, within firm, split your movers in a balanced way between group 1 and group 2. Do the same for the individual who don't move. You can do that by assigning a random number to each worker within firm and then defining the group as being below or above the median.
  3. Perform AKM on eash split-sample
  4. Compute biased-corrected estimates for variance of firm-effects and covariances between worker and firm effects.
+
+The theta in bias correction formula is on var(psi), not psi itself.
 
 <span class="label label-success">Question 7</span> Report the true values, the non biased corrected and the bias corrected. 
 
