@@ -58,8 +58,8 @@ Matched Employer Employee Data [paper <i class="fa fa-external-link" aria-hidden
 
 ## Partial insurance
 
- - Blundel Pistaferi Preston  [slides]()
- - Heathcote Sorestleten and Violante [slides]()
+ - Blundel Pistaferi Preston  [slides](pdf/slides-pinsurance-bp.pdf)
+ - Heathcote Sorestleten and Violante [slides](pdf/slides-pinsurance-HSV.pdf)
  - [Notes](pdf/contracting.pdf) on contracting
  - [Notes](pdf/PartialInsurance.pdf) on earnings and consumtpion
 
