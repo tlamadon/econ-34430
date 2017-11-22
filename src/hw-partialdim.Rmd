@@ -41,7 +41,7 @@ for (k in c(5:50)) {
 
 ggplot(rr,aes(x=log(k),y=log(ss))) + geom_point() + geom_line()
 
-fit = lm(lok(ss) ~ log(k),rr)
+fit = lm(log(ss) ~ log(k),rr)
 
 
 ```
