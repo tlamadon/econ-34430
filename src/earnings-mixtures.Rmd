@@ -218,7 +218,7 @@ The code does not need any modicification if we do things conditional on $\rho$.
 **Question 5**: Use your function estimate the mixture model in differences using $\rho=0.6$. Next run your code on a grid for $\rho$ between 0 and 1. Report the likelihood plot over the values of $\rho$ and report the maximum likelihood estimator of $\rho$.
 
 
-## Bonus questions, NP estimation using joint diagonalization
+## NP estimation using joint diagonalization
 
 In class we saw that one could try to directly esimate the mixture components using SVD and eigen value decompositions. Multiple values of $y_3$ can be pulled together into a joint diagonalization. The first step is to construct the $A(y3)$ matrix for several values of $y_3$. Cut the values of $y3$ into groups and construct the matrix within each group (use 10 groups). You also need to discretize $y_1$ and $y_2$, use 20 point of supports. This should give you 10 different matrices. 
 
@@ -235,9 +235,9 @@ $$
 \end{align}
 $$
 
-And so at this point, to gain in efficiency, we can use a joint diagonalization of the all the $\tilde{A}(y_3)$ matrices at once. The `ffdiag` command in the `joitnDiag` package to perform this decomposition given a set of $\tilde{A}(y_3)$ matrices. It will return the $Q$ matrix.
+And so at this point, to gain in efficiency, we can use a joint diagonalization of the all the $\tilde{A}(y_3)$ matrices at once. The `ffdiag` command in the `jointDiag` package to perform this decomposition given a set of $\tilde{A}(y_3)$ matrices. It will return the $Q$ matrix.
 
-**Bonus question**: Implement this procedure, run it on simulated data (impose the stationarity) and plot the true CDF versus the estimated CDF. Finally, run it on the data and report the estimated CDF!
+**Question 6**: Implement this procedure, run it on simulated data (impose the stationarity) and plot the true CDF versus the estimated CDF. Finally, run it on the data and report the estimated CDF!
 
 
 
